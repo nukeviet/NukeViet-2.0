@@ -1,0 +1,75 @@
+/*
+* @Program:	NukeViet CMS v2.0 RC1
+* @File name: 	Changelog
+* @Author: 	AnhTu
+* @Version: 	1.0
+* @Date: 	24.05.2009
+*/
+
+So với bản NukeViet 2.0 beta 2b 27/01/2007, NukeViet 2.0 RC 1 có những điểm mới sau:
+
+1/Hệ thống:
+- Sửa lại phần cài đặt hệ thống (http://nukeviet.vn/phpbb/viewtopic.php?f=42&t=4967)
+
+- Viết lại: ./index.php, ./header.php, ./footer.php, ./modules.php gọn gàng hơn;
+
+- Viết lại: ./includes/functions/mainfile.php, ./includes/functions/security.php;
+
+- Viết lại: ./includes/functions/blocks.php, ./includes/functions/uploads.php;
+
+- Tạo thêm: ./includes/functions/functions.php, ./includes/functions/counter.php;
+
+- Tích hợp lớp bảo mật Link Protect điều khiển trong Admin Control Panel;
+
+- Bỏ trình soạn thảo SPAW1; Fix lỗi Spaw2: http://nukeviet.vn/phpbb/viewtopic.php?f=37&t=175&start=20#p1816, 
+  lỗi Spaw2 trên IIS: http://nukeviet.vn/phpbb/viewtopic.php?f=37&t=175&start=30#p6034
+  
+- Thêm tính năng cho phép 1 block có thể hiển thị tại nhiều khu vực, Quản lý tại Admin Control Panel/Blocks;
+
+- Theme có thể thay đổi theo Module, quản lý tại Admin Control Panel/Module; Thay thế theme cũ bằng 3 theme mới
+  tương đương 3 style: nv_green, nv_orange, nv_silver Với các tính năng sau đã được làm mẫu;
+  3 theme này có khả năng thay đổi vị trí các cột block nhờ vào việc điều khiển của biến $index,
+  biến điều khiển bởi $bltype quản lý trong Admin Control Panel/Modules. Các module sử dụng trên NukeViet 2.0 Beta 2 
+  muốn dùng cho NukeViet 2.0 RC 1 cần thay đổi bằng cách mở file index.php của module, tìm: $index = 0; hoặc $index = 1;
+  thay bằng: $index = (defined('MOD_BLTYPE')) ? MOD_BLTYPE : 1; 
+  Nếu ko code lại thì module vẫn chạy nhưng không quản lý được các cột của theme.
+  Có thể đổi tên theme (Rename thư mục) mà không làm lỗi link ảnh trên theme (sử dụng biến $ThemeSel tại vị trí tên theme);
+  Đa ngôn ngữ hình ảnh cho theme (sử dụng biến $currentlang để định vị hình ảnh);
+  Banner có thể tự động thay đổi theo module, ngôn ngữ (sử dụng biến $module_name,$currentlang để định vị hình ảnh)
+  như đã được lưu ý ở đây: http://nukeviet.vn/phpbb/viewtopic.php?f=41&t=4709;
+  Sử dụng 3 block chuẩn để tạo menu cho theme: Menu1(menu dọc), Menu2(menu ngang-trên), Menu3(menu ngang-dưới).
+  Menu (1 cấp) tạo hoàn toàn tự động (theo tên module), có thể điều khiển menu trong Admin Control Panel/Modules.
+  Các theme sử dụng trên NukeViet 2.0 beta 2 cần được code lại để có tính năng này, 
+  nếu ko code lại thì nó vẫn chạy nhưng không có các tính năng trên.
+
+- Nâng cấp mã chống spam (chi tiết xem hàm nv_capcha_txt() trong ./includes/functions/functions.php
+  (các mã chống spam cũ sẽ phải thay đổi nếu không sẽ không hoạt động)
+
+- Chia hệ thống thành 2 bản: có / không có forum phpbb.
+
+Trong quá trình viết lại và thêm mới chú ý đến: yếu tố bảo mật, gọn gàng, tốc độ load trang
+và sửa một số lỗi.
+
+
+2/Thêm vào hệ thống các modules:
+- Addnews (Gửi bài viết);
+- AutoTranslate (Dịch tự động);
+- Contact (Liên hệ, http://nukeviet.vn/phpbb/viewtopic.php?f=42&t=603&p=29793#p29793 được sửa chữa thêm; thay cho module Feedback của bản 1.x);
+- Rss (Kênh tin chia sẻ; RSS được tạo tự động bằng cách thả file rss.php phù hợp vào thư mục chứa module tương ứng cần xuất RSS);
+- Sitemap (Sơ đồ site);
+- Support (Hỗ trợ);
+- Weblinks (Liên kết website).
+
+3/Nâng cấp, sửa lỗi các modules:
+- Your_Account: Sửa lỗi T_String;
+- News: đưa comment của News hiện cuối bài viết; Quản lý comment; Fix các lỗi ký tự đặc biệt, ký tự gạch chéo ngược...;
+  Fix lỗi xuống dòng, Fix lỗi tạo ảnh thumb, Cho phép sử dụng hình cũ để làm đẹp cho bản tin không có hình cũ v.v...
+- Files: Thay bằng bản tại http://nukeviet.vn/phpbb/viewtopic.php?f=42&t=4629 được sửa chữa thêm; Quản lý comment,
+- Voting: Sửa chữa, nâng cấp từ Module Voting của thành viên ntanh2605 (http://nukeviet.vn/phpbb/viewtopic.php?f=42&t=5141);
+  Thêm tính năng hẹn giờ bật tắt thăm dò trong 1 khoảng thời gian xác định, chủ động bật tắt thăm dò...
+- Forums: Sửa lỗi phông chữ file faq của module Forums;
+
+4 Thay đổi và thêm bớt 1 số block
+
+24/05/2009
+NukeViet Group
