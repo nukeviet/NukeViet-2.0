@@ -3,10 +3,10 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC3
+* @Date: 		01.03.2010
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -112,7 +112,7 @@ function newsstart()
 	{
 		$querylang = "";
 	}
-	$resuls1 = $db->sql_query( "SELECT * FROM " . $prefix . "_stories where newsst='1' $querylang ORDER BY sid DESC LIMIT 1" );
+	$result1 = $db->sql_query( "SELECT * FROM " . $prefix . "_stories where newsst='1' $querylang ORDER BY sid DESC LIMIT 1" );
 	$row1 = $db->sql_fetchrow( $result1 );
 	if ( $row1 )
 	{

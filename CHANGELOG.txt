@@ -1,3 +1,145 @@
+NHỮNG THAY ĐỔI CỦA NUKEVIET 2.0 RC3 SO VỚI NUKEVIET 2.0 RC2
+===========================================================
+
+Thay đổi các file:
+-----------------
+\upload\admin\case\case.stories.php
+\upload\admin\language\lang-english.php
+\upload\admin\language\lang-vietnamese.php
+\upload\admin\modules\authors.php
+\upload\admin\modules\newsletter.php
+\upload\admin\modules\setban.php
+\upload\admin\modules\stories.php
+\upload\admin\modules\users.php
+\upload\admin\admin.php
+\upload\blocks\block-Languages.php
+\upload\blocks\block-Menu1_default.php
+\upload\blocks\block-MiniChat.php
+\upload\blocks\block-Online.php
+\upload\blocks\block-RandomVoting.php
+\upload\includes\functions\blocks.php
+\upload\includes\functions\functions.php
+\upload\includes\functions\mainfile.php
+\upload\includes\functions\news.php
+\upload\install\dumper.php
+\upload\install\dumper2.php
+\upload\install\install.php
+\upload\language\lang-vietnamese.php
+\upload\modules\Addnews\index.php
+\upload\modules\Contact\index.php
+\upload\modules\Files\index.php
+\upload\modules\News\friend.php
+\upload\modules\News\index.php
+\upload\modules\Newsletter\index.php
+\upload\modules\Your_Account\index.php
+\upload\themes\nv_green\blocks\block-Menu2.php
+\upload\themes\nv_green\blocks\block-Menu3.php
+\upload\themes\nv_orange\blocks\block-Menu3.php
+\upload\themes\nv_silver\blocks\block-Menu2.php
+\upload\themes\nv_silver\blocks\block-Menu3.php
+\upload\themes\nv_silver\theme.php
+\upload\footer.php
+\upload\header.php
+\upload\modules.php
+
+===========================
+Những thay đổi về tính năng:
+===========================
+Fix lỗi của bản RC2:
+===================
+1. File: install\install.php
+Sửa để cài đặt được trên server windows PHP 5.2.11
+
+$HTTP_GET_VARS -> $_GET
+$HTTP_POST_VARS -> $_POST
+$HTTP_SERVER_VARS -> $_SERVER
+$HTTP_ENV_VARS -> $_ENV
+
+Nếu Safe Mode mở thì chỉ cảnh báo
+
+2. Sửa hàm kiểm tra email trên PHP và Javascript
+    Tìm: eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,6}$"
+    Thay Bằng: preg_match("/^[a-z0-9]([a-z0-9_.-]+)*[a-z0-9]@([a-z0-9]([a-z0-9_-]+)*[a-z0-9].)+[a-z]{2,6}$/i"
+
+admin\admin.php, 2
+admin\modules\authors.php, 2
+admin\modules\newsletter.php, 1
+admin\modules\users.php, 1
+ins_tall\install.php, 1
+modules\News\friend.php, 2
+modules\News\index.php, 1
+modules\Newsletter\index.php, 1
+modules\Your_Account\index.php, 2
+modules\Contact\index.php, 1
+
+3. Sửa lỗi Your_Account
+1)    Xóa file includes\data\ulist.php
+2)    Xóa file includes\functions\users.php
+3)    Xóa tất cả các dòng
+     ulist();
+trong các file sau:
+	admin\modules\users.php
+	modules\Your_Account\index.php
+
+Các module không có khác (music, …) cần kiểm tra xem có sửa dụng biến $udt, ulist.php không
+-    Đã sửa lại Module File để lấy thông tin từ data
+-    Đã sửa lại File admin\modules\users.php
+-    Block block-Online.php
+
+4. Sửa lỗi XSS: trong file includes/functions/functions.php
+tìm đến dòng :
+    if ( $strip == "nohtml" ) $AllowableHTML = array( '' );
+Thay bằng:
+    if ( $strip == "nohtml" ) {
+        $AllowableHTML = array( '' );
+        $str = strip_tags( $str );
+    }
+
+5. Fix lỗi phân trang khi tra cứu bài viết trong News NV2RC
+trong file modules\News\index.php:
+Tìm dòng sau ( trong hàm archive())
+       $base_url = "modules.php?name=$module_name&op=viewtop&topicid=$topicid";
+Sửa thành:
+       $base_url = "modules.php?name=$module_name&op=archive&day=$day&month=$month&year=$year&catid=$catid&pozit=$pozit";
+
+6. Sửa module ConfigureBan.
+    Copy file admin\modules\setban.php đè vào file cũ
+    Xóa file includes\data\config_Setban.php
+    Tạo file includes\data\config_banip.php (Nội dung = rỗng và CHMOD cho file này có quyền được ghi)
+    Tìm function nv_is_ban trong file: includes\functions\functions.php bằng function sau:
+            function nv_is_ban( $client_ip = "" )
+            {
+                global $datafold;
+                if ( empty($client_ip) ) $client_ip = nv_getClientIP();
+                $return = false;
+                if ( file_exists(INCLUDE_PATH . $datafold . "/config_banip.php")){
+                    @include ( INCLUDE_PATH . $datafold . "/config_banip.php" );
+                    if (in_array($client_ip, $array_ip_ban) )
+                    {
+                        $return = true;
+                    }
+                }
+                return $return;
+            }
+7. Sửa Block không cho chèn ký tự "|" vào nội dung
+
+===============
+Những điểm mới:
+===============
+1. Cho phép quản lý Module Tin tức trong Admin Control Panel thuận tiện hơn:
+	+ Sửa lại Function ManagerCategory, OrderCat, Commentok, EditCategory, newadminhome
+	+ Tạo thêm func MoveCat
+
+====================
+Những người tham gia
+====================
+Báo lỗi: vv0lll
+Sửa lỗi: vuthao, conmatdo, xman
+===============
+laser
+01.03.2010
+http://nukeviet.vn
+
 NHỮNG THAY ĐỔI CỦA NUKEVIET 2.0 RC2 SO VỚI NUKEVIET 2.0 RC1
 ===========================================================
 Những thay đổi về File:

@@ -3,10 +3,10 @@
 /*
 * @Program:	NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC3
+* @Date: 		01.03.2010
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -46,7 +46,7 @@ function footmsg()
 function foot()
 {
 	global $db, $prefix, $nukeurl, $datafold, $home, $gzip_method, $do_gzip_compress, $name, $protect, $protected_links;
-	if ( $home ) blocks( Down, $name );
+	if ( $home ) blocks("Down", $name );
 	themefooter();
 	// Begin Link Protect
 	if ( $protect )

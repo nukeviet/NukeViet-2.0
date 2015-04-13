@@ -3,10 +3,10 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC2
+* @Version: 	2.0 RC3
 * @Date: 		16.06.2009
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -107,7 +107,8 @@ if ( $adm_access == 1 )
 	{
 		global $adminfile;
 		OpenTable();
-		echo "<center><b><a href=\"" . $adminfile . ".php?op=newsadminhome\"><b>" . _ARTICLEADMIN . "</b></a></b><br>\n<br>\n" . "<a href=\"" . $adminfile . ".php?op=newsconfig\"><b>" . _CONFIGNEWS . "</b></a> | \n" . "<a href=\"" . $adminfile . ".php?op=ManagerCategory\"><b>" . _CATEGORIESADMIN . "</b></a> | \n" . "<a href=\"" . $adminfile . ".php?op=ManagerTopic\"><b>" . _TOPICSADMIN . "</b></a><br>\n" . "<a href=\"" . $adminfile . ".php?op=Imggallery\"><b>" . _IMGGALLERY . "</b></a> | \n" . "<a href=\"" . $adminfile . ".php?op=adminnews\"><b>" . _NEWSADMIN . "</b></a> | \n" . "<a href=\"" . $adminfile . ".php?op=Comment\"><b>" . _DUYETCOMM . "</b></a> | \n" . "<a href=\"" . $adminfile . ".php?op=Commentok\"><b>" . _CHECKCOMM . "</b></a>\n" . "</center>\n";
+		echo "<center><b><a href=\"" . $adminfile . ".php?op=newsadminhome\"><b>" . _ARTICLEADMIN . "</b></a></b><br>\n<br>\n" . "<a href=\"" . $adminfile . ".php?op=newsconfig\"><b>" . _CONFIGNEWS . "</b></a> | \n" . "<a href=\"" . $adminfile . ".php?op=ManagerCategory\"><b>" . _CATEGORIESADMIN . "</b></a> | \n" . "<a href=\"" . $adminfile . ".php?op=Imggallery\"><b>" . _IMGGALLERY . "</b></a>\n" 
+		. " <br> <a href=\"" . $adminfile . ".php?op=ManagerTopic\"><b>" . _TOPICSADMIN . "</b></a> | \n" . "<a href=\"" . $adminfile . ".php?op=Commentok\"><b>" . _DUYETCOMM . "</b></a>\n | <a href=\"" . $adminfile . ".php?op=adminnews\"><b>" . _NEWSADMIN . "</b></a>" . "</center><br>\n";
 		CloseTable();
 		echo "<br>\n";
 	}
@@ -121,6 +122,24 @@ if ( $adm_access == 1 )
 	{
 		global $adminfile, $prefix, $user_prefix, $db, $radminsuper, $anonymous;
 		include ( "../header.php" );
+		$catid = (isset($_GET['cat'])) ? intval($_GET['cat']) : 0;
+		if ($catid > 0) 
+		{
+		$catid2 = $catid;
+		$sql3 = "SELECT catid FROM ".$prefix."_stories_cat where parentid='$catid'";
+		$result3 = $db->sql_query($sql3);
+		while ($row3 = $db->sql_fetchrow($result3)) $catid2 = $catid2.",".$row3['catid'];
+		$cha = "where catid in ($catid2)";
+		list( $mi) = $db->sql_fetchrow( $db->sql_query("select title from " . $prefix . "_stories_cat where catid in ($catid2)") );
+		$chu = "&cat=$catid";
+		}
+		$tencat_ar = array();
+		$sql3 = "SELECT catid, title FROM ".$prefix."_stories_cat where parentid='0'";
+		$result3 = $db->sql_query($sql3);
+		while ($row3 = $db->sql_fetchrow($result3)) {
+			$k = $row3['catid'];
+			$tencat_ar[$row3['catid']] = $row3['title'];
+		}
 		GraphicAdmin();
 		newstopbanner();
 		$sql = "SELECT sid, title, aid, UNIX_TIMESTAMP(time) as formatted, hometext FROM " . $prefix . "_stories_temp order by time DESC";
@@ -184,17 +203,36 @@ if ( $adm_access == 1 )
 			CloseTable();
 			echo "<br>";
 		}
-		$numf = $db->sql_fetchrow( $db->sql_query("SELECT COUNT(*) FROM " . $prefix . "_stories") );
+		$numf = $db->sql_fetchrow( $db->sql_query("SELECT COUNT(*) FROM " . $prefix . "_stories $cha") );
 		$page = ( isset($_GET['page']) ) ? intval( $_GET['page'] ) : 0;
 		$all_page = ( $numf[0] ) ? $numf[0] : 1;
-		$per_page = 10;
-		$base_url = "" . $adminfile . ".php?op=newsadminhome";
-		$sql3 = "SELECT sid, aid, title, UNIX_TIMESTAMP(time) as formatted, alanguage, newsst FROM " . $prefix . "_stories ORDER BY time DESC LIMIT $page,$per_page";
+		$per_page = 25;
+		$base_url = "" . $adminfile . ".php?op=newsadminhome$chu";
+		$sql3 = "SELECT sid, aid, title,comments,counter, UNIX_TIMESTAMP(time) as formatted, alanguage, newsst FROM " . $prefix . "_stories $cha ORDER BY time DESC LIMIT $page,$per_page";
 		$result3 = $db->sql_query( $sql3 );
+			OpenTable();
+			echo "<center><b>" . _LASTARTICLES . "";
+			echo "<div align=right><select name=\"haha\" onchange=\"top.location.href=this.options[this.selectedIndex].value\">\n";
+					echo "<option value=\"" . $adminfile . ".php?op=newsadminhome\">" . _ALLCAT . "</option>";
+					for($i=1;$i <=$k;$i++) {
+						if ($tencat_ar[$i] != "") {
+						echo "<option value=\"" . $adminfile . ".php?op=newsadminhome&amp;cat=$i\"";
+						if($i == $catid2) echo " selected";
+						echo ">$tencat_ar[$i]</option>\n";
+					$sqlhi = "SELECT * FROM ".$prefix."_stories_cat where parentid='".$i."' ORDER BY weight asc";
+					$resulthi = $db->sql_query($sqlhi);
+					while ($row3 = $db->sql_fetchrow($resulthi)) {
+						echo "<option value=\"" . $adminfile . ".php?op=newsadminhome&amp;cat=$row3[catid]\"";
+						if($cat == $row3['catid']) echo " selected";
+						echo "> + $row3[title]</option>\n";
+					}
+					}
+				}
+				echo "</select></div>";
+
+			echo "<br><font size=3> $mi</font></b></center><br>";
 		if ( $db->sql_numrows($result3) != 0 )
 		{
-			OpenTable();
-			echo "<center><b>" . _LASTARTICLES . "</b></center><br>";
 			echo "<center><table border=\"1\" width=\"100%\" bgcolor=\"$bgcolor1\">";
 			while ( $row3 = $db->sql_fetchrow($result3) )
 			{
@@ -204,6 +242,9 @@ if ( $adm_access == 1 )
 				$time = viewtime( $row3['formatted'], 2 );
 				$alanguage = $row3['alanguage'];
 				$newsst = intval( $row3['newsst'] );
+				$tluan = $row3['comments'];
+				$hit = $row3['counter'];
+
 				if ( $newsst == 1 )
 				{
 					$ttd = "<a title=\"" . _OUTTTD . "\" href=\"" . $adminfile . ".php?op=AddTTD&t=0&sid=$sid\"><img border=\"0\" src=\"../images/red_dot.gif\" width=\"10\" height=\"10\"></a>";
@@ -225,13 +266,13 @@ if ( $adm_access == 1 )
 				{
 					$htl = "<a title=\"" . _ADDIMG . "\" href=\"" . $adminfile . ".php?op=Imggallery&in=2&sid=$sid\"><img border=\"0\" src=\"../images/center_l.gif\" width=\"7\" height=\"11\"></a>";
 				}
-				echo "<tr><td align=\"right\"><b>$sid</b>" . "</td><td align=\"left\" width=\"100%\"><a href=\"../modules.php?name=News&op=viewst&sid=$sid\">$title</a>  ( $time )" . "</td><td align=\"center\">$alanguage" . "</td><td align=\"right\" nowrap>(<a href=\"" . $adminfile . ".php?op=EditStory&sid=$sid\">" . _EDIT . "</a>-<a href=\"" . $adminfile . ".php?op=RemoveStory&sid=$sid\">" . _DELETE . "</a>)" . "</td><td width=\"20\" height=\"20\" align=\"center\">$htl</td><td width=10>$ttd</td></tr>";
+				echo "<tr><td align=\"right\"><b>$sid</b>" . "</td><td align=\"left\" width=\"65%\"><a href=\"../modules.php?name=News&op=viewst&sid=$sid\">$title</a>  ( $time )" . "</td><td align=\"center\"><a title=\"" . _OUTTTD . "\" href=\"" . $adminfile . ".php?op=Commentok&sid=$sid\"><b>$tluan </b>" ._COMMENT. "</td><td align=\"center\"><b>$hit</b> " ._VIEW. "</td><td align=\"center\">$alanguage" . "</td><td align=\"right\" nowrap>(<a href=\"" . $adminfile . ".php?op=EditStory&sid=$sid\">" . _EDIT . "</a>-<a href=\"" . $adminfile . ".php?op=RemoveStory&sid=$sid\">" . _DELETE . "</a>)" . "</td><td width=\"20\" height=\"20\" align=\"center\">$htl</td><td width=10>$ttd</td></tr>";
 			}
 			echo "</table>";
 			echo @generate_page( $base_url, $all_page, $per_page, $page );
 			echo "<br><br><center>" . "<form action=\"" . $adminfile . ".php\" method=\"post\">" . "" . _STORYID . ": <input type=\"text\" NAME=\"sid\" SIZE=\"10\"> " . "<select name=\"op\">" . "<option value=\"EditStory\" SELECTED>" . _EDIT . "</option>" . "<option value=\"RemoveStory\">" . _DELETE . "</option>" . "</select> " . "<input type=\"submit\" value=\"" . _GO . "\">" . "</form></center>";
-			CloseTable();
-		}
+
+			CloseTable();		}
 		include ( "../footer.php" );
 	}
 
@@ -243,7 +284,6 @@ if ( $adm_access == 1 )
 	function newsconfig()
 	{
 		global $adminfile, $datafold;
-
 		global $articlecomm, $commentcheck, $addnews, $newsprint, $newssave, $newsfriend, $newshome, $news2cot, $catnewshome, $newspagenum, $catnewshomeimg, $sizecatnewshomeimg, $sizeimgskqa, $htatl, $catimgnewshome, $newsarticleimg, $sizenewsarticleimg, $hienthi_tlq, $hienthi_ccd, $comblbarstat, $block_atl, $sizeatl, $block_top10topic, $block_top10articles, $block_top10count, $temp_path, $path;
 		include ( "../header.php" );
 
@@ -691,7 +731,7 @@ if ( $adm_access == 1 )
 	{
 		global $adminfile, $db, $prefix;
 		OpenTable();
-		echo "<center><font class=\"option\"><b>" . _CATEGORYADD . "</b></font><br><br><br>" . "<form action=\"" . $adminfile . ".php\" method=\"post\">" . "<b>" . _CATNAME . ":</b> " . "<input type=\"text\" name=\"title\" size=\"30\"> " . "&nbsp;<b>" . _STPIC . ":</b> " . "<select name=\"catimage\">";
+		echo "<center><font class=\"option\"><b>" . _CATEGORYADD . "</b></font><br><br><br>" . "<form action=\"" . $adminfile . ".php?op=SaveCategory\" method=\"post\">" . "<b>" . _CATNAME . ":</b> " . "<input type=\"text\" name=\"title\" size=\"30\"> " . "&nbsp;<b>" . _STPIC . ":</b> " . "<select name=\"catimage\">";
 		$path1 = explode( "/", "../images/cat/" );
 		$path = "$path1[0]/$path1[1]/$path1[2]";
 		$handle = opendir( $path );
@@ -733,7 +773,7 @@ if ( $adm_access == 1 )
 			$title2 = $row2['title'];
 			echo "<option value=\"$catid2\">$title2</option>";
 		}
-		echo "</select>&nbsp;" . "<input type=\"hidden\" name=\"storieshome\" value=\"0\">" . "<input type=\"hidden\" name=\"op\" value=\"SaveCategory\">" . "<input type=\"submit\" value=\"" . _SAVE . "\">" . "</form></center>";
+		echo "</select>&nbsp;" . "<input type=\"hidden\" name=\"storieshome\" value=\"0\">" .  "<input type=\"submit\" value=\"" . _SAVE . "\">" . "</form></center>";
 		CloseTable();
 		echo "<br>";
 	}
@@ -747,112 +787,152 @@ if ( $adm_access == 1 )
 	{
 		global $adminfile, $prefix, $db;
 		include ( "../header.php" );
-
 		newstopbanner();
-		xaddcat();
-		$sql = "select * from " . $prefix . "_stories_cat order by parentid, weight";
-		$result = $db->sql_query( $sql );
-		$num = $db->sql_numrows( $result );
-		if ( $num > 0 )
+		$path1 = explode( "/", "../images/cat/" );
+		$path = "$path1[0]/$path1[1]/$path1[2]";
+		$handle = opendir( $path );
+		while ( $file = readdir($handle) )
 		{
-			OpenTable();
-			echo "<table border=\"1\" width=\"100%\"><tr>" . "<td align=\"center\"><b>" . _CATEGORIES . "</b></td><td colspan=\"3\" align=\"center\">" . "<b>" . _POSITION . "</b></td><td align=\"center\"><b>" . _FUNCTIONS . "</b></td><td align=\"center\"><b>" . _CSTORIESHOME6 . "</b></td><td align=\"center\"><b>" . _CLINKSHOME . "</b></td><td align=\"center\" width=20>&nbsp;</td></tr>";
-			while ( $row = $db->sql_fetchrow($result) )
+			if ( (ereg("^([_0-9a-zA-Z]+)([.]{1})([_0-9a-zA-Z]{3})$", $file)) and $file != "AllTopics.gif" )
 			{
-				$catid = intval( $row['catid'] );
-				$parentid = intval( $row['parentid'] );
-				$title = "<b>" . $row['title'] . "</b>";
-				$storieshome = intval( $row['storieshome'] );
-				$linkshome = intval( $row['linkshome'] );
-				$ihome = intval( $row['ihome'] );
-				if ( $parentid != 0 )
-				{
-					list( $ptitle ) = $db->sql_fetchrow( $db->sql_query("select title from " . $prefix . "_stories_cat where catid='$parentid'") );
-					$title = "$ptitle &raquo; $title";
-				}
-				if ( $ihome == "1" )
-				{
-					$title = "" . $title . " (*)";
-				}
+				$tlist .= "$file ";
+			}
+		}
+		closedir( $handle );
+		$tlist = explode( " ", $tlist );
+		sort( $tlist );
 
-				$weight = $row['weight'];
-				$weight1 = $weight - 1;
-				$weight3 = $weight + 1;
-				list( $catid1 ) = $db->sql_fetchrow( $db->sql_query("SELECT catid FROM " . $prefix . "_stories_cat WHERE weight='$weight1' AND parentid='$parentid'") );
-				list( $catid3 ) = $db->sql_fetchrow( $db->sql_query("SELECT catid FROM " . $prefix . "_stories_cat WHERE weight='$weight3' AND parentid='$parentid'") );
-				$con1 = intval( $catid1 );
-				$con3 = intval( $catid3 );
-				if ( $con1 )
-				{
-					$up = "<a href=\"" . $adminfile . ".php?op=OrderCategory&amp;weight=$weight&amp;catidori=$catid&amp;weightrep=$weight1&amp;catidrep=$con1\"><img src=\"../images/up.gif\" alt=\"" . _CATUP . "\" title=\"" . _CATUP . "\" border=\"0\" hspace=\"3\"></a>";
-				}
+	$sql = "SELECT * FROM ".$prefix."_stories_cat where parentid='0' ORDER BY weight";
+	$result = $db->sql_query($sql);
+	$numr = $db->sql_numrows($result);
+	$rowt3 = $db->sql_numrows( $result ); $ho = $rowt3;
+		$tencat_ar = array();
+		$sql3 = "SELECT catid, title FROM ".$prefix."_stories_cat where parentid='0'";
+		$result3 = $db->sql_query($sql3);
+		while ($row3 = $db->sql_fetchrow($result3)) {
+			$k = $row3['catid'];
+			$tencat_ar[$row3['catid']] = $row3['title'];
+		}
+	if($numr > 0) {
+		Opentable();
+		echo "<form method=\"POST\" action=\"".$adminfile.".php\">\n";
+		echo "<br><center><table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" style=\"border-collapse: collapse, border-color:#c0c0c0\" width=99%>\n";
+		echo "<tr bgcolor=#5d5d5d>\n<td align=\"center\"><b><font color=white>ID</b></td><td align=\"center\"><font color=white><b>iHome</b></td>\n<td align=\"center\" width=24%><b><font color=white>"._CATEGORY."</b></td>\n<td align=\"center\"><font color=white><b>"._INCAT."</b></td><td align=\"center\"><font color=white><b>"._WEIGHT."</b></td><td align=\"center\"><font color=white><b>"._CSTORIESHOME6."</b></td><td align=\"center\"><font color=white><b>Image</td><td align=\"center\"><font color=white><b>Links</td><td></td><td></td>\n</tr>\n";
+		$a=0;
+		while ($row = $db->sql_fetchrow($result)) {
+			$storieshome = intval( $row['storieshome'] );
+			$sql4 = "select * from " . $prefix . "_stories where catid='".intval($row['catid'])."'";
+			$result4 = $db->sql_query( $sql4 );
+			$row4 = $db->sql_fetchrow( $result4 );
+				if ( $row4 )
+					if ( $storieshome == 0 )$storieshome = " [<a href=\"" . $adminfile . ".php?op=CstorieshomeCategory&catid=".intval($row['catid'])."\">" . _CSTORIESHOME1 . "</a>]";
+					else $storieshome = " [<a href=\"" . $adminfile . ".php?op=EditStory&sid=$storieshome\">" . _CSTORIESHOME4 . "</a> | <a href=\"" . $adminfile . ".php?op=CstorieshomeCategory&catid=".intval($row['catid'])."\">" . _CSTORIESHOME5 . "</a>]";
+				else $storieshome = " [" . _CSTORIESHOME3 . "]";
+			if ( $db->sql_numrows($db->sql_query("select * from " . $prefix . "_stories_images where sid='0' AND home='0' AND catid='".intval($row['catid'])."'")) )
+					$htl = "<a title=\"" . _ADDIMG . "\" href=\"" . $adminfile . ".php?op=Imggallery&in=1&catid=".intval($row['catid'])."\"><img border=\"0\" src=\"../images/out.gif\" width=\"20\" height=\"20\"></a>";
 				else
-				{
-					$up = "";
-				}
-				if ( $con3 )
-				{
-					$down = "<a href=\"" . $adminfile . ".php?op=OrderCategory&amp;weight=$weight&amp;catidori=$catid&amp;weightrep=$weight3&amp;catidrep=$con3\"><img src=\"../images/down.gif\" alt=\"" . _CATDOWN . "\" title=\"" . _CATDOWN . "\" border=\"0\" hspace=\"3\"></a>";
-				}
-				else
-				{
-					$down = "";
-				}
-				$up_down = "$up $down";
-				if ( (! $up) and (! $down) )
-				{
-					$up_down = "&nbsp;";
-				}
-				$functions = "[ <a href=\"../modules.php?name=News&op=viewcat&catid=$catid\">" . _SHOW . "</a> | <a href=\"" . $adminfile . ".php?op=EditCategory&catid=$catid\">" . _EDIT . "</a> | <a href=\"" . $adminfile . ".php?op=DelCategory&cat=$catid\">" . _DELETE . "</a> ]";
-				$sql4 = "select * from " . $prefix . "_stories where catid='$catid'";
+					$htl = "<a title=\"" . _ADDIMG . "\" href=\"" . $adminfile . ".php?op=Imggallery&in=1&catid=".intval($row['catid'])."\"><img border=\"0\" src=\"../images/center_l.gif\" width=\"7\" height=\"11\"></a>";
+
+			if($a%2==0) { $bg="#FFFFFF"; } else { $bg="#F0F0F0"; }
+			echo "<input type=\"hidden\" name=\"catid[$a]\" value=\"".intval($row['catid'])."\">";
+			echo "<a name=\"".intval($row['catid'])."\"></a>";
+			echo "<tr bgcolor=$bg>\n";
+			echo "<td align=\"center\">".intval($row['catid'])."</td>\n";
+			echo "<td align=\"center\"><input  type=\"checkbox\" value=1 name=\"ihome[$a]\"  " . ( ($row['ihome'] == 1) ? " checked" : "" ) . "></td>\n";
+			echo "<td><input type=\"text\" name=\"title[$a]\" size=\"30\" value=\"".$row['title']."\"></td>\n";
+			echo "<td align=center><select name=\"haha\" onchange=\"top.location.href=this.options[this.selectedIndex].value\">\n";
+			echo "<option value=\"" . $adminfile . ".php?op=MoveCat&amp;id=" . $row['catid'] . "&amp;new=0\">" . _NOINCAT . "</option>";
+			for($i=1;$i <=$k;$i++) {
+						if ($tencat_ar[$i] != "" & $i!=$row['catid'] ) {
+						echo "<option value=\"" . $adminfile . ".php?op=MoveCat&amp;id=" . $row['catid'] . "&amp;new=$i\"";
+						if($i == $row['catid']) echo " selected";
+						echo ">$tencat_ar[$i]</option>\n";
+						}
+			}
+			echo "</select></td>";
+			echo "<td align=\"center\">";
+			echo "<select name=\"select1_" . $row['catid'] . "\" onchange=\"top.location.href=this.options[this.selectedIndex].value\">\n";
+				for ( $j = 1; $j <= $ho; $j++ )
+					{
+						echo "<option value=\"" . $adminfile . ".php?op=OrderCategory&amp;id=" . $row['catid'] . "&amp;new=" . $j . "\"" . ( ($row['weight'] == $j) ? " selected=\"selected\"" : "" ) . ">" . $j . "</option>\n";
+					}
+					echo "</select></td>\n";
+			$sobaiviet = $db->sql_numrows( $db->sql_query("SELECT * FROM ".$prefix."_stories where catid='" . $row['catid'] . "'"));
+			echo "<td align=\"center\"> <small> $storieshome</small></td>\n";
+			echo "<td align=\"center\"><select name=\"image[$a]\">";
+			for ( $i = 0; $i < sizeof($tlist); $i++ ) if ( $tlist[$i] != "" ) echo "<option name=\"catimage\" value=\"$tlist[$i]\"" . ( ($row['catimage'] == $tlist[$i]) ? " selected=\"selected\"" : "" ).">$tlist[$i]\n";
+			echo "</select></td>\n";
+			echo "<td align=\"center\"><select name=\"linkhome[$a]\">";
+			for ( $i = 0; $i < 10; $i++ ) if ( $tlist[$i] != "" ) echo "<option name=\"linkhome\" value=\"$i\"" . ( ($row['linkshome'] == $i) ? " selected=\"selected\"" : "" ).">$i\n";
+			echo "</select></td>\n";
+			echo "<td align=\"center\"><a href=\"" . $adminfile . ".php?op=DelCategory&cat=".$row['catid']."\">" . _DELETE . "</a></td>\n";
+			echo "<td align=\"center\"> $htl</td>\n";
+			echo "</tr>\n";
+			$sql3 = "SELECT * FROM ".$prefix."_stories_cat where parentid='".$row['catid']."' ORDER BY weight asc";
+			$result3 = $db->sql_query($sql3);
+			$rowt3 = $db->sql_numrows( $result3 );
+			$rowt4 = $db->sql_numrows( $result3 );
+				while ($row3 = $db->sql_fetchrow($result3)) {
+				$storieshome = intval( $row3['storieshome'] );
+				$sql4 = "select * from " . $prefix . "_stories where catid='".intval($row3['catid'])."'";
 				$result4 = $db->sql_query( $sql4 );
 				$row4 = $db->sql_fetchrow( $result4 );
-				if ( $row4 )
-				{
-					if ( $storieshome == 0 )
-					{
-						$storieshome = " [<a href=\"" . $adminfile . ".php?op=CstorieshomeCategory&catid=$catid\">" . _CSTORIESHOME1 . "</a>]";
-					}
+					if ( $row4 )
+						if ( $storieshome == 0 )$storieshome = " [<a href=\"" . $adminfile . ".php?op=CstorieshomeCategory&catid=".intval($row3['catid'])."\">" . _CSTORIESHOME1 . "</a>]";
+						else $storieshome = " [<a href=\"" . $adminfile . ".php?op=EditStory&sid=$storieshome\">" . _CSTORIESHOME4 . "</a> | <a href=\"" . $adminfile . ".php?op=CstorieshomeCategory&catid=".intval($row3['catid'])."\">" . _CSTORIESHOME5 . "</a>]";
+					else $storieshome = " [" . _CSTORIESHOME3 . "]";
+				if ( $db->sql_numrows($db->sql_query("select * from " . $prefix . "_stories_images where sid='0' AND home='0' AND catid='".intval($row3['catid'])."'")) )
+						$htl = "<a title=\"" . _ADDIMG . "\" href=\"" . $adminfile . ".php?op=Imggallery&in=1&catid=".intval($row3['catid'])."\"><img border=\"0\" src=\"../images/out.gif\" width=\"20\" height=\"20\"></a>";
 					else
-					{
-						$storieshome = " [<a href=\"" . $adminfile . ".php?op=EditStory&sid=$storieshome\">" . _CSTORIESHOME4 . "</a> | <a href=\"" . $adminfile . ".php?op=CstorieshomeCategory&catid=$catid\">" . _CSTORIESHOME5 . "</a>]";
+						$htl = "<a title=\"" . _ADDIMG . "\" href=\"" . $adminfile . ".php?op=Imggallery&in=1&catid=".intval($row3['catid'])."\"><img border=\"0\" src=\"../images/center_l.gif\" width=\"7\" height=\"11\"></a>";
+					$a++;
+					if($a%2==0)  $bg="#FFFFFF";  else  $bg="#F0F0F0"; 
+					echo "<input type=\"hidden\" name=\"catid[$a]\" value=\"".intval($row3['catid'])."\">";
+					echo "<tr bgcolor=$bg>\n";
+					echo "<td align=\"center\">".intval($row3['catid'])."</td>\n";
+					echo "<td align=\"center\"><input  type=\"checkbox\" value=1 name=\"ihome[$a]\" " . ( ($row3['ihome'] == 1) ? " checked" : "" ) . "></td>\n";
+					echo "<td align=\"center\"><input type=\"text\" name=\"title[$a]\" size=\"26\" value=\"".$row3['title']."\"></td>\n";
+					echo "<td align=right><select name=\"haha\" onchange=\"top.location.href=this.options[this.selectedIndex].value\">\n";
+					echo "<option value=\"" . $adminfile . ".php?op=MoveCat&amp;id=" . $row3['catid'] . "&amp;new=0\">" . _NOINCAT . "</option>";
+					for($i=1;$i <=$k;$i++) {
+						if ($tencat_ar[$i] != "") {
+						echo "<option value=\"" . $adminfile . ".php?op=MoveCat&amp;id=" . $row3['catid'] . "&amp;new=$i\"";
+						if($i == $row['catid']) echo " selected";
+						echo ">$tencat_ar[$i]</option>\n";
+						}
 					}
+					echo "</select></td>";
+					echo "<td align=\"right\">";
+					echo "<select name=\"select1_" . $row3['catid'] . "\" onchange=\"top.location.href=this.options[this.selectedIndex].value\">\n";
+							for ( $j = 1; $j <= $rowt4; $j++ )
+							{
+								echo "<option value=\"" . $adminfile . ".php?op=OrderCategory&amp;id=" . $row3['catid'] . "&amp;new=" . $j . "\"" . ( ($row3['weight'] == $j) ? " selected=\"selected\"" : "" ) . ">" . $j . "</option>\n";
+							}
+					echo "</select></td>\n";
+					$sobaiviet = $db->sql_numrows( $db->sql_query("SELECT * FROM ".$prefix."_stories where catid='" . $row3['catid'] . "'"));
+					echo "<td align=\"center\"><small> $storieshome</small></td>\n";
+			echo "<td align=\"center\"><select name=\"image[$a]\">";
+			for ( $i = 0; $i < sizeof($tlist); $i++ ) if ( $tlist[$i] != "" ) echo "<option name=\"catimage\" value=\"$tlist[$i]\"" . ( ($row3['catimage'] == $tlist[$i]) ? " selected=\"selected\"" : "" ).">$tlist[$i]\n";
+			echo "</select></td>\n";
+			echo "<td align=\"center\"><select name=\"linkhome[$a]\">";
+			for ( $i = 0; $i < 10; $i++ ) if ( $tlist[$i] != "" ) echo "<option name=\"linkhome\" value=\"$i\"" . ( ($row3['linkshome'] == $i) ? " selected=\"selected\"" : "" ).">$i\n";
+			echo "</select></td>\n";
+			echo "<td align=\"center\"><a href=\"" . $adminfile . ".php?op=DelCategory&cat=" . $row3['catid'] . "\">" . _DELETE . "</a></td>\n";
+			echo "<td align=\"center\"> $htl</td>\n";
+			echo "</tr>\n";
 				}
-				else
-				{
-					$storieshome = " [" . _CSTORIESHOME3 . "]";
-				}
-				echo "<tr><td>$title</td><td align=\"center\">$weight</td><td align=\"center\">";
-				if ( $parentid == 0 )
-				{
-					echo "$up_down";
-				}
-				else
-				{
-					echo "&nbsp;";
-				}
-				echo "</td><td align=\"center\">";
-				if ( $parentid == 0 )
-				{
-					echo "&nbsp;";
-				}
-				else
-				{
-					echo "$up_down";
-				}
-				if ( $db->sql_numrows($db->sql_query("select * from " . $prefix . "_stories_images where sid='0' AND home='0' AND catid='$catid'")) )
-				{
-					$htl = "<a title=\"" . _ADDIMG . "\" href=\"" . $adminfile . ".php?op=Imggallery&in=1&catid=$catid\"><img border=\"0\" src=\"../images/out.gif\" width=\"20\" height=\"20\"></a>";
-				}
-				else
-				{
-					$htl = "<a title=\"" . _ADDIMG . "\" href=\"" . $adminfile . ".php?op=Imggallery&in=1&catid=$catid\"><img border=\"0\" src=\"../images/center_l.gif\" width=\"7\" height=\"11\"></a>";
-				}
-				echo "</td><td align=\"center\">$functions</td><td align=\"center\">$storieshome</td><td align=\"center\">$linkshome</td><td align=\"center\" width=20>$htl</td></tr>";
-			}
-			echo "</table>";
-			CloseTable();
+			$a++;
 		}
+		echo "<input type=\"hidden\" name=\"op\" value=\"EditCategory\">";
+		echo "<tr>\n";
+		echo "<td colspan=\"9\" align=\"center\"><br><Br><input type=\"submit\" value=\""._SAVECHANGES."\"><br><br></td>\n";
+		echo "</tr>\n";
+		echo "</table>\n";
+		echo "</form></center>\n";
+   CloseTable();
+	echo "<br>";
+}
+		xaddcat();
 		include ( "../footer.php" );
 	}
 
@@ -865,15 +945,29 @@ if ( $adm_access == 1 )
 	 * @param mixed $catidori
 	 * @return
 	 */
-	function OrderCategory( $weightrep, $weight, $catidrep, $catidori )
+	function OrderCategory( )
 	{
-		global $adminfile, $prefix, $db;
-		$catidrep = intval( $catidrep );
-		$catidori = intval( $catidori );
-		$db->sql_query( "update " . $prefix . "_stories_cat set weight='$weight' where catid='$catidrep'" );
-		$db->sql_query( "update " . $prefix . "_stories_cat set weight='$weightrep' where catid='$catidori'" );
-		fixweightcat();
-		ncatlist();
+		global $db, $prefix, $adminfile, $currentlang, $multilingual;
+		$id = intval( $_GET['id'] );
+		$newk = intval( $_GET['new'] );
+		if ( $id and $newk )
+		{
+			$result = $db->sql_query(" select parentid from " . $prefix . "_stories_cat WHERE catid = '$id'");
+			$row = $db->sql_fetchrow($result);
+			if ($row)
+			{
+					$catid2 = $row['parentid'];
+					$weight = 0;
+					$chami = $db->sql_query( "select * from " . $prefix . "_stories_cat WHERE parentid = '$catid2' AND catid != '$id' ORDER BY weight" );
+ 					while ($row2 = $db->sql_fetchrow($chami)) {
+						$weight++;
+						if ( $weight == $newk ){	$weight++; }
+						$db->sql_query( "UPDATE " . $prefix . "_stories_cat SET weight=" . $weight . " WHERE catid=" . $row2['catid'] );
+						}
+					$db->sql_query( "UPDATE " . $prefix . "_stories_cat SET weight=" . $newk . " WHERE catid=" . $id );
+				
+	}
+	}
 		Header( "Location: " . $adminfile . ".php?op=ManagerCategory" );
 	}
 
@@ -883,10 +977,39 @@ if ( $adm_access == 1 )
 	 * 
 	 * @return
 	 */
+
+	
+	
+	
+function MoveCat()
+	{
+		global $db, $prefix, $adminfile, $currentlang, $multilingual;
+		$id = intval( $_GET['id'] );
+		$newk = intval( $_GET['new'] );
+		if ( $id) {
+		$result = $db->sql_query(" select parentid from " . $prefix . "_stories_cat WHERE catid = '$id'");
+			$row = $db->sql_fetchrow($result);
+			if ($row)
+			{
+					$catid2 = $row['parentid'];
+					$weight = 0;
+					$chami = $db->sql_query( "select * from " . $prefix . "_stories_cat WHERE parentid = '$catid2' AND catid != '$id' ORDER BY weight" );
+ 					while ($row2 = $db->sql_fetchrow($chami)) {
+						$weight++;
+						$db->sql_query( "UPDATE " . $prefix . "_stories_cat SET weight=" . $weight . " WHERE catid=" . $row2['catid'] );
+						}
+			}
+		list( $xweight ) = $db->sql_fetchrow( $db->sql_query("SELECT max(weight) AS xweight FROM " . $prefix . "_stories_cat WHERE parentid='$newk'") );
+			$weight = $xweight + 1;
+		$db->sql_query( "UPDATE " . $prefix . "_stories_cat SET parentid=" . $newk . ", weight='$weight' WHERE catid=" . $id );
+		}
+	Header( "Location: " . $adminfile . ".php?op=ManagerCategory" );
+	}
+
+	 
 	function AddCategory()
 	{
 		include ( "../header.php" );
-
 		newstopbanner();
 		xaddcat();
 		include ( "../footer.php" );
@@ -898,125 +1021,24 @@ if ( $adm_access == 1 )
 	 * @param mixed $catid
 	 * @return
 	 */
-	function EditCategory( $catid )
+	function EditCategory( )
 	{
 		global $adminfile, $prefix, $db;
-		include ( "../header.php" );
+	$id = $_POST['catid'];
+	$ten = $_POST['title'];
+	$ihome = $_POST['ihome'];
+	$image = $_POST['image'];
+	$linkhome = $_POST['linkhome'];
+	for($i=0; $i < sizeof($id); $i++) {
+		$chgid = intval($id[$i]);
+		if($chgid!=0) {
+		$numr2 = $db->sql_numrows($db->sql_query("SELECT * FROM ".$prefix."_stories_cat WHERE (title='".trim(stripslashes(FixQuotes($ten[$i])))."' and ihome='".intval($ihome[$i])."' and catimage='$image[$i]' and linkshome='$linkhome[$i]')"));
+		if($numr2 == 0)$db->sql_query("UPDATE ".$prefix."_stories_cat SET title='".trim(stripslashes(FixQuotes($ten[$i])))."', ihome=".intval($ihome[$i]).", catimage='$image[$i]', linkshome=$linkhome[$i]  WHERE catid=$chgid");
+	}
+	}
+	$db->sql_query("OPTIMIZE TABLE ".$prefix."_stories_cat");
+	info_exit( "<br><b>" . _CATSAVED . "ok</b><META HTTP-EQUIV=\"refresh\" content=\"2;URL=".$_SERVER['HTTP_REFERER']."\"><br><br>" );
 
-		newstopbanner();
-		OpenTable();
-		echo "<center><font class=\"option\"><b>" . _EDITCATEGORY . "</b></font><br><br>";
-		if ( ! $catid )
-		{
-			$sql = "select catid title from " . $prefix . "_stories_cat";
-			$result = $db->sql_query( $sql );
-			echo "<form action=\"" . $adminfile . ".php\" method=\"post\">";
-			echo "<b>" . _ASELECTCATEGORY . ": </b>";
-			echo "<select name=\"catid\">";
-			echo "<option name=\"catid\" value=\"0\">" . _THECATEGORY . "</option>";
-			while ( $row = $db->sql_fetchrow($result) )
-			{
-				$catid = intval( $row['catid'] );
-				$title = $row['title'];
-				echo "<option name=\"catid\" value=\"$catid\">$title</option>";
-			}
-			echo "</select>";
-			echo "<input type=\"hidden\" name=\"op\" value=\"EditCategory\">";
-			echo "<input type=\"submit\" value=\"" . _EDIT . "\"></form><br><br>";
-			echo "" . _NOARTCATEDIT . "";
-		}
-		else
-		{
-			$sql = "select * from " . $prefix . "_stories_cat where catid='$catid'";
-			$result = $db->sql_query( $sql );
-			$row = $db->sql_fetchrow( $result );
-			$title = $row['title'];
-			$parentid = intval( $row['parentid'] );
-			$catimage = $row['catimage'];
-			$ihome = intval( $row['ihome'] );
-			if ( $ihome == 1 )
-			{
-				$sel1 = "checked";
-				$sel2 = "";
-			}
-			else
-			{
-				$sel1 = "";
-				$sel2 = "checked";
-			}
-			$linkshome = $row['linkshome'];
-			echo "<form action=\"" . $adminfile . ".php\" method=\"post\">";
-			echo "<b>" . _CATEGORYNAME . ":</b> ";
-			echo "<input type=\"text\" name=\"title\" size=\"30\" value=\"$title\"> ";
-			echo "&nbsp;<b>" . _STPIC . ":</b> " . "<select name=\"catimage\">";
-			$path1 = explode( "/", "../images/cat/" );
-			$path = "$path1[0]/$path1[1]/$path1[2]";
-			$handle = opendir( $path );
-			while ( $file = readdir($handle) )
-			{
-				if ( (ereg("^([_0-9a-zA-Z]+)([.]{1})([_0-9a-zA-Z]{3})$", $file)) and $file != "AllTopics.gif" )
-				{
-					$tlist .= "$file ";
-				}
-			}
-			closedir( $handle );
-			$tlist = explode( " ", $tlist );
-			sort( $tlist );
-			for ( $i = 0; $i < sizeof($tlist); $i++ )
-			{
-				if ( $tlist[$i] != "" )
-				{
-					if ( $catimage == $tlist[$i] )
-					{
-						$sel = "selected";
-					}
-					else
-					{
-						$sel = "";
-					}
-					echo "<option name=\"catimage\" value=\"$tlist[$i]\" $sel>$tlist[$i]\n";
-				}
-			}
-			echo "</select><br>" . "<b>" . _PUBLISHINHOME . ":</b> " . "<input type=\"radio\" name=\"ihome\" value=\"1\" $sel1>" . _YES . "&nbsp;" . "<input type=\"radio\" name=\"ihome\" value=\"0\" $sel2>" . _NO . "<br>";
-			echo "<b>" . _CLINKSHOME1 . ":</b> " . "<select name=\"linkshome\">";
-			for ( $a = 0; $a <= 10; $a++ )
-			{
-				$sel = "";
-				if ( $a == $linkshome )
-				{
-					$sel = " selected";
-				}
-				echo "<option name=\"linkshome\"$sel>$a</option>\n";
-			}
-			echo "</select>";
-			if ( $db->sql_numrows($db->sql_query("select * from " . $prefix . "_stories_cat where parentid='$catid'")) == 0 )
-			{
-				echo "<br><b>" . _INCAT . ":</b> " . "<select name=\"parentid\">";
-				echo "<option value=\"0\">" . _NOINCAT . "</option>";
-				$sql2 = "select catid, title from " . $prefix . "_stories_cat WHERE parentid='0' AND catid!='$catid'";
-				$result2 = $db->sql_query( $sql2 );
-				while ( $row2 = $db->sql_fetchrow($result2) )
-				{
-					$catid2 = intval( $row2['catid'] );
-					$title2 = $row2['title'];
-					echo "<option value=\"$catid2\"";
-					if ( $catid2 == $parentid ) echo " selected";
-					echo ">$title2</option>";
-				}
-				echo "</select>&nbsp;";
-			}
-			else
-			{
-				echo "<br>" . _NOTEINCAT . "<input type=\"hidden\" name=\"parentid\" value=\"$parentid\"><br>";
-			}
-			echo "<input type=\"hidden\" name=\"catid\" value=\"$catid\">";
-			echo "<input type=\"hidden\" name=\"op\" value=\"SaveEditCategory\">";
-			echo "<input type=\"submit\" value=\"" . _SAVECHANGES . "\"><br><br>";
-			echo "</form>";
-		}
-		echo "</center>";
-		CloseTable();
-		include ( "../footer.php" );
 	}
 
 	/**
@@ -1395,7 +1417,7 @@ if ( $adm_access == 1 )
 			Header( "Location: " . $adminfile . ".php?op=ManagerCategory" );
 			exit();
 		}
-		$row = $db->sql_numrows( $db->sql_query("select title from " . $prefix . "_stories_cat where title='$title'") );
+		$row = $db->sql_numrows( $db->sql_query("select title from " . $prefix . "_stories_cat where title='$title' and parentid='$parentid'") );
 		if ( $row )
 		{
 			info_exit( "<center><font class=\"content\"><b>" . _CATEXISTS . "</b></font><br><br>" . _GOBACK . "</center>" );
@@ -3897,12 +3919,7 @@ if ( $adm_access == 1 )
 
 		newstopbanner();
 		OpenTable();
-		echo "<div align='center'><b>" . _COMMENTADMIN . "</b></div>\n";
-		CloseTable();
-		echo "<br>";
-		OpenTable();
-		echo "<br><br><center>" . "<form action=\"" . $adminfile . ".php\" method=\"post\">" . "" . _COMMID . ": <input type=\"text\" NAME=\"tid\" SIZE=\"10\"> " . "<select name=\"op\">" . "<option value=\"EditStoriesComment\" SELECTED>" . _EDIT . "</option>" . "<option value=\"RemoveStoriesComment\">" . _DELETE . "</option>" . "</select> " . "<input type=\"submit\" value=\"" . _GO . "\">" . "</form></center>";
-		CloseTable();
+		echo "<div align='center'><a href=\"" . $adminfile . ".php?op=Commentok\"><b>" . _COMMOK . "</b></a> | <a href=\"" . $adminfile . ".php?op=Comment\"><b>" . _COMMNO . "</b></a></div>\n";		CloseTable();
 		echo "<br>";
 		OpenTable();
 		$num_comno = $db->sql_fetchrow( $db->sql_query("SELECT COUNT(tid) FROM " . $prefix . "_stories_comments WHERE online='0'") );
@@ -3913,9 +3930,6 @@ if ( $adm_access == 1 )
 		$sql_comno = "SELECT a.tid as tid, a.sid as sid, a.name as name, a.comment as comment, b.title as title FROM " . $prefix . "_stories_comments a, " . $prefix . "_stories b WHERE b.sid=a.sid AND a.online=0 ORDER BY a.date DESC LIMIT $page, $perpage";
 		$res_comno = $db->sql_query( $sql_comno );
 		echo "<table width='100%' border='0' cellpadding='5' style='border-collapse: collapse'>\n";
-		echo "<tr>\n";
-		echo "<td align='center'><b>" . _COMMNO . "</b></td>\n";
-		echo "</tr>\n";
 		echo "<tr>\n";
 		echo "<td align='center'>\n";
 		echo "<table width='90%' border='1' cellpadding='3' cellspacing='1' style='border-collapse: collapse'>\n";
@@ -3947,7 +3961,11 @@ if ( $adm_access == 1 )
 		}
 		echo "</table>\n";
 		CloseTable();
-
+		echo "<br>";
+		OpenTable();
+		echo "<br><center>" . "<form action=\"" . $adminfile . ".php\" method=\"post\">" . "" . _COMMID . ": <input type=\"text\" NAME=\"tid\" SIZE=\"10\"> " . "<select name=\"op\">" . "<option value=\"EditStoriesComment\" SELECTED>" . _EDIT . "</option>" . "<option value=\"RemoveStoriesComment\">" . _DELETE . "</option>" . "</select> " . "<input type=\"submit\" value=\"" . _GO . "\">" . "</form></center>";
+		CloseTable();
+		echo "<br>";
 		include ( "../footer.php" );
 	}
 
@@ -3961,28 +3979,29 @@ if ( $adm_access == 1 )
 	{
 		global $adminfile, $db, $prefix;
 		include ( "../header.php" );
-
+		$sid = (isset($_GET['sid'])) ? intval($_GET['sid']) : 0;
+		if ($sid > 0) 
+		{
+		$sid2 = $sid;
+		$cha = "and sid='$sid2'";
+		$cha2 = "and a.sid='$sid2'";
+		list( $mi) = $db->sql_fetchrow( $db->sql_query("select title from " . $prefix . "_stories where sid='$sid'") );
+		$chu = "&sid=$sid";
+		}
 		newstopbanner();
 		OpenTable();
-		echo "<div align='center'><b>" . _COMMENTADMIN . "</b></div>\n";
+		echo "<div align='center'><a href=\"" . $adminfile . ".php?op=Commentok\"><b>" . _COMMOK . "</b></a> | <a href=\"" . $adminfile . ".php?op=Comment\"><b>" . _COMMNO . "</b></a></div>\n";
 		CloseTable();
 		echo "<br>";
 		OpenTable();
-		echo "<br><br><center>" . "<form action=\"" . $adminfile . ".php\" method=\"post\">" . "" . _COMMID . ": <input type=\"text\" NAME=\"tid\" SIZE=\"10\"> " . "<select name=\"op\">" . "<option value=\"EditStoriesComment\" SELECTED>" . _EDIT . "</option>" . "<option value=\"RemoveStoriesComment\">" . _DELETE . "</option>" . "</select> " . "<input type=\"submit\" value=\"" . _GO . "\">" . "</form></center>";
-		CloseTable();
-		echo "<br>";
-		OpenTable();
-		$num_comok = $db->sql_fetchrow( $db->sql_query("SELECT COUNT(tid) FROM " . $prefix . "_stories_comments WHERE online='1'") );
+		$num_comok = $db->sql_fetchrow( $db->sql_query("SELECT COUNT(tid) FROM " . $prefix . "_stories_comments WHERE online='1' $cha") );
 		$all_page = $num_comok[0] ? $num_comok[0] : 1;
 		$page = isset( $_GET['page'] ) ? intval( $_GET['page'] ) : 0;
-		$perpage = 10;
-		$base_url = "" . $adminfile . ".php?op=Commentok";
-		$sql_comok = "SELECT a.tid as tid, a.sid as sid, a.name as name, a.comment as comment, b.title as title FROM " . $prefix . "_stories_comments a, " . $prefix . "_stories b WHERE b.sid=a.sid AND a.online=1 ORDER BY a.date DESC LIMIT $page, $perpage";
+		$perpage = 15;
+		$base_url = "" . $adminfile . ".php?op=Commentok$chu";
+		$sql_comok = "SELECT a.tid as tid, a.sid as sid, a.name as name, a.comment as comment, b.title as title FROM " . $prefix . "_stories_comments a, " . $prefix . "_stories b WHERE b.sid=a.sid AND a.online=1 $cha2 ORDER BY a.date DESC LIMIT $page, $perpage";
 		$res_comok = $db->sql_query( $sql_comok );
-		echo "<table width='100%' border='0' cellpadding='5' style='border-collapse: collapse'>\n";
-		echo "<tr>\n";
-		echo "<td align='center'><b>" . _COMMOK . "</b></td>\n";
-		echo "</tr>\n";
+		echo "<center><font size=3><b>$mi</font><table width='100%' border='0' cellpadding='5' style='border-collapse: collapse'>\n";
 		echo "<tr>\n";
 		echo "<td align='center'>\n";
 		echo "<table width='90%' border='1' cellpadding='3' cellspacing='1' style='border-collapse: collapse'>\n";
@@ -3999,7 +4018,7 @@ if ( $adm_access == 1 )
 			echo "<tr>\n";
 			echo "<td align='center'>" . $row_comok['tid'] . "</td>\n";
 			echo "<td>" . $row_comok['name'] . "</td>\n";
-			echo "<td><a href=\"../modules.php?name=News&op=viewst&sid=" . $row_comok['sid'] . "\">" . $row_comok['title'] . "</a><br><i>" . $row_comok['comment'] . "</i></td>\n";
+			echo "<td><b><a href=\"../modules.php?name=News&op=viewst&sid=" . $row_comok['sid'] . "\">" . $row_comok['title'] . "</a></b><br>" . $row_comok['comment'] . "</td>\n";
 			echo "<td align='center'><a href='" . $adminfile . ".php?op=Commentche&id=" . $row_comok['tid'] . "'>" . _COMMCHE2 . "</a>&nbsp;|&nbsp;<a href='" . $adminfile . ".php?op=EditStoriesComment&amp;tid=" . $row_comok['tid'] . "'>" . _EDIT . "</a>&nbsp;|&nbsp;<a href='" . $adminfile . ".php?op=RemoveStoriesComment&amp;sid=" . $row_comok['sid'] . "&amp;tid=" . $row_comok['tid'] . "'>" . _DELETE . "</a>&nbsp;|&nbsp;<a href='" . $adminfile . ".php?op=Commentdel&id=" . $row_comok['tid'] . "'>" . _DELETEIT . "</a></td>\n";
 			echo "</tr>\n";
 			$i++;
@@ -4010,11 +4029,16 @@ if ( $adm_access == 1 )
 		if ( $all_page > $perpage )
 		{
 			echo "<tr>\n";
-			echo "<td>" . generate_page( $base_url, $all_page, $perpage, $page ) . "</td>\n";
+			echo "<td align=right>" . generate_page( $base_url, $all_page, $perpage, $page ) . "</td>\n";
 			echo "</tr>\n";
 		}
 		echo "</table>\n";
 		CloseTable();
+		echo "<br>";
+		OpenTable();
+		echo "<center>" . "<form action=\"" . $adminfile . ".php\" method=\"post\">" . "" . _COMMID . ": <input type=\"text\" NAME=\"tid\" SIZE=\"10\"> " . "<select name=\"op\">" . "<option value=\"EditStoriesComment\" SELECTED>" . _EDIT . "</option>" . "<option value=\"RemoveStoriesComment\">" . _DELETE . "</option>" . "</select> " . "<input type=\"submit\" value=\"" . _GO . "\">" . "</form></center>";
+		CloseTable();
+		echo "<br>";
 		include ( "../footer.php" );
 	}
 
@@ -4182,13 +4206,17 @@ if ( $adm_access == 1 )
 		case "ManagerCategory":
 			ManagerCategory();
 			break;
-
+			
+		case "MoveCat":
+			MoveCat();
+			break;
+			
 		case "OrderCategory":
-			OrderCategory( $weightrep, $weight, $catidrep, $catidori );
+			OrderCategory( );
 			break;
 
 		case "EditCategory":
-			EditCategory( $catid );
+			EditCategory( );
 			break;
 
 		case "CstorieshomeCategory":

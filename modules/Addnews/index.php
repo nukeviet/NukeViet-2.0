@@ -1,21 +1,21 @@
 <?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC1
+* @Program:		NukeViet CMS v2.0 RC3
 * @File name: 	Module Addnews
 * @Author: 		Nguyen Anh Tu (Nukeviet Group)
 * @Version: 	2.0
 * @Date: 		06.07.2009
 * @Website: 	www.nukeviet.vn
 * @Contact: 	anht@mail.ru
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
 $module_name = basename( dirname(__file__) );
 @require_once ( "mainfile.php" );
 get_lang( $module_name );
-get_lang( News );
+get_lang("News");
 if ( file_exists($datafold . "/config_News.php") ) @require_once ( $datafold . "/config_News.php" );
 if ( defined('_MODTITLE') ) $module_title = _MODTITLE;
 $index = ( defined('MOD_BLTYPE') ) ? MOD_BLTYPE : 1;
@@ -45,7 +45,7 @@ if ( ! defined('IS_ADMMOD') )
 	}
 }
 
-$save = intval( $_POST['save'] );
+$save = isset( $_POST['save'] ) ? intval( $_POST['save'] ) : 0;
 $error = "";
 if ( $save )
 {

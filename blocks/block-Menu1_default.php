@@ -1,13 +1,13 @@
 <?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC1
+* @Program:		NukeViet CMS v2.0 RC3
 * @File name: 	Block Menu
 * @Author: 		Nguyen The Hung (Nukeviet Group)
 * @Version: 	3.1
 * @Date: 		29.06.2009
 * @Website: 	http://mangvn.org
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -27,6 +27,7 @@ $cao_menu = "20px";
 $mau_menu = "2";
 
 // Màu nền menu mặc định
+$nen_menu = "";
 //$nen_menu = $bgcolor1;
 // màu mẫu: #FAFAFA
 
@@ -203,9 +204,9 @@ $sql = "SELECT title, custom_title, view FROM " . $prefix . "_modules WHERE acti
 $result = $db->sql_query( $sql );
 while ( $row = $db->sql_fetchrow($result) )
 {
-	$m_title = $row[title];
-	$custom_title = $row[custom_title];
-	$view = $row[view];
+	$m_title = $row['title'];
+	$custom_title = $row['custom_title'];
+	$view = $row['view'];
 	$m_title2 = ereg_replace( "_", " ", $m_title );
 	if ( $custom_title != "" )
 	{

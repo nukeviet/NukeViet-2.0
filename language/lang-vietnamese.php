@@ -3,10 +3,10 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC3
+* @Date: 		01.03.2010
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -154,7 +154,6 @@ define( "_BROKENDOWN", "File hỏng" );
 define( "_PAGEGENERATION", "Thời gian mở trang:" );
 define( "_SECONDS", "giây" );
 define( "_YOUHAVEONEMSG", "Bạn có tin nhắn cá nhân mới" );
-define( "_YOUHAVE", "Bạn có" );
 define( "_NEWPMSG", "Tin nhắn mới" );
 define( "_CONTRIBUTEDBY", "Cộng tác viên" );
 define( "_CHAT", "Chat" );

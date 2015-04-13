@@ -1,12 +1,12 @@
 <?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC1
+* @Program:		NukeViet CMS v2.0 RC3
 * @File name: 	Module Contact
 * @Version: 	2.1
 * @Date: 		25.06.2009
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -86,7 +86,7 @@ function contact_form()
 {
 	global $db, $module_name, $sitename, $user, $prefix, $cookie, $user_prefix, $sitekey;
 	include ( "header.php" );
-	$guitoi = intval( $_GET['to'] );
+	$guitoi = isset( $_GET['to'] ) ? intval( $_GET['to'] ) : 0;
 	OpenTable();
 	echo "<center><b><font class=\"title\">" . _FORMHEADER . " $sitename</font></b>";
 	echo "</center>";
@@ -265,11 +265,7 @@ function submit( $dpid, $cname, $youradd, $yourphone, $from, $email, $message )
 		include ( "footer.php" );
 		exit;
 	}
-
-	if ( ereg("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,6}$", $from) )
-	{
-	}
-	else
+	if (! preg_match("/^[a-z0-9]([a-z0-9_.-]+)*[a-z0-9]@([a-z0-9]([a-z0-9_-]+)*[a-z0-9].)+[a-z]{2,6}$/i", $from) )
 	{
 		OpenTable();
 		echo "<br><center><font class=\"title\"><b>" . _INVALIDEMAIL . "</b></font>";

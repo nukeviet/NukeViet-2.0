@@ -1,12 +1,12 @@
 <?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC1
+* @Program:		NukeViet CMS v2.0 RC3
 * @File name: 	frend.php @ Module News
 * @Version: 	2.0
-* @Date: 		01.05.2009
+* @Date: 		01.03.2010
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -88,7 +88,7 @@ if ( (defined('IS_ADMMOD')) || ($newsfriend == 1) || ($newsfriend == 2 and (defi
 			{
 				exit;
 			}
-			if ( (strlen($yname) > 30) || (! $yname) || ($yname == "") || (! $ymail) || ($ymail == "") || (! eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,6}$", $ymail)) || (strrpos($ymail, ' ') > 0) || (! $fmail) || ($fmail == "") || (! eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,6}$", $fmail)) || (strrpos($fmail, ' ') > 0) )
+			if ( (strlen($yname) > 30) || (! $yname) || ($yname == "") || (! $ymail) || ($ymail == "") || (! preg_match("/^[a-z0-9]([a-z0-9_.-]+)*[a-z0-9]@([a-z0-9]([a-z0-9_-]+)*[a-z0-9].)+[a-z]{2,6}$/i", $ymail)) || (strrpos($ymail, ' ') > 0) || (! $fmail) || ($fmail == "") || (! preg_match("/^[a-z0-9]([a-z0-9_.-]+)*[a-z0-9]@([a-z0-9]([a-z0-9_-]+)*[a-z0-9].)+[a-z]{2,6}$/i", $fmail)) || (strrpos($fmail, ' ') > 0) )
 			{
 				echo "<html>\n<head>\n" . "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=" . _CHARSET . "\">\n" . "<title>" . _FRIEND . "</title>\n</head>\n<body bgcolor=\"#ECF3FB\">\n" . "<hr size=\"1\" color=\"#DC0312\"><center>$sitename - " . _FRIEND . "<hr size=\"1\" color=\"#DC0312\">\n" . "<br><br><center><font class=\"content\">" . _ACEROR5 . "<br><br>" . _GOBACK . "</font></center><br><br>\n" . "</form>\n<hr size=\"1\" color=\"#DC0312\"><button onclick=\"window.close();\">" . _CLOSEWIN . "</button></center><hr size=\"1\" color=\"#DC0312\">\n" . "</body>\n</html>";
 				exit();

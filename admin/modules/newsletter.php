@@ -3,10 +3,10 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC3
+* @Date: 		01.03.2010
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -760,7 +760,7 @@ if ( $row2['radminsuper'] == 1 || $auth_user == 1 )
 		global $adminfile, $db, $prefix;
 		$new_email = strtolower( $new_email );
 		$actionletter = 1;
-		if ( (! $new_email) || ($new_email == "") || (! eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,6}$", $new_email)) || (strrpos($new_email, ' ') > 0) )
+		if ( (! $new_email) || ($new_email == "") || (! preg_match("/^[a-z0-9]([a-z0-9_.-]+)*[a-z0-9]@([a-z0-9]([a-z0-9_-]+)*[a-z0-9].)+[a-z]{2,6}$/i", $new_email)) || (strrpos($new_email, ' ') > 0) )
 		{
 			$info = "" . _NEW_NOEMAIL . "";
 			$actionletter = 0;

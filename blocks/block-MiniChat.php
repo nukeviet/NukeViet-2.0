@@ -3,10 +3,10 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC3
+* @Date: 		01.03.2010
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -46,12 +46,15 @@ if ( defined('IS_USER') and isset($_POST['chat']) and $_POST['chat'] == "send" a
 	$contentc = "<?php\n\n";
 	$fctime = date( "d-m-Y H:i:s", filectime("" . INCLUDE_PATH . "" . $datafold . "/chat.php") );
 	$fmtime = date( "d-m-Y H:i:s" );
+	$c_chater = htmlspecialchars( stripslashes(FixQuotes(filter_text($_POST['chater'], "nohtml"))) );
+	$c_send = htmlspecialchars( stripslashes(FixQuotes(filter_text($_POST['send'], "nohtml"))) );
+	$c_send = str_replace('|',' ', $c_send);
 	$contentc .= "// File: chat.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Do not change anything in this file!\n\n";
 	$contentc .= "if ((!defined('NV_SYSTEM')) AND (!defined('NV_ADMIN'))) {\n";
 	$contentc .= "die('Stop!!!');\n";
 	$contentc .= "}\n";
 	$contentc .= "\n";
-	$contentc .= "\$chatrow[] = \"" . htmlspecialchars( stripslashes(FixQuotes(filter_text($_POST['chater'], "nohtml"))) ) . "|" . htmlspecialchars( stripslashes(FixQuotes(filter_text($_POST['send'], "nohtml"))) ) . "|" . time() . "\";\n";
+	$contentc .= "\$chatrow[] = \"" . $c_chater . "|" . $c_send . "|" . time() . "\";\n";
 	for ( $x = 0; $x < sizeof($chatrow); $x++ )
 	{
 		$chatrow2 = explode( "|", $chatrow[$x] );

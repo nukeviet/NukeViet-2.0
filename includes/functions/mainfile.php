@@ -3,10 +3,10 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC2
+* @Version: 	2.0 RC3
 * @Date: 		28.05.2009
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -59,6 +59,7 @@ if ( $eror_value )
 {
 	@ini_set( 'display_errors', 1 );
 	error_reporting( E_ALL ^ E_NOTICE );
+	//error_reporting( E_ALL);
 }
 else
 {

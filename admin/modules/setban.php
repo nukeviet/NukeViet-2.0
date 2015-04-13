@@ -3,10 +3,10 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC3
+* @Date: 		01.03.2010
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -35,9 +35,9 @@ if ( defined('IS_SPADMIN') )
 	 * @param mixed $bad_ip
 	 * @return
 	 */
-	function ConfigureBan( $bad_ip )
+	function ConfigureBan()
 	{
-		global $adminfile, $datafold, $ip_ban;
+		global $adminfile, $datafold, $db, $prefix;
 		include ( "../header.php" );
 		GraphicAdmin();
 		OpenTable();
@@ -45,89 +45,86 @@ if ( defined('IS_SPADMIN') )
 		CloseTable();
 		echo "<br>";
 		OpenTable();
-		$ip_ban_list = ereg_replace( "\|", ", ", $ip_ban );
-		echo "<form action=\"" . $adminfile . ".php\" method=\"post\">\n" . "<table border=\"0\"><tr><td valign=top>\n" . "<font class=\"option\"><b>" . _BANBADADRES . " </b></font></td>" . "<td>$ip_ban_list</td></tr>\n" . "<tr><td>" . _BANADDADRES . "</td>" . "<td><input type=\"text\" size=\"30\" name=\"ip_ban_add\" value=\"$bad_ip\"></td></tr>" . "<tr><td>" . _BANDELADRES . "</td>" . "<td><select name=\"ip_ban_del\"><option value=\"\" selected></option>\n";
-
-		$ip_ban_array = explode( "|", $ip_ban );
-		$ip_num = count( $ip_ban_array ) - 1;
-		$i = 0;
-		while ( $i <= $ip_num )
-		{
-			echo "<option value=\"$ip_ban_array[$i]\">$ip_ban_array[$i]</option>\n";
-			$i++;
+		$ip_ban_list = "";
+		$bad_ip = ( isset($_GET['bad_ip']) ) ? trim( $_GET['bad_ip'] ) : (( isset($_POST['bad_ip']) ) ? trim( $_POST['bad_ip'] ) : "");
+		
+		echo"<p align=\"center\"><b>" . _BANBADADRES . " </b></p>";
+		$a = 0;
+		$result = $db->sql_query("SELECT `id`, `banip`, `settime` FROM `" . $prefix . "_banip`");
+		echo"<table border=\"1\" cellpadding=\"3\" cellspacing=\"3\" align=\"center\" style=\"border-collapse: collapse;border: 1px solid #CCCCCC;\">";
+			echo"<tr align=\"center\" style=\"background-color: #E4E4E4;font-weight: bold\"><td><b>STT</b></td><td><b>IP</b></td><td><b>Time</b></td><td>"._FUNCTIONS."</tr>";
+		while ( list($id, $banip, $settime) = $db->sql_fetchrow($result) ) {
+			$a++;
+			echo"<tr><td align=\"center\">" . $a . "</td>" . "<td>".$banip."</td><td>".date("H:s d/m/Y", $settime)."</td><td align=\"center\"><a href=\"" . $adminfile . ".php?op=SaveSetBan&id=".$id."\">"._DELETE."</td></tr>";
 		}
-
-		echo "</select>" . "<input type=\"hidden\" name=\"op\" value=\"SaveSetBan\">\n";
-		echo "</td></tr><tr><td></td><td>" . "<input type=\"submit\" value=\"" . _BANSAVED . "\"></center>\n" . "</form>" . "</td></tr>\n" . "</table>\n";
+		echo"</table>\n";
+		echo "<br><br><form action=\"" . $adminfile . ".php\" method=\"post\">\n" . "<table border=\"0\" align=\"center\">
+		<tr><td>" . _BANADDADRES . "</td>" . "<td><input type=\"text\" size=\"16\" name=\"ip_ban_add\" value=\"$bad_ip\"></td>";
+		echo "<td><input type=\"hidden\" name=\"op\" value=\"SaveSetBan\">\n";
+		echo "" . "<input type=\"submit\" value=\"" . _BANSAVED . "\"></center>\n" . "</form>" . "</td></tr>\n" . "</table>\n";
 		CloseTable();
 		echo "<br>";
 		include ( "../footer.php" );
 	}
 
-	/**
-	 * SaveSetBan()
-	 * 
-	 * @param mixed $ip_ban_add
-	 * @param mixed $uname_ban_add
-	 * @param mixed $ip_ban_del
-	 * @param mixed $uname_ban_del
-	 * @return
-	 */
-	function SaveSetBan( $ip_ban_add, $uname_ban_add, $ip_ban_del, $uname_ban_del )
+	function SaveSetBan()
 	{
-		global $checkmodname, $adminfile, $datafold, $ip_ban;
-		$ip_ban_add = trim( $ip_ban_add );
-		$ip_ban_del = trim( $ip_ban_del );
-		$ip_ban = trim( $ip_ban );
-		if ( $ip_ban_del != "" )
-		{
-			$ip_ban = ereg_replace( "\|$ip_ban_del", "", $ip_ban );
-			$ip_ban = ereg_replace( "" . $ip_ban_del . "\|", "", $ip_ban );
-			$ip_ban = ereg_replace( "$ip_ban_del", "", $ip_ban );
-		}
-
-
-		if ( $ip_ban_add != "" )
-		{
-			if ( $ip_ban != "" )
-			{
-				$ip_ban_add = "" . $ip_ban . "|$ip_ban_add";
+		global $db, $prefix, $adminfile, $datafold;
+		if (isset($_POST['ip_ban_add'])) {
+			$ip_ban_add = trim($_POST['ip_ban_add']);
+			if (preg_match( '/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/', $ip_ban_add) ) {
+				$db->sql_query("CREATE TABLE IF NOT EXISTS `" . $prefix . "_banip` (
+				  `id` int(10) NOT NULL auto_increment,
+  				  `banip` varchar(20) NOT NULL default '',
+				  `settime` int(11) NOT NULL default '1',
+				  PRIMARY KEY  (`id`),
+				  UNIQUE KEY `banip` (`banip`)
+				)");
+				 $db->sql_query("INSERT INTO " . $prefix . "_banip (`id`, `banip`, `settime`) VALUES (NULL, '".$ip_ban_add."', UNIX_TIMESTAMP())");
 			}
 		}
-		else
-		{
-			$ip_ban_add = $ip_ban;
+		elseif (isset($_GET['id'])) {
+			 $db->sql_query("DELETE FROM " . $prefix . "_banip WHERE `id` = '".intval($_GET['id'])."' LIMIT 1");
+		}
+		
+		$filename = "../".$datafold."/config_banip.php";
+		if (!file_exists($filename)) {
+			file_put_contents($filename, "");
 		}
 
-		@chmod( "../$datafold/config_" . $checkmodname . ".php", 0777 );
-		@$file = fopen( "../$datafold/config_" . $checkmodname . ".php", "w" );
-		$content = "<?php\n\n";
-		$fctime = date( "d-m-Y H:i:s", filectime("../$datafold/config_" . $checkmodname . ".php") );
-		$fmtime = date( "d-m-Y H:i:s" );
-		$content .= "// File: config_" . $checkmodname . ".php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Do not change anything in this file!\n\n";
-		$content .= "if ((!defined('NV_SYSTEM')) AND (!defined('NV_ADMIN'))) {\n";
-		$content .= "die();\n";
-		$content .= "}\n";
-		$content .= "\$ip_ban = \"$ip_ban_add\";\n";
-		$content .= "\n";
-		$content .= "?>";
-		@$writefile = fwrite( $file, $content );
-		fclose( $file );
-		@chmod( "../$datafold/config_" . $checkmodname . ".php", 0604 );
-		header( "Location: " . $adminfile . ".php?op=ConfigureBan" );
-
-	}
+		@chmod($filename, 0777 );
+		if (is_writable($filename)) {
+			@$file = fopen($filename, "w" );
+			$content = "<?php\n\n";
+			$content .= "if ((!defined('NV_SYSTEM')) AND (!defined('NV_ADMIN'))) {\n";
+			$content .= "\tdie('Stop!!!');\n";
+			$content .= "}\n";
+			$content .= "\$array_ip_ban = array();\n";
+			$result = $db->sql_query("SELECT `banip` FROM `" . $prefix . "_banip`");
+			while ( list($banip) = $db->sql_fetchrow($result) ) {
+				$content .= "\$array_ip_ban[] ='".$banip."';\n";
+			}
+			$content .= "?>";
+			@fwrite( $file, $content );
+			@fclose( $file );
+			@chmod($file, 0604 );
+			Header( "Location: " . $adminfile . ".php?op=ConfigureBan" );
+		}
+		else {
+			info_exit("The file ".$filename." is not writable");
+		}
+	}	
 
 
 	switch ( $op )
 	{
 
 		case "ConfigureBan":
-			ConfigureBan( $bad_ip );
+			ConfigureBan();
 			break;
 
 		case "SaveSetBan":
-			SaveSetBan( $ip_ban_add, $uname_ban_add, $ip_ban_del, $uname_ban_del );
+			SaveSetBan();
 			break;
 
 	}

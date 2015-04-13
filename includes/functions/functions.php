@@ -3,10 +3,10 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC2
+* @Version: 	2.0 RC3
 * @Date: 		28.05.2009
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -157,7 +157,7 @@ function compress_output_deflate( $output )
  */
 function nv_getClientIP()
 {
-	$client_ip = $_SERVER['HTTP_CLIENT_IP'];
+	$client_ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] :"";
 	if ( ! strstr($client_ip, ".") ) $client_ip = $_SERVER['REMOTE_ADDR'];
 	if ( ! strstr($client_ip, ".") ) $client_ip = getenv( "REMOTE_ADDR" );
 	return trim( $client_ip );
@@ -174,15 +174,12 @@ function nv_is_ban( $client_ip = "" )
 	global $datafold;
 	if ( empty($client_ip) ) $client_ip = nv_getClientIP();
 	$return = false;
-	$ip_ban = "";
-	if ( file_exists(INCLUDE_PATH . $datafold . "/config_Setban.php") and filesize(INCLUDE_PATH . $datafold . "/config_Setban.php") != 0 )
-	{
-		@include ( INCLUDE_PATH . $datafold . "/config_Setban.php" );
-
-	}
-	if ( ! empty($ip_ban) and in_array($client_ip, explode("|", $ip_ban)) )
-	{
-		$return = true;
+	if ( file_exists(INCLUDE_PATH . $datafold . "/config_banip.php")){
+		@include ( INCLUDE_PATH . $datafold . "/config_banip.php" );
+		if (in_array($client_ip, $array_ip_ban) )
+		{
+			$return = true;
+		}
 	}
 	return $return;
 }
@@ -274,7 +271,7 @@ function del_online( $del )
 function get_lang( $module )
 {
 	global $currentlang, $language;
-	if ( $module == admin )
+	if ( $module == "admin")
 	{
 		if ( file_exists("language/lang-$currentlang.php") ) @include_once ( "language/lang-$currentlang.php" );
 		elseif ( file_exists("language/lang-$language.php") ) @include_once ( "language/lang-$language.php" );
@@ -622,7 +619,10 @@ function check_html( $str, $strip = "" )
 
 
 	include ( "" . INCLUDE_PATH . "$datafold/config.php" );
-	if ( $strip == "nohtml" ) $AllowableHTML = array( '' );
+	if ( $strip == "nohtml" ) {
+		$AllowableHTML = array( '' );
+		$str = strip_tags( $str );
+	}
 	$str = stripslashes( $str );
 	$str = eregi_replace( "<[[:space:]]*([^>]*)[[:space:]]*>", '<\\1>', $str );
 

@@ -3,10 +3,10 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC3
+* @Date: 		01.03.2010
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -297,7 +297,7 @@ if ( $adm_access == 1 )
 	{
 		global $bad_mail, $datafold, $stop, $user_prefix, $db;
 		$user_email = strtolower( $user_email );
-		if ( (! $user_email) || ($user_email == "") || (! eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,6}$", $user_email)) ) $stop = "<center>" . _ERRORINVEMAIL . "</center><br>";
+		if ( (! $user_email) || ($user_email == "") || (! preg_match("/^[a-z0-9]([a-z0-9_.-]+)*[a-z0-9]@([a-z0-9]([a-z0-9_-]+)*[a-z0-9].)+[a-z]{2,6}$/i", $user_email)) ) $stop = "<center>" . _ERRORINVEMAIL . "</center><br>";
 		if ( strrpos($user_email, ' ') > 0 ) $stop = "<center>" . _ERROREMAILSPACES . "</center>";
 		$bad_email = explode( "|", $bad_mail );
 		foreach ( $bad_email as $bad_mail )
@@ -356,12 +356,7 @@ if ( $adm_access == 1 )
 		GraphicAdmin();
 		admusertitle();
 		search_user( $sqltable = "users", $go_result = "modifyUser" );
-		$udt = array();
-		if ( file_exists("../$datafold/ulist.php") )
-		{
-			include_once ( "../$datafold/ulist.php" );
-		}
-		$numrows = sizeof( $udt );
+		list($numrows) = $db->sql_fetchrow( $db->sql_query("SELECT count(*) FROM ".$user_prefix."_users WHERE username!='' and username!='Anonymous'") );
 		$Today = time() - 86400;
 
 		$sql = "SELECT user_id, username, user_email FROM " . $user_prefix . "_users WHERE user_regdate >= $Today  AND user_id!=1 ORDER BY user_id DESC";
@@ -460,6 +455,7 @@ if ( $adm_access == 1 )
 	function UsersConfig()
 	{
 		global $allowuserreg, $allowuserlogin, $useactivate, $nick_max, $nick_min, $pass_max, $pass_min, $expiring, $userredirect, $sendmailuser, $send2mailuser, $allowmailchange, $bad_mail, $bad_nick, $suspend_nick, $adminfile, $datafold;
+		global $db, $prefix, $user_prefix;
 		include ( "../header.php" );
 
 		admusertitle();
@@ -606,13 +602,7 @@ if ( $adm_access == 1 )
 		$suspend_nick = str_replace( "|", ", ", $suspend_nick );
 		if ( isset($_GET['chng_uid']) )
 		{
-			$udt = array();
-			if ( file_exists("../$datafold/ulist.php") )
-			{
-				include_once ( "../$datafold/ulist.php" );
-			}
-			$unm = explode( "|", $udt[intval($_GET['chng_uid'])] );
-			$unm = $unm[0];
+			list($unm) = $db->sql_fetchrow( $db->sql_query("SELECT username FROM " . $user_prefix . "_users WHERE user_id='".intval($_GET['chng_uid'])."'") );
 			if ( $unm != "" and ! eregi("$unm", $suspend_nick) )
 			{
 				if ( $suspend_nick != "" )
@@ -788,7 +778,6 @@ if ( $adm_access == 1 )
 			}
 			else
 			{
-				ulist();
 				if ( $sendmailuser == 1 )
 				{
 					$message = _WELCOMETO . " $sitename!\r\n\r\n";
@@ -937,7 +926,6 @@ if ( $adm_access == 1 )
 			{
 				$db->sql_query( "update " . $user_prefix . "_users set username='$chng_uname', name='$chng_name', lastname='$chng_lastname', viewuname='$chng_viewuname', user_email='$chng_email', user_website='$chng_url', user_icq='$chng_user_icq', user_telephone='$chng_user_telephone', user_from='$chng_user_from', user_interests='$chng_user_intrest', user_viewemail='$chng_user_viewemail', user_sig='$chng_user_sig' where user_id='$chng_uid'" );
 			}
-			ulist();
 			Header( "Location: " . $adminfile . ".php?op=modifyUser&chng_uid=$chng_uid" );
 		}
 		else
@@ -1010,7 +998,6 @@ if ( $adm_access == 1 )
 				mail( $del_mail, $subject, $message, $mailhead );
 			}
 			$db->sql_query( "delete from " . $user_prefix . "_users where user_id='$del_uid'" );
-			ulist();
 		}
 		Header( "Location: " . $adminfile . ".php?op=mod_users" );
 	}
@@ -1219,7 +1206,6 @@ if ( $adm_access == 1 )
 			$db->sql_query( "INSERT INTO " . $user_prefix . "_users (user_id, username, viewuname, user_email, user_regdate, user_password, opros, user_avatar, user_avatar_type) VALUES (NULL, '$chng_uname', '$chng_viewuname', '$chng_email', '$user_regdate', '$cpass', '$chng_opros', 'gallery/blank.gif', '3')" );
 			$db->sql_query( "DELETE FROM " . $user_prefix . "_users_temp WHERE user_id='$chng_uid'" );
 			$db->sql_query( "OPTIMIZE TABLE " . $user_prefix . "_users_temp" );
-			ulist();
 			if ( $sendmailuser == 1 )
 			{
 				$message = "" . _WELCOMETO . " $sitename!\r\n\r\n";

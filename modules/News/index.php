@@ -1,12 +1,12 @@
 <?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC1
+* @Program:		NukeViet CMS v2.0 RC3
 * @File name: 	Module News
 * @Version: 	2.0
 * @Date: 		13.06.2009
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -877,7 +877,7 @@ function viewst()
 			}
 			//---- form thao luan ------
 			echo "<script language=\"Javascript\" type=\"text/javascript\">\n";
-			echo "   var cfilter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;\n";
+			echo "   var cfilter = /^([a-zA-Z0-9_.-])+\@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;\n";
 			echo "function checkMail(field){\n";
 			echo "   if (cfilter.test(field)) {\n";
 			echo "      return true;\n";
@@ -1072,7 +1072,7 @@ function addcomment()
 			if ( strlen($postname) < 3 || (strlen($postname) > 50) )
 			{
 				$error = _ERCOM1;
-			} elseif ( ! eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,6}$", $postemail) )
+			} elseif ( ! preg_match("/^[a-z0-9]([a-z0-9_.-]+)*[a-z0-9]@([a-z0-9]([a-z0-9_-]+)*[a-z0-9].)+[a-z]{2,6}$/i", $postemail) )
 			{
 				$error = _ERCOM2;
 			} elseif ( strlen($postcomment) < 3 )
@@ -1106,7 +1106,7 @@ function addcomment()
 	include ( "header.php" );
 	//---- form thao luan ------
 	echo "<script language=\"Javascript\" type=\"text/javascript\">\n";
-	echo "   var cfilter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;\n";
+	echo "   var cfilter = /^([a-zA-Z0-9_.-])+\@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;\n";
 	echo "function checkMail(field){\n";
 	echo "   if (cfilter.test(field)) {\n";
 	echo "      return true;\n";
@@ -1638,7 +1638,7 @@ function archive( $catid, $pozit, $day, $month, $year )
 	$page = ( isset($_GET['page']) ) ? intval( $_GET['page'] ) : 0;
 	$all_page = ( $numf[0] ) ? $numf[0] : 1;
 	$per_page = intval( $newspagenum );
-	$base_url = "modules.php?name=$module_name&op=viewtop&topicid=$topicid";
+    $base_url = "modules.php?name=$module_name&op=archive&day=$day&month=$month&year=$year&catid=$catid&pozit=$pozit";
 	$result = $db->sql_query( "SELECT * FROM " . $prefix . "_stories WHERE $p $querylang order by sid DESC LIMIT $page,$per_page" );
 	include ( "header.php" );
 	echo "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n<tr>\n<td valign=\"top\">";
@@ -1805,6 +1805,7 @@ function archive( $catid, $pozit, $day, $month, $year )
 	include ( "footer.php" );
 }
 
+$op = isset($_GET['op']) ? $_GET['op'] :(isset($_POST['op']) ? $_POST['op'] :"");
 switch ( $op )
 {
 

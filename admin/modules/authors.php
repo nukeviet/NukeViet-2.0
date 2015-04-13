@@ -3,10 +3,10 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC3
+* @Date: 		01.03.2010
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -559,7 +559,7 @@ if ( defined('IS_SPADMIN') )
 			{
 				$badaddadmin = 1;
 				$badinfo = "" . _BADNICKADMIN . "";
-			} elseif ( (! eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,6}$", $add_email)) || (strrpos($add_email, ' ') > 0) || ($db->sql_numrows($db->sql_query("SELECT * FROM " . $prefix . "_authors WHERE email='$add_email'")) > 0) )
+			} elseif ( (! preg_match("/^[a-z0-9]([a-z0-9_.-]+)*[a-z0-9]@([a-z0-9]([a-z0-9_-]+)*[a-z0-9].)+[a-z]{2,6}$/i", $add_email)) || (strrpos($add_email, ' ') > 0) || ($db->sql_numrows($db->sql_query("SELECT * FROM " . $prefix . "_authors WHERE email='$add_email'")) > 0) )
 			{
 				$badaddadmin = 1;
 				$badinfo = "" . _BADMAILADMIN . "";
@@ -824,7 +824,7 @@ if ( defined('IS_SPADMIN') )
 			{
 				$badaddadmin = 1;
 				$badinfo = "" . _BADNICKADMIN . "";
-			} elseif ( ($chng_email != $check['email']) and ((! eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,6}$", $chng_email)) || (strrpos($chng_email, ' ') > 0) || ($db->sql_numrows($db->sql_query("SELECT * FROM " . $prefix . "_authors WHERE email='$chng_email'")) > 0)) )
+			} elseif ( ($chng_email != $check['email']) and ((! preg_match("/^[a-z0-9]([a-z0-9_.-]+)*[a-z0-9]@([a-z0-9]([a-z0-9_-]+)*[a-z0-9].)+[a-z]{2,6}$/i", $chng_email)) || (strrpos($chng_email, ' ') > 0) || ($db->sql_numrows($db->sql_query("SELECT * FROM " . $prefix . "_authors WHERE email='$chng_email'")) > 0)) )
 			{
 				$badaddadmin = 1;
 				$badinfo = "" . _BADMAILADMIN . "";

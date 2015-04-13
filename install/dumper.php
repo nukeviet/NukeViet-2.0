@@ -1,13 +1,13 @@
 <?php
 
 /*
-* @Program:	NukeViet CMS
+* @Program:		NukeViet CMS
 * @File name: 	NukeViet Setup
-* @Author: 	NukeViet Group
-* @Version: 	2.0 RC2
-* @Date: 		07.07.2009
+* @Author: 		NukeViet Group
+* @Version: 	2.0 RC3
+* @Date: 		01.03.2010
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -309,6 +309,125 @@ $db->sql_query( "CREATE TABLE " . $prefix . "_stories (
   KEY topicid (topicid)
 )" );
 
+$db->sql_query( "INSERT INTO " . $user_prefix . "_stories VALUES ( '1', '1', '', 'Ra mắt công ty mã nguồn mở đầu tiên tại Việt Nam', '2010-03-01 00:00:01', 'Mã nguồn mở NukeViet vốn đã quá quen thuộc với cộng đồng CNTT Việt Nam trong mấy năm qua. Tuy chưa hoạt động chính thức, nhưng chỉ trong khoảng 5 năm gần đây, mã nguồn mở NukeViet đã được dùng phổ biến ở Việt Nam, áp dụng ở hầu hết các lĩnh vực, từ tin tức đến thương mại điện tử, từ các website cá nhân cho tới những hệ thống website doanh nghiệp.', 'Để chuyên nghiệp hóa việc phát hành mã nguồn mở NukeViet, Ban quản trị 
+NukeViet quyết định thành lập doanh nghiệp chuyên quản NukeViet mang tên
+ <span style=\"font-weight: bold;\">Công ty cổ phần Phát triển nguồn mở Việt Nam</span> (Viết tắt là 
+VINADES.,JSC), chính thức ra 
+mắt vào 
+ngày 25-2-2010 (trụ sở tại 67B/35 Khương Hạ, Khương Đình, Thanh Xuân, Hà
+ Nội) nhằm phát triển, phổ biến hệ thống NukeViet tại Việt Nam.<br /><br />Theo 
+ông Nguyễn Anh Tú, Chủ tịch HĐQT VINADES, công ty sẽ phát triển bộ mã 
+nguồn NukeViet nhất quán theo con đường mã nguồn mở đã chọn, chuyên 
+nghiệp và quy mô 
+hơn bao giờ hết. Đặc biệt là hoàn toàn miễn phí đúng tinh thần mã nguồn 
+mở quốc tế. <br /><br />NukeViet là một hệ quản trị nội dung mã nguồn
+ mở (Opensource Content Management 
+System) thuần Việt từ nền tảng PHP-Nuke và cơ sở dữ liệu MySQL. Người sử
+ dụng thường gọi NukeViet là portal vì nó có khả năng tích hợp nhiều ứng
+ dụng
+ trên nền web, cho phép người sử dụng có thể dễ dàng xuất bản và quản 
+trị các nội dung của họ lên internet hoặc intranet. <br /><br />NukeViet cung cấp 
+nhiều dịch vụ và ứng dụng nhờ khả năng tăng cường tính năng thêm các 
+module, block... tạo sự dễ dàng cài đặt, quản lý, ngay cả với những 
+người mới tiếp cận với website. Người dùng có thể tìm hiểu thêm thông 
+tin và tải về sản phẩm tại địa chỉ <a target=\"_blank\" href=\"http://nukeviet.vn/\">http://nukeviet.vn</a><br />', '', '0', '3', '', '1', 'vietnamese', '0', '', 'Quỳnh Nhi &#x002F; Hanoimoi.com.vn', '0', '0')" );
+$db->sql_query( "INSERT INTO " . $user_prefix . "_stories VALUES ( '2', '2', 'Nguyễn Thế Hùng', 'Giới thiệu về mã nguồn mở NukeViet', '2010-03-01 00:00:01', 'Chắc hẳn đây không phải lần đầu tiên bạn nghe nói đến mã nguồn mở. Và nếu bạn là người mê lướt web thì hẳn bạn từng nhìn thấy đâu đó cái tên NukeViet. NukeViet, phát âm là Nu-Ke-Việt, chính là phần mềm dùng để xây dựng các Website mà bạn ngày ngày online để truy cập đấy.', '<h3>THÔNG
+TIN VỀ MÃ NGUỒN MỞ NUKEVIET </h3> 
+<p style=\"font-weight: bold;\">I. Giới thiệu chung:</p> 
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NukeViet
+là một hệ quản trị nội dung mã
+nguồn mở (Opensource Content Management System), người sử dụng thường 
+gọi NukeViet là portal vì nó có khả năng tích hợp nhiều ứng dụng trên 
+nền Web. NukeViet được Nguyễn Anh Tú
+- một lưu
+học sinh người Việt tại Nga - cùng cộng đồng phát
+triển thành một ứng dụng thuần Việt từ nền tảng
+PHP-Nuke. NukeViet được viết bằng ngôn ngữ PHP và
+chủ yếu sử dụng cơ sở dữ liệu MySQL,
+cho phép người sử dụng có thể dễ dàng xuất bản &amp;
+quản trị các nội dung của họ lên
+Internet hoặc Intranet.</p> 
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NukeViet được sử dụng ở nhiều website, từ những
+website cá nhân cho tới những hệ thống website doanh nghiệp, nó cung cấp
+ nhiều dịch vụ và ứng dụng nhờ khả năng
+tăng cường tính năng
+bằng cách cài thêm các
+module, block... NukeViet có thể dễ dàng cài đặt, dễ dàng quản lý kể cả 
+với những người mới sử dụng.</p> 
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Thông tin chi tiết về NukeViet có thể
+tìm thấy ở bách khoa toàn thư mở Wikipedia: <a href=\"http://vi.wikipedia.org/wiki/NukeViet\">http://vi.wikipedia.org/wiki/NukeViet</a></p> 
+<p style=\"font-weight: bold;\">II. Thông tin về diễn đàn NukeViet:</p> 
+<p>Diễn đàn
+NukeViet hoạt động trên website: <a href=\"http://nukeviet.vn/\"><b>http://nukeviet.vn</b></a> hiện có trên 9.500 thành viên thực gồm học sinh, sinh viên &amp; nhiều 
+thành
+phần khác thuộc giới trí thức ở trong và ngoài nước.</p> 
+<p>Là một
+diễn đàn của các nhà quản lý website, rất nhiều thành viên trong diễn 
+đàn
+NukeViet là cán bộ, lãnh đạo từ đủ mọi lĩnh vực: công nghệ thông tin, 
+xây dựng,
+văn hóa - xã hội, thể thao, dịch vụ - du lịch... từ cử nhân, bác sĩ, kỹ 
+sư cho
+đến bộ đội, công an...</p> 
+<p>Nhiều học
+sinh, sinh viên tham gia diễn đàn NukeViet, đam mê mã nguồn mở và đã 
+thành công
+với chính công việc mà họ yêu thích.</p> 
+<p style=\"font-weight: bold;\">III. Ban Quản Trị NukeViet:</p> 
+<p style=\"font-weight: bold;\">1. Lập trình viên 
+chính &amp; là người
+sáng lập NukeViet:</p> 
+<ul> 
+  <li>Họ và tên: Nguyễn Anh Tú</li> 
+  <li>Nick Name: AnhTu</li> 
+  <li>Thông tin chung: Nguyên du học sinh người Việt tại Liên
+bang Nga, nguyên chánh văn phòng hội người Việt tại Liên bang Nga. Hiện 
+đang
+sống và làm việc tại Mát-xcơ-va, Liên bang Nga.</li> 
+</ul> 
+<p style=\"font-weight: bold;\">2. Các quản trị viên</p> 
+<p>* Nguyễn Thế Hùng</p> 
+<ul> 
+  <li>Nick Name: laser</li> 
+  <li>Thông tin chung: Quản trị viên phụ trách chung. Hiện 
+đang
+sống và làm việc tại Hải Phòng.</li> 
+</ul> 
+<p>* Bùi Diệp Linh</p> 
+<ul> 
+  <li>Nick Name: convoi</li> 
+  <li>Thông tin chung: Quản trị viên phụ trách khu vực phía 
+Nam. Hiện đang sống và làm việc tại Vũng Tàu.</li> 
+</ul> 
+<p>Ngoài 3
+quản trị viên trên còn có một số quản trị viên khác và hơn 20 điều hành 
+viên
+phụ trách điều phối &amp; hỗ trợ diễn đàn.</p> 
+<p style=\"font-weight: bold;\">IV. Các bài báo nói về NukeViet:</p> 
+<ul> 
+  <li>NukeViet
+và 4 cú nhấp chuột: Báo Sài Gòn tiếp thị &amp; Dân trí điện tử đăng ngày
+ 18/05/2006</li> 
+  <li>Nukeviet
+và câu chuyện của 3 chàng \"ngự lâm\": Tạp chí Thế Giới Vi Tính - PC World
+ VN
+ngày 11/5/2006</li> 
+  <li>E-book
+hướng dẫn sử dụng NukeViet: Tạp chí Echip số 125 ra ngày 18-1-2008</li> 
+  <li>Dùng nguồn mở không công khai: Vấn nạn phần
+mềm Việt?: Báo điện tử VietNamNet ngày 25/11/2006</li>
+</ul><br />', '', '0', '1', '', '1', 'vietnamese', '0', '', 'nukeviet.vn', '0', '0')" );
+$db->sql_query( "INSERT INTO " . $user_prefix . "_stories VALUES ( '3', '3', '', 'First open-source company starts operation', '2010-03-01 00:00:01', 'The Vietnam Open Source Development Joint Stock Company (VINADES., JSC), the first firm operating in the field of open source in the country, made its debut on February 25.', '
+<p>The Hanoi-based company will
+ further develop and popularise an open source content management system
+ best known as NukeViet in the country. </p>
+<p>VINADES Chairman Nguyen Anh Tu said NukeViet is totally free and 
+users can download the product at www.nukeviet.vn. </p>
+<p>NukeViet has been widely used across the country over the past five 
+years. The system, built on PHP-Nuke and MySQL database, enables users 
+to easily post and manage files on the Internet or Intranet.</p>', '', '0', '0', '', '1', 'english', '0', '', 'VOVNews&#x002F;VNA', '0', '0')" );
+
+
 $db->sql_query( "DROP TABLE IF EXISTS " . $prefix . "_stories_auto" );
 $db->sql_query( "CREATE TABLE " . $prefix . "_stories_auto (
   anid int(11) NOT NULL auto_increment,
@@ -363,6 +482,10 @@ $db->sql_query( "CREATE TABLE " . $prefix . "_stories_cat (
   PRIMARY KEY  (catid),
   KEY catid (catid)
 )" );
+
+$db->sql_query( "INSERT INTO " . $user_prefix . "_stories_cat VALUES ( '1', '0', 'Tin tức', '1', 'bieudo.gif', '1', '0', '3')" );
+$db->sql_query( "INSERT INTO " . $user_prefix . "_stories_cat VALUES ( '2', '0', 'Bài viết', '2', 'but.gif', '1', '0', '3')" );
+$db->sql_query( "INSERT INTO " . $user_prefix . "_stories_cat VALUES ( '3', '0', 'News', '3', 'bieudo.gif', '1', '0', '3')" );
 
 $db->sql_query( "DROP TABLE IF EXISTS " . $prefix . "_stories_topic" );
 $db->sql_query( "CREATE TABLE " . $prefix . "_stories_topic (
@@ -515,6 +638,7 @@ $db->sql_query( "CREATE TABLE " . $prefix . "_weblinks_links (
 );" );
 
 $db->sql_query( "INSERT INTO " . $user_prefix . "_weblinks_links VALUES ( '1', '1', 'Mã nguồn mở NukeViet', 'http://nukeviet.vn', 'http://nukeviet.ws/img/nukeviet.png', 'Website chính thức hỗ trợ sử dụng mã nguồn mở tạo web NukeViet.', '$time', '1', '1')" );
+$db->sql_query( "INSERT INTO " . $user_prefix . "_weblinks_links VALUES ( '2', '1', 'VINADES.,JSC', 'http://vinades.vn', 'http://vinades.vn/logo120x60.png', 'Công ty cổ phần Phát triển nguồn mở Việt Nam', '$time', '1', '1')" );
 
 
 $db->sql_query( "DROP TABLE IF EXISTS " . $prefix . "_nvsupport_cat" );
@@ -584,6 +708,14 @@ $db->sql_query( "CREATE TABLE " . $prefix . "_nvsupport_user (
    KEY `sendername` (`sendername`)
 )" );
 
-$db->sql_close();
+$db->sql_query( "DROP TABLE IF EXISTS " . $prefix . "_banip" );
+$db->sql_query( "CREATE TABLE " . $prefix . "_banip (
+  `id` int(10) NOT NULL auto_increment,
+  `banip` varchar(20) NOT NULL default '',
+  `settime` int(11) NOT NULL default '1',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `banip` (`banip`)
+)");
 
+$db->sql_close();
 ?>

@@ -3,10 +3,10 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC2
+* @Version: 	2.0 RC3
 * @Date: 		06.07.2009
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -88,17 +88,14 @@ function blist()
 function blocks( $side, $name )
 {
 	global $prefix, $multilingual, $currentlang, $db, $block_side, $home, $datafold;
+	$blocks = array();
 	$blocks = unserialize( file_get_contents(INCLUDE_PATH . $datafold . "/blist_" . $currentlang . ".txt") );
 	$now = time();
 	$block_side = strtolower( $side[0] );
 	$bls = array();
-	if ( $block_side == "l" ) $bls = $blocks['l'];
-	elseif ( $block_side == "r" ) $bls = $blocks['r'];
-	elseif ( $block_side == "c" ) $bls = $blocks['c'];
-	elseif ( $block_side == "d" ) $bls = $blocks['d'];
-
-	if ( ! empty($bls) )
+	if ( isset($blocks[$block_side]) )
 	{
+		$bls = $blocks[$block_side];
 		foreach ( $bls as $bid => $bl )
 		{
 			if ( defined('NV_ADMIN') ) $name = "acp";
@@ -213,7 +210,7 @@ function blocks( $side, $name )
 						elseif ( $block_side == "d" ) themecenterbox( $bl['title'], $content, $bl['link'] );
 						else  themesidebox( $bl['title'], $content, $bl['link'] );
 					}
-					unset( $content );
+					$content = "";
 				}
 			}
 		}

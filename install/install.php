@@ -4,10 +4,10 @@
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet Setup
 * @Author: 		NukeViet Group
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC3
+* @Date: 		01.03.2010
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -26,9 +26,9 @@ function get_php_setting( $val )
 	return $r ? 'ON' : 'OFF';
 }
 
-if ( isset($HTTP_GET_VARS['langst']) )
+if ( isset($_GET['langst']) )
 {
-	$setuplang = trim( $HTTP_GET_VARS['langst'] );
+	$setuplang = trim( $_GET['langst'] );
 	setcookie( "langst", "" . $setuplang . "", time() + 3600 );
 	Header( "Location: install.php" );
 	exit();
@@ -46,7 +46,7 @@ else
 }
 
 $phpver_success = ( ! function_exists('version_compare') || version_compare(phpversion(), '4.3.0', '<') ) ? "<font color=\"#ffffff\"><b>" . _FAILED . "</b></font>" : "" . _SUCCESS . "";
-$safe_mode_success = ( get_php_setting('safe_mode') == 'ON' ) ? "<font color=\"#ffffff\"><b>" . _FAILED . "</b></font>" : "" . _SUCCESS . "";
+$safe_mode_success = ( get_php_setting('safe_mode') == 'ON' ) ? "<font color=\"#ffffff\">" . _WARNING . "</font>" : "" . _SUCCESS . "";
 $mysqlsupport_success = ( ! function_exists('mysql_connect') ) ? "<font color=\"#ffffff\"><b>" . _FAILED . "</b></font>" : "" . _SUCCESS . "";
 $register_globals_allowed = ( get_php_setting('register_globals') == 'On' ) ? "<font color=\"#ffffff\">" . _WARNING . "</font>" : "" . _SUCCESS . "";
 $magic_quotes_runtime_allowed = ( get_php_setting('magic_quotes_runtime') == 'On' ) ? "<font color=\"#ffffff\">" . _WARNING . "</font>" : "" . _SUCCESS . "";
@@ -64,33 +64,33 @@ if ( in_array('set_time_limit', split(',\s*', ini_get('disable_functions'))) )
 else
 {
 	$set_time_limit_allowed = "" . _SUCCESS . "";
-	set_time_limit( 180 );
+	@set_time_limit( 180 );
 }
 $file_uploads_allowed = ( get_php_setting('file_uploads') == 'Off' ) ? "<font color=\"#ffffff\">" . _WARNING . "</font>" : "" . _SUCCESS . "";
 
-$dbhost = trim( strip_tags((! empty($HTTP_POST_VARS['dbhost'])) ? $HTTP_POST_VARS['dbhost'] : 'localhost') );
-$dbuname0 = trim( strip_tags((! empty($HTTP_POST_VARS['dbuname0'])) ? $HTTP_POST_VARS['dbuname0'] : '') );
-$dbuname1 = trim( strip_tags((! empty($HTTP_POST_VARS['dbuname1'])) ? $HTTP_POST_VARS['dbuname1'] : '') );
-$dbuname2 = trim( strip_tags((! empty($HTTP_POST_VARS['dbuname2'])) ? $HTTP_POST_VARS['dbuname2'] : '') );
-$dbpass0 = trim( strip_tags((! empty($HTTP_POST_VARS['dbpass0'])) ? $HTTP_POST_VARS['dbpass0'] : '') );
-$dbpass1 = trim( strip_tags((! empty($HTTP_POST_VARS['dbpass1'])) ? $HTTP_POST_VARS['dbpass1'] : '') );
-$dbpass2 = trim( strip_tags((! empty($HTTP_POST_VARS['dbpass2'])) ? $HTTP_POST_VARS['dbpass2'] : '') );
-$dbname = trim( strip_tags((! empty($HTTP_POST_VARS['dbname'])) ? $HTTP_POST_VARS['dbname'] : '') );
-$prefix = trim( strip_tags((! empty($HTTP_POST_VARS['prefix'])) ? $HTTP_POST_VARS['prefix'] : 'nukeviet') );
-$user_prefix = trim( strip_tags((! empty($HTTP_POST_VARS['user_prefix'])) ? $HTTP_POST_VARS['user_prefix'] : 'nukeviet') );
-$sitename = trim( strip_tags((! empty($HTTP_POST_VARS['sitename'])) ? $HTTP_POST_VARS['sitename'] : '') );
-$adminname = trim( strip_tags((! empty($HTTP_POST_VARS['adminname'])) ? $HTTP_POST_VARS['adminname'] : '') );
-$adminmail = trim( strip_tags((! empty($HTTP_POST_VARS['adminmail'])) ? $HTTP_POST_VARS['adminmail'] : '') );
-$adminpassword = trim( strip_tags((! empty($HTTP_POST_VARS['adminpassword'])) ? $HTTP_POST_VARS['adminpassword'] : '') );
-$username = trim( strip_tags((! empty($HTTP_POST_VARS['username'])) ? $HTTP_POST_VARS['username'] : '') );
-$usermail = trim( strip_tags((! empty($HTTP_POST_VARS['usermail'])) ? $HTTP_POST_VARS['usermail'] : '') );
-$userpassword = trim( strip_tags((! empty($HTTP_POST_VARS['userpassword'])) ? $HTTP_POST_VARS['userpassword'] : '') );
-$language = trim( strip_tags((! empty($HTTP_POST_VARS['language'])) ? $HTTP_POST_VARS['language'] : 'vietnamese') );
-$datafold = trim( strip_tags((! empty($HTTP_POST_VARS['datafold'])) ? $HTTP_POST_VARS['datafold'] : 'includes/data') );
-$adminfold = trim( strip_tags((! empty($HTTP_POST_VARS['adminfold'])) ? $HTTP_POST_VARS['adminfold'] : 'admin') );
-$adminfile = trim( strip_tags((! empty($HTTP_POST_VARS['adminfile'])) ? $HTTP_POST_VARS['adminfile'] : 'admin') );
-$automovef = trim( strip_tags((! empty($HTTP_POST_VARS['automovef'])) ? $HTTP_POST_VARS['automovef'] : '0') );
-$step = ( isset($HTTP_POST_VARS['step']) ) ? $HTTP_POST_VARS['step'] : '';
+$dbhost = trim( strip_tags((! empty($_POST['dbhost'])) ? $_POST['dbhost'] : 'localhost') );
+$dbuname0 = trim( strip_tags((! empty($_POST['dbuname0'])) ? $_POST['dbuname0'] : '') );
+$dbuname1 = trim( strip_tags((! empty($_POST['dbuname1'])) ? $_POST['dbuname1'] : '') );
+$dbuname2 = trim( strip_tags((! empty($_POST['dbuname2'])) ? $_POST['dbuname2'] : '') );
+$dbpass0 = trim( strip_tags((! empty($_POST['dbpass0'])) ? $_POST['dbpass0'] : '') );
+$dbpass1 = trim( strip_tags((! empty($_POST['dbpass1'])) ? $_POST['dbpass1'] : '') );
+$dbpass2 = trim( strip_tags((! empty($_POST['dbpass2'])) ? $_POST['dbpass2'] : '') );
+$dbname = trim( strip_tags((! empty($_POST['dbname'])) ? $_POST['dbname'] : '') );
+$prefix = trim( strip_tags((! empty($_POST['prefix'])) ? $_POST['prefix'] : 'nukeviet') );
+$user_prefix = trim( strip_tags((! empty($_POST['user_prefix'])) ? $_POST['user_prefix'] : 'nukeviet') );
+$sitename = trim( strip_tags((! empty($_POST['sitename'])) ? $_POST['sitename'] : '') );
+$adminname = trim( strip_tags((! empty($_POST['adminname'])) ? $_POST['adminname'] : '') );
+$adminmail = trim( strip_tags((! empty($_POST['adminmail'])) ? $_POST['adminmail'] : '') );
+$adminpassword = trim( strip_tags((! empty($_POST['adminpassword'])) ? $_POST['adminpassword'] : '') );
+$username = trim( strip_tags((! empty($_POST['username'])) ? $_POST['username'] : '') );
+$usermail = trim( strip_tags((! empty($_POST['usermail'])) ? $_POST['usermail'] : '') );
+$userpassword = trim( strip_tags((! empty($_POST['userpassword'])) ? $_POST['userpassword'] : '') );
+$language = trim( strip_tags((! empty($_POST['language'])) ? $_POST['language'] : 'vietnamese') );
+$datafold = trim( strip_tags((! empty($_POST['datafold'])) ? $_POST['datafold'] : 'includes/data') );
+$adminfold = trim( strip_tags((! empty($_POST['adminfold'])) ? $_POST['adminfold'] : 'admin') );
+$adminfile = trim( strip_tags((! empty($_POST['adminfile'])) ? $_POST['adminfile'] : 'admin') );
+$automovef = trim( strip_tags((! empty($_POST['automovef'])) ? $_POST['automovef'] : '0') );
+$step = ( isset($_POST['step']) ) ? $_POST['step'] : '';
 if ( ! get_magic_quotes_gpc() )
 {
 	$dbhost = addslashes( $dbhost );
@@ -115,27 +115,27 @@ if ( ! get_magic_quotes_gpc() )
 	$dbuname = addslashes( $dbuname );
 	$dbuname = addslashes( $dbuname );
 }
-if ( ! empty($HTTP_POST_VARS['server_name']) )
+if ( ! empty($_POST['server_name']) )
 {
-	$server_name = $HTTP_POST_VARS['server_name'];
+	$server_name = $_POST['server_name'];
 }
 else
 {
-	if ( ! empty($HTTP_SERVER_VARS['SERVER_NAME']) || ! empty($HTTP_ENV_VARS['SERVER_NAME']) )
+	if ( ! empty($_SERVER['SERVER_NAME']) || ! empty($_ENV['SERVER_NAME']) )
 	{
-		$server_name = ( ! empty($HTTP_SERVER_VARS['SERVER_NAME']) ) ? $HTTP_SERVER_VARS['SERVER_NAME'] : $HTTP_ENV_VARS['SERVER_NAME'];
+		$server_name = ( ! empty($_SERVER['SERVER_NAME']) ) ? $_SERVER['SERVER_NAME'] : $_ENV['SERVER_NAME'];
 	}
 	else
-		if ( ! empty($HTTP_SERVER_VARS['HTTP_HOST']) || ! empty($HTTP_ENV_VARS['HTTP_HOST']) )
+		if ( ! empty($_SERVER['HTTP_HOST']) || ! empty($_ENV['HTTP_HOST']) )
 		{
-			$server_name = ( ! empty($HTTP_SERVER_VARS['HTTP_HOST']) ) ? $HTTP_SERVER_VARS['HTTP_HOST'] : $HTTP_ENV_VARS['HTTP_HOST'];
+			$server_name = ( ! empty($_SERVER['HTTP_HOST']) ) ? $_SERVER['HTTP_HOST'] : $_ENV['HTTP_HOST'];
 		}
 		else
 		{
 			$server_name = '';
 		}
 }
-$script_path = str_replace( '/install', '', dirname($HTTP_SERVER_VARS['PHP_SELF']) );
+$script_path = str_replace( '/install', '', dirname($_SERVER['PHP_SELF']) );
 $cookie_path = "" . $script_path . "/";
 $startdate = date( "d/m/Y" );
 $cookie_domain = "";
@@ -184,7 +184,7 @@ $test2 = array( $adminname, $adminpassword, $username, $userpassword );
 $test3 = array( $adminmail, $usermail );
 $bad_email = array( 'yoursite.com', 'mysite.com', 'localhost', 'xxx' );
 $bad_nicks = array( 'anonimo', 'anonymous', 'god', 'linux', 'nobody', 'operator', 'root' );
-if ( ! function_exists('version_compare') || version_compare(phpversion(), '4.3.0', '<') || get_php_setting('safe_mode') == 'ON' || ! function_exists('mysql_connect') )
+if ( ! function_exists('version_compare') || version_compare(phpversion(), '4.3.0', '<') || ! function_exists('mysql_connect') )
 {
 	$gostep2 = false;
 	$gostep3 = false;
@@ -221,7 +221,7 @@ else
 		for ( $i = 0; $i < sizeof($test3); $i++ )
 		{
 			if ( $errmsg != "" ) break;
-			if ( $test3[$i] == "" || strlen($test3[$i]) < 7 || ! eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,6}$", $test3[$i]) )
+			if ( $test3[$i] == "" || strlen($test3[$i]) < 7 || ! preg_match("/^[a-z0-9]([a-z0-9_.-]+)*[a-z0-9]@([a-z0-9]([a-z0-9_-]+)*[a-z0-9].)+[a-z]{2,6}$/i", $test3[$i]) )
 			{
 				$gostep3 = false;
 				$errmsg = constant( "_ERRB3" . $i );
@@ -348,7 +348,7 @@ if ( $gostep2 == false )
 	$gostep3 = false;
 }
 
-//$step = (isset($HTTP_POST_VARS['step'])) ? $HTTP_POST_VARS['step'] : '';
+//$step = (isset($_POST['step'])) ? $_POST['step'] : '';
 if ( file_exists("../mainfile.php") )
 {
 	$step = 4;

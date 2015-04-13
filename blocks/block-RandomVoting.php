@@ -3,10 +3,10 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC3
+* @Date: 		01.03.2010
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -17,7 +17,7 @@ if ( (! defined('NV_SYSTEM')) and (! defined('NV_ADMIN')) )
 }
 
 global $db, $prefix, $multilingual, $currentlang;
-get_lang( Voting );
+get_lang("Voting");
 if ( $multilingual == 1 )
 {
 	$querylang = "WHERE planguage='$currentlang'";
@@ -32,7 +32,7 @@ for ( $i = 0; $i < 10; $i++ )
 	$result = $db->sql_query( $sql );
 	$row = $db->sql_fetchrow( $result );
 	$xquestion = explode( '|', $row['question'] );
-	$expire = $xquestion[1];
+	$expire = isset($xquestion[1]) ? intval($xquestion[1]) : 0;
 	$mdate = $row['time'];
 	if ( $expire == 0 )
 	{

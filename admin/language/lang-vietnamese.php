@@ -2,10 +2,10 @@
 /*
  * @Program:	NukeViet CMS
  * @File name: 	NukeViet System
- * @Version: 	2.0 RC2
+ * @Version: 	2.0 RC3
  * @Date: 		07.07.2009
  * @Website: 	www.nukeviet.vn
- * @Copyright: 	(C) 2009
+ * @Copyright: 	(C) 2010
  * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
@@ -91,7 +91,7 @@ define("_CATEGORYADD","Thêm chủ đề mới");
 define("_CATEGORYNAME","Tên chủ đề");
 define("_CATEXISTS","Chủ đề này đã có!");
 define("_CATNAME","Tên");
-define("_CATSAVED","Chủ đề đã được lưu!");
+define("_CATSAVED","Đã xong!");
 define("_CENTER","Giữa");
 define("_CENTERBLOCK","Block giữa");
 define("_CENTERDOWN","Giữa - Dưới ");
@@ -544,7 +544,7 @@ define("_CSTORIESHOME2","Chọn tin");
 define("_CSTORIESHOME3","Chưa có tin");
 define("_CSTORIESHOME4","Xem");
 define("_CSTORIESHOME5","Chọn mới");
-define("_CSTORIESHOME6","Tin tiêu điểm");
+define("_CSTORIESHOME6","Tiêu điểm");
 define("_CLINKSHOME","Số liên kết");
 define("_CLINKSHOME1","Chọn số liên kết cùng chủ đề trên trang chủ");
 define("_CATUP","Chuyển lên trên");
@@ -768,6 +768,11 @@ define('_FORUMS','Diễn đàn');
 //310509 - Anhtu
 define('_CHANGEACCOUNT','Thay đổi thông tin tài khoản');
 define('_CURRENTPASSW','Mật khẩu hiện tại của bạn');
+
+//9:32 AM 2/18/2010 - conmatdo
+define('_ALLCAT','Tất cả chủ đề');
+define('_VIEW','Lần xem');
+define('_COMMENT','Thảo luận');
 //END
 
 

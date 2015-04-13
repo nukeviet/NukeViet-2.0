@@ -1,13 +1,13 @@
 <?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC1
+* @Program:		NukeViet CMS v2.0 RC3
 * @File name: 	Theme Nv_orange
 * @Author: 		Boder - Nguyen Minh Giap
 * @Version: 	1.0
-* @Date: 		01.05.2009
+* @Date: 		01.03.2010
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -61,9 +61,9 @@ $sql = "SELECT title, custom_title, view FROM " . $prefix . "_modules WHERE acti
 $result = $db->sql_query( $sql );
 while ( $row = $db->sql_fetchrow($result) )
 {
-	$m_title = $row[title];
-	$custom_title = $row[custom_title];
-	$view = $row[view];
+	$m_title = $row['title'];
+	$custom_title = $row['custom_title'];
+	$view = $row['view'];
 	$m_title2 = ereg_replace( "_", " ", $m_title );
 	if ( $custom_title != "" )
 	{

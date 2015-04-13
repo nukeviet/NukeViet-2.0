@@ -3,10 +3,10 @@
  * @Program:	NukeViet CMS
  * @File name: 	NukeViet System
  * @Editor: 	Nthanhbinh & member
- * @Version: 	2.0 RC2
+ * @Version: 	2.0 RC3
  * @Date: 		07.07.2009
  * @Website: 	www.nukeviet.vn
- * @Copyright: 	(C) 2009
+ * @Copyright: 	(C) 2010
  * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
  */
  
@@ -769,6 +769,11 @@ define('_FORUMS','Forums');
 //310509 - Anhtu
 define('_CHANGEACCOUNT','Change your account');
 define('_CURRENTPASSW','Current password');
+
+//9:32 AM 2/18/2010 - conmatdo
+define('_ALLCAT','All category');
+define('_VIEW','Lần xem');
+define('_COMMENT','Thảo luận');
 //END
 
 

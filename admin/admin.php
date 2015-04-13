@@ -3,12 +3,12 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	admin.php
-* @Version: 	2.0 RC2
+* @Version: 	2.0 RC3
 * @Date: 		15.06.2009
 * @author: 		Nguyen Anh Tu (Nukeviet Group)
 * @contact: 	anht@mail.ru
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -208,7 +208,7 @@ if ( ! defined("IS_ADMIN") )
 		{
 			$pwd = "";
 			$error = "Password is empty or invalid";
-		} elseif ( empty($email) || ! eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,6}$", $email) || strrpos($email, ' ') > 0 )
+		} elseif ( empty($email) || ! preg_match("/^[a-z0-9]([a-z0-9_.-]+)*[a-z0-9]@([a-z0-9]([a-z0-9_-]+)*[a-z0-9].)+[a-z]{2,6}$/i", $email) || strrpos($email, ' ') > 0 )
 		{
 			$email = "";
 			$error = "E-mail is empty or invalid";
@@ -458,7 +458,7 @@ function adminMain()
 		{
 			$error = _BADPASSADMIN3;
 		}
-		elseif ( ! eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,6}$", $admin_email) )
+		elseif ( ! preg_match("/^[a-z0-9]([a-z0-9_.-]+)*[a-z0-9]@([a-z0-9]([a-z0-9_-]+)*[a-z0-9].)+[a-z]{2,6}$/i", $admin_email) )
 		{
 			$error = _BADMAILADMIN;
 		} elseif ( $db->sql_numrows($db->sql_query("SELECT * FROM `" . $prefix . "_authors` WHERE (`email`='" . $admin_email . "' AND `aid`!='" . $aid . "')")) > 0 )

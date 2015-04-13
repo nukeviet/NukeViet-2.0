@@ -4,10 +4,10 @@
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet Setup
 * @Author: 		NukeViet Group
-* @Version: 	2.0 RC2
-* @Date: 		07.07.2009
+* @Version: 	2.0 RC3
+* @Date: 		01.03.2010
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -39,7 +39,7 @@ $content .= "</filesmatch>";
 $content = "<?php\n\n";
 $fctime = date( "d-m-Y H:i:s", filectime("../$datafold/mainfile.php") );
 $fmtime = date( "d-m-Y H:i:s" );
-$content .= "// File: mainfile.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC2.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
+$content .= "// File: mainfile.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC3.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
 $content .= "define('NV_MAINFILE', true);\n";
 $content .= "define('NV_ANTIDOS', true);\n\n";
 $content .= "\$datafold = \"$datafold\";\n\n";
@@ -96,7 +96,7 @@ $content .= "?>";
 $content = "<?php\n\n";
 $fctime = date( "d-m-Y H:i:s", filectime("../$datafold/config.php") );
 $fmtime = date( "d-m-Y H:i:s" );
-$content .= "// File: config.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC2.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
+$content .= "// File: config.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC3.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
 $content .= "if ((!defined('NV_SYSTEM')) AND (!defined('NV_ADMIN'))) {\n";
 $content .= "die('Stop!!!');\n";
 $content .= "}\n";
@@ -108,7 +108,7 @@ $content .= "\$nukeurl = \"$nukeurl\";\n";
 $content .= "\$site_logo = \"logo.gif\";\n";
 $content .= "\$startdate = \"$startdate\";\n";
 $content .= "\$adminmail = \"$adminmail\";\n";
-$content .= "\$anonpost = \"1\";\n";
+$content .= "\$anonpost = \"0\";\n";
 $content .= "\$Default_Theme = \"nv_silver\";\n";
 $content .= "\$changtheme = \"0\";\n";
 $content .= "\$actthemes = \"nv_green|nv_orange|nv_silver\";\n";
@@ -122,8 +122,8 @@ $content .= "\$notify = \"1\";\n";
 $content .= "\$anonymous = \"Guest\";\n";
 $content .= "\$admingraphic = \"1\";\n";
 $content .= "\$minpass = \"5\";\n";
-$content .= "\$pollcomm = \"1\";\n";
-$content .= "\$articlecomm = \"1\";\n";
+$content .= "\$pollcomm = \"0\";\n";
+$content .= "\$articlecomm = \"0\";\n";
 $content .= "\$Home_Module = \"News\";\n";
 $content .= "\$adminfold = \"$adminfold\";\n";
 $content .= "\$adminfile = \"$adminfile\";\n";
@@ -162,7 +162,7 @@ $content .= "?>";
 $content = "<?php\n\n";
 $fctime = date( "d-m-Y H:i:s", filectime("../$datafold/config_admin.php") );
 $fmtime = date( "d-m-Y H:i:s" );
-$content .= "// File: config_admin.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC2.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
+$content .= "// File: config_admin.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC3.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
 $content .= "if (!defined('NV_ADMIN')) {\n";
 $content .= "die('Stop!!!');\n";
 $content .= "}\n";
@@ -192,7 +192,7 @@ $content .= "?>";
 $content = "<?php\n\n";
 $fctime = date( "d-m-Y H:i:s", filectime("../$datafold/config_Your_Account.php") );
 $fmtime = date( "d-m-Y H:i:s" );
-$content .= "// File: config_Your_Account.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC2.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
+$content .= "// File: config_Your_Account.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC3.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
 $content .= "if ((!defined('NV_SYSTEM')) AND (!defined('NV_ADMIN'))) {\n";
 $content .= "die('Stop!!!');\n";
 $content .= "}\n";
@@ -223,7 +223,7 @@ $content .= "?>";
 $content = "<?php\n\n";
 $fctime = date( "d-m-Y H:i:s", filectime("../$datafold/config_News.php") );
 $fmtime = date( "d-m-Y H:i:s" );
-$content .= "// File: config_News.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC2.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
+$content .= "// File: config_News.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC3.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
 $content .= "if ((!defined('NV_SYSTEM')) AND (!defined('NV_ADMIN'))) {\n";
 $content .= "die('Stop!!!');\n";
 $content .= "}\n";
@@ -262,7 +262,7 @@ $content .= "?>";
 $content = "<?php\n\n";
 $fctime = date( "d-m-Y H:i:s", filectime("../$datafold/config_Files.php") );
 $fmtime = date( "d-m-Y H:i:s" );
-$content .= "// File: config_Files.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC2.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
+$content .= "// File: config_Files.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC3.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
 $content .= "if ((!defined('NV_SYSTEM')) AND (!defined('NV_ADMIN'))) {\n";
 $content .= "die('Stop!!!');\n";
 $content .= "}\n";
@@ -301,10 +301,56 @@ $content .= "?>";
 $content = "<?php\n\n";
 $fctime = date( "d-m-Y H:i:s", filectime("../$datafold/admlock.php") );
 $fmtime = date( "d-m-Y H:i:s" );
-$content .= "// File: admlock.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC2.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
+$content .= "// File: admlock.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC3.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
 $content .= "?>";
 @$writefile = fwrite( $file, $content );
 @fclose( $file );
 @chmod( "../$datafold/admlock.php", 0604 );
 
+@chmod( "../$datafold/config_banip.php", 0777 );
+@$file = fopen( "../$datafold/config_banip.php", "w" );
+$content = "<?php\n\n";
+$fctime = date( "d-m-Y H:i:s", filectime("../$datafold/config_banip.php") );
+$fmtime = date( "d-m-Y H:i:s" );
+$content .= "// File: config_banip.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC3.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
+$content .= "\$array_ip_ban = array();\n";
+$content .= "?>";
+@$writefile = fwrite( $file, $content );
+@fclose( $file );
+@chmod( "../$datafold/config_banip.php", 0604 );
+
+// Config_Editor.php
+function getUniqueCode($length = "")
+{	
+	$code = md5(uniqid(rand(), true));
+	if ($length != "") return substr($code, 0, $length);
+	else return $code;
+}
+
+@chmod( "../$datafold/config_Editor.php", 0777 );
+@$file = fopen( "../$datafold/config_Editor.php", "w" );
+$content = "<?php\n\n";
+$fctime = date( "d-m-Y H:i:s", filectime("../$datafold/config_Editor.php") );
+$fmtime = date( "d-m-Y H:i:s" );
+$content .= "// File: config_Editor.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC3.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
+$content .= "\$editorconfig = array(\n";
+$content .= "	'default_theme' => 'spaw2',\n";
+$content .= "	'default_toolbarset' => 'standard',\n";
+$content .= "	'allow_upload' => '1',\n";
+$content .= "	'allow_modify' => '1',\n";
+$content .= "	'max_upload_filesize' => '0',\n";
+$content .= "	'max_img_width' => '0',\n";
+$content .= "	'max_img_height' => '0',\n";
+$content .= "	'allowed_filetypes' => array('images','flash','documents','archives'),\n";
+$content .= "	'img_dir' => 'uploads/spaw2/images/',\n";
+$content .= "	'flash_dir' => 'uploads/spaw2/flash/',\n";
+$content .= "	'files_dir' => 'uploads/',\n";
+$content .= "	'doc_dir' => 'uploads/spaw2/doc/',\n";
+$content .= "	'arch_dir' => 'uploads/spaw2/compressed/',\n";
+$content .= "	'editor_pass' => '".getUniqueCode(20)."'\n";
+$content .= ");\n";
+$content .= "?>";
+@$writefile = fwrite( $file, $content );
+@fclose( $file );
+@chmod( "../$datafold/config_Editor.php", 0604 );
 ?>

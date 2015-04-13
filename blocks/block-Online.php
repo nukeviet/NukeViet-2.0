@@ -3,10 +3,10 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC3
+* @Date: 		01.03.2010
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -16,7 +16,7 @@ if ( (! defined('NV_SYSTEM')) and (! defined('NV_ADMIN')) )
 	exit;
 }
 
-global $onls_m, $onls_g, $statcls, $stathits1, $datafold;
+global $db, $user_prefix, $onls_m, $onls_g, $statcls, $stathits1, $datafold;
 
 if ( $onls_m != "" )
 {
@@ -64,31 +64,34 @@ $content .= "<td>&nbsp;" . _HITSOL . "</td>\n";
 $content .= "<td align=\"right\">" . $num_h4 . "</td>\n";
 $content .= "</tr>\n";
 $content .= "</table>\n";
-if ( file_exists("" . INCLUDE_PATH . "" . $datafold . "/ulist.php") )
-{
-	include_once ( "" . INCLUDE_PATH . "" . $datafold . "/ulist.php" );
 	if ( $onls_m != "" )
 	{
+		$array_user_id_online = array();
 		$content .= "<hr>\n";
 		$content .= "<table border=\"0\" cellspacing=\"1\" style=\"border-collapse: collapse\" width=\"100%\">\n";
 		for ( $l = 0; $l < sizeof($onls_m1); $l++ )
 		{
 			$onls_m2 = explode( ":", $onls_m1[$l] );
-			if ( isset($udt[intval($onls_m2[0])]) )
-			{
-				$onl_m_name = explode( "|", $udt[intval($onls_m2[0])] );
-				$onl_m_name = $onl_m_name[1];
-				$ln = $l + 1;
+			$array_user_id_online[] = intval($onls_m2[0]);
+		}
+		
+		$list_user_id_online = implode(",",$array_user_id_online);
+		if ( $list_user_id_online != "" ) {
+			$ln = 0;
+			$fsql = "SELECT user_id, username, viewuname, user_email FROM " . $user_prefix . "_users WHERE user_id IN (0,".$list_user_id_online.");";
+			$fresult = $db->sql_query( $fsql );
+			while ( $frow = $db->sql_fetchrow($fresult) ){
+				$ln = $ln + 1;
 				$ln = str_pad( $ln, 2, "0", STR_PAD_LEFT );
 				$content .= "<tr>\n";
 				$content .= "<td width=\"10\">" . $ln . "</td>\n";
-				$content .= "<td align=\"right\"><a href=\"" . INCLUDE_PATH . "modules.php?name=Your_Account&op=userinfo&user_id=" . intval( $onls_m2[0] ) . "\">" . $onl_m_name . "</td>\n";
+				$content .= "<td align=\"right\"><a href=\"" . INCLUDE_PATH . "modules.php?name=Your_Account&op=userinfo&user_id=" . intval( $frow['user_id'] ) . "\">" . $frow['viewuname'] . "</td>\n";
 				$content .= "</tr>\n";
 			}
 		}
 		$content .= "</table>\n";
 	}
-}
+
 $content .= "\n<center>" . _YOURIP . ": " . $_SERVER["REMOTE_ADDR"] . "</center>";
 
 ?>

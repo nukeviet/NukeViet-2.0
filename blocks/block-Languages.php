@@ -33,6 +33,7 @@ if ( $multilingual == 1 )
 
 	$content = "<center><form action=\"" . $actlang . "\" method=\"get\"><select name=\"newlanguage\" onChange=\"top.location.href=this.options[this.selectedIndex].value\">";
 	$handle = opendir( "" . INCLUDE_PATH . "language" );
+	$languageslist = "";
 	while ( $file = readdir($handle) )
 	{
 		if ( preg_match("/^lang\-(.+)\.php/", $file, $matches) )

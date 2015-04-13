@@ -1,12 +1,12 @@
 <?php
 /*
- * @Program:	NukeViet CMS v2.0 RC1
+ * @Program:		NukeViet CMS v2.0 RC3
  * @File name: 	Theme Nv_silver
  * @Author: 	Boder - Nguyen Minh Giap
  * @Version: 	1.0
  * @Date: 		13.06.2009
  * @Website: 	www.nukeviet.vn
- * @Copyright: 	(C) 2009
+ * @Copyright: 	(C) 2010
  * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
@@ -130,7 +130,7 @@ echo "<td valign=\"top\" width=\"190\" bgcolor=\"#FFFFFF\">\n";
 echo "<table border=\"0\" width=\"100%\" cellpadding=\"0\" style=\"border-collapse: collapse\">\n";
 echo "<tr>\n";
 echo "<td>";
-blocks(left,$name);
+blocks("left",$name);
 echo"</td>\n";
 echo "</tr>\n";
 echo "<tr>\n";
@@ -157,7 +157,7 @@ echo "<td valign=\"top\" width=\"3\">\n";
 echo "<img border=\"0\" src=\"".INCLUDE_PATH."themes/".$ThemeSel."/images/".$currentlang."/spacer.gif\" width=\"3\" height=\"1\"></td>\n";
 }
 echo "<td valign=\"top\" width=\"160\">";
-blocks(right,$module_name);
+blocks("right",$module_name);
 echo"</td>\n";
 if ($index == "5") {
 echo "<td valign=\"top\" width=\"3\">\n";

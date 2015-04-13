@@ -1,12 +1,12 @@
 <?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC1
+* @Program:		NukeViet CMS v2.0 RC3
 * @File name: 	Module Your_Account
 * @Version: 	1.0
 * @Date: 		09.05.2009
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -120,7 +120,7 @@ function NV_mailCheck( $user_email )
 	global $user_prefix, $db, $bad_mail;
 	$user_email = strtolower( $user_email );
 	$bad_email = explode( "|", $bad_mail );
-	if ( (! $user_email) || ($user_email == "") || strlen($user_email) < 7 || (! eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,6}$", $user_email)) )
+	if ( (! $user_email) || ($user_email == "") || strlen($user_email) < 7 || (! preg_match("/^[a-z0-9]([a-z0-9_.-]+)*[a-z0-9]@([a-z0-9]([a-z0-9_-]+)*[a-z0-9].)+[a-z]{2,6}$/i", $user_email)) )
 	{
 		$stop = "" . _ERRORINVEMAIL . "";
 	} elseif ( strrpos($user_email, ' ') > 0 )
@@ -162,7 +162,7 @@ function NV_mailCheck2( $user_email )
 	global $bad_mail;
 	$user_email = strtolower( $user_email );
 	$bad_email = explode( "|", $bad_mail );
-	if ( (! $user_email) || ($user_email == "") || strlen($user_email) < 7 || (! eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,6}$", $user_email)) )
+	if ( (! $user_email) || ($user_email == "") || strlen($user_email) < 7 || (! preg_match("/^[a-z0-9]([a-z0-9_.-]+)*[a-z0-9]@([a-z0-9]([a-z0-9_-]+)*[a-z0-9].)+[a-z]{2,6}$/i", $user_email)) )
 	{
 		$stop = "" . _ERRORINVEMAIL . "";
 	} elseif ( strrpos($user_email, ' ') > 0 )
@@ -340,7 +340,6 @@ function finishNewUser()
 		{
 			exit();
 		}
-		ulist();
 		if ( $allowuserlogin == 1 )
 		{
 			info_exit( _ALLOWUSERLOGIN );
@@ -447,7 +446,6 @@ function activate()
 			$db->sql_query( "INSERT INTO " . $user_prefix . "_users (user_id, username, viewuname, user_email, user_regdate, user_password, opros, user_avatar, user_avatar_type) VALUES (NULL, '$row[username]', '$row[viewuname]', '$row[user_email]', '$user_regdate', '$row[user_password]', '$row[opros]', '$user_avatar', '$user_avatar_type')" );
 			$db->sql_query( "DELETE FROM " . $user_prefix . "_users_temp WHERE user_id='" . intval($user_id) . "'" );
 			$db->sql_query( "OPTIMIZE TABLE " . $user_prefix . "_users_temp" );
-			ulist();
 			if ( $allowuserlogin == 1 )
 			{
 				info_exit( _ALLOWUSERLOGIN );
@@ -847,6 +845,12 @@ function new_user()
 			echo "alert(\"" . _EMAILNOTUSABLE . "\");\n";
 			echo "Forma.user_email.focus();\n";
 			echo "return false;\n";
+			echo "}\n";
+			echo "var filter =/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/;\n";
+			echo "if (!filter.test(Forma.user_email.value)) {\n";		
+				echo "alert(\"" . _EMAILNOTUSABLE . "\");\n";
+				echo "Forma.user_email.focus();\n";
+				echo "return false;\n";
 			echo "}\n";
 			echo "if (Forma.otviet.value == \"\") {\n";
 			echo "alert(\"" . _OTVIET . " ?\");\n";
@@ -1360,8 +1364,36 @@ function edituser()
 		CloseTable();
 		echo "<br>\n";
 		OpenTable();
+			echo "\n<script>\n";
+			echo "function check_data(Forma) {\n";
+			echo "if (Forma.user_email.value == \"\")  {\n";
+				echo "alert(\"" . _MAILBLOCKED . "\");\n";
+				echo "Forma.user_email.focus();\n";
+				echo "return false;\n";
+			echo "}\n";
+			echo "t = Forma.user_email.value.search(\"@\");\n";
+			echo "k = Forma.user_email.value.search(\" \");\n";
+			echo "if(k >= 0){\n";
+			echo "alert(\"" . _EMAILNOTUSABLE . "\");\n";
+			echo "Forma.user_email.focus();\n";
+			echo "return false;\n";
+			echo "}\n";
+			echo "if(t <= -1){\n";
+			echo "alert(\"" . _EMAILNOTUSABLE . "\");\n";
+			echo "Forma.user_email.focus();\n";
+			echo "return false;\n";
+			echo "}\n";
+			echo "var filter =/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/;\n";
+			echo "if (!filter.test(Forma.user_email.value)) {\n";		
+				echo "alert(\"" . _EMAILNOTUSABLE . "\");\n";
+				echo "Forma.user_email.focus();\n";
+				echo "return false;\n";
+			echo "}\n";
+			echo "return true; \n";
+			echo "}\n";
+			echo "</script>\n";		
 		echo "<table cellpadding=\"3\" border=\"0\" width='100%'><tr><td>\n";
-		echo "<form action=\"modules.php?name=$module_name\" method=\"post\">\n";
+		echo "<form onsubmit=\"return check_data(this)\"  action=\"modules.php?name=$module_name\" method=\"post\">\n";
 		echo "<b>" . _USRNICKNAME . "</b>:</td><td><b>" . $mbrow[username] . "</b></td></tr><tr>\n";
 		echo "<tr><td><b>" . _VIEWNAME . "</b>:<br>" . _OPTIONAL . "</td><td>\n";
 		echo "<input type=\"text\" name=\"viewuname\" value=\"" . $mbrow[viewuname] . "\" size=\"50\" maxlength=\"100\"></td></tr>\n";
@@ -1483,7 +1515,7 @@ function saveuser()
 			{
 				$user_website = "http://" . $user_website;
 			}
-			if ( ! preg_match('#^http[s]?\\:\\/\\/[a-z0-9\-]+\.([a-z0-9\-]+\.)?[a-z]+#i', $user_website) )
+			if ( ! preg_match('#^http[s]?\\:\\/\\/[a-z0-9-]+\.([a-z0-9-]+\.)?[a-z]+#i', $user_website) )
 			{
 				$user_website = '';
 			}
@@ -1492,7 +1524,6 @@ function saveuser()
 				$viewuname = $user_ar[1];
 			}
 			$db->sql_query( "UPDATE " . $user_prefix . "_users SET viewuname='$viewuname', name='$realname', lastname='$reallastname', user_email='$nemail', user_website='$user_website', user_icq='$user_icq', user_telephone='$user_telephone', user_from='$user_from', user_interests='$user_interests', user_sig='$user_sig', user_viewemail='$user_viewemail', opros='$opros' WHERE user_id='$user_id'" );
-			ulist();
 		}
 		Header( "Location: modules.php?name=$module_name&op=edituser" );
 	}

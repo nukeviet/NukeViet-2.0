@@ -1,12 +1,12 @@
 <?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC1
+* @Program:		NukeViet CMS v2.0 RC3
 * @File name: 	Module Files
 * @Version: 	2.2
 * @Date: 		14.06.2009
 * @Website: 	www.nukeviet.vn
-* @Copyright: 	(C) 2009
+* @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
@@ -1388,10 +1388,10 @@ function view_file()
 			else
 			{
 				global $user_ar;
-				$tentv = explode( "|", $udt[intval($user_ar[0])] );
-				echo "<font class=option><b>" . _YOURNAME . ":</b> $tentv[1]</font><br>";
-				echo "<input type=\"hidden\" name=\"postname\" value=\"$tentv[1]\">\n" 
-				. "<input type=\"hidden\" name=\"postemail\" value=\"$tentv[2]\">\n" 
+				list($tentv_username, $tentv_user_email, $tentv_viewuname) = $db->sql_fetchrow( $db->sql_query("SELECT username, user_email, viewuname FROM " . $user_prefix . "_users WHERE user_id='".intval($user_ar[0])."'") );
+				echo "<font class=option><b>" . _YOURNAME . ":</b> ".$tentv_viewuname."</font><br>";
+				echo "<input type=\"hidden\" name=\"postname\" value=\"".$tentv_viewuname."\">\n" 
+				. "<input type=\"hidden\" name=\"postemail\" value=\"".$tentv_user_email."\">\n" 
 				. "<input type=\"hidden\" name=\"posturl\" value=\"\">\n";
 			}
 			echo "<font class=\"option\"><b>" . _SUBJECT . ":</b></font><br>";
@@ -1610,9 +1610,9 @@ function show()
 		else
 		{
 			global $user_ar;
-			$tentv = explode( "|", $udt[intval($user_ar[0])] );
-			echo "<font class=option><b>" . _YOURNAME . ":</b> $tentv[1]</font><br>";
-			echo "<input type=\"hidden\" name=\"postname\" value=\"$tentv[1]\">\n" . "<input type=\"hidden\" name=\"postemail\" value=\"$tentv[2]\">\n" . "<input type=\"hidden\" name=\"posturl\" value=\"\">\n";
+			list($tentv_username, $tentv_user_email, $tentv_viewuname) = $db->sql_fetchrow( $db->sql_query("SELECT username, user_email, viewuname FROM " . $user_prefix . "_users WHERE user_id='".intval($user_ar[0])."'") );
+			echo "<font class=option><b>" . _YOURNAME . ":</b> ".$tentv_viewuname."</font><br>";
+			echo "<input type=\"hidden\" name=\"postname\" value=\"".$tentv_viewuname."\">\n" . "<input type=\"hidden\" name=\"postemail\" value=\"".$tentv_user_email."\">\n" . "<input type=\"hidden\" name=\"posturl\" value=\"\">\n";
 		}
 		echo "<font class=\"option\"><b>" . _SUBJECT . ":</b></font><br>";
 		echo "<input type=\"text\" name=\"subject\" size=\"62\" value=\"$subject\"><br>";
