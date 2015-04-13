@@ -8,29 +8,16 @@ SpawConfig::setStaticConfigItem(
     'any'           => array('.*'),
     'images'        => array('.jpg', '.gif', '.png'),
     'flash'         => array('.swf'),
-    'documents'     => array('.doc', '.pdf'),
-    'audio'         => array('.wav', '.mp3', '.wma'),
+    'documents'     => array('.doc', '.xls', '.pdf', '.rtf', '.odt', '.ods', '.txt'),
+    'audio'         => array('.wav', '.mp3', '.ogg', '.wma'),
     'video'         => array('.avi', '.mpg', '.mpeg', '.mov', '.wmv'),
-    'archives'      => array('.zip', '.gz'),
+    'archives'      => array('.zip', '.rar', '.gz'),
     // add your custom filetypes below
     //'' => '',
   ), 
   SPAW_CFG_TRANSFER_SECURE
 );
-//NV010207
-SpawConfig::setStaticConfigItem(
-  'PG_SPAWFM_MIMETYPES',
-  array(
-    'any'           => array('*'),
-    'images'        => array("image/gif", "image/pjpeg", "image/jpeg", "image/png", "image/x-png"),
-    'flash'         => array("application/x-shockwave-flash"),
-    'documents'     => array("application/msword", "application/pdf"),
-    'audio'         => array("audio/x-wav", "audio/mpeg", "audio/x-ms-wma"),
-    'video'         => array("video/x-msvideo", "video/mpeg", "video/quicktime", "video/x-ms-wmv"),
-    'archives'      => array("application/x-zip-compressed", "application/x-gzip"),
-  )
-);
-//END
+
 // filetypes icons:
 // default icons
 SpawConfig::setStaticConfigItem(

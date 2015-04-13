@@ -3,8 +3,8 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC2
+* @Date: 		07.07.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -17,7 +17,7 @@ define( "_ERROR", "<font color=\"#CC0000\">Your email address is incorrect!</fon
 define( "_GETBACK", "We will answer you as soon as." );
 define( "_EMAILSENT", "Your email has been sent successfully." );
 define( "_BACK", "Back" );
-define( "_FORMHEADER", "Contact" );
+define( "_FORMHEADER", "Contact Admin" );
 define( "_INVALIDEMAIL", "Email address you entered is incorrect. " );
 define( "_NOFULL", "You have not have not entered enough information! " );
 define( "_PLEASEFULL", "Note: All boxes marked with flowers, that need to be declared complete, accurate " );

@@ -3,8 +3,8 @@
 /*
 * @Program:		NukeViet CMS v2.0 RC1
 * @File name: 	Module Contact
-* @Version: 	2.0
-* @Date: 		01.05.2009
+* @Version: 	2.1
+* @Date: 		25.06.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -121,13 +121,13 @@ function contact_form()
 	echo "<form onsubmit=\"return check_data3(this)\" action=\"modules.php?name=$module_name\" method=\"post\">";
 	echo "<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\" align=\"center\">\n<TBODY>\n";
 	echo "<tr><td align=\"right\" valign=\"top\"><font class=\"content\">" . _YOURNAME . " <font color=\"#FF0000\">*</font>:</font></td>";
-	echo "<td align=\"left\">&nbsp;<input name=\"cname\"  size=\"45\" maxlength=\"30\" value=\"$ns_un\"></td></tr>";
+	echo "<td align=\"left\">&nbsp;<input name=\"cname\"  size=\"45\" maxlength=\"125\" value=\"$ns_un\"></td></tr>";
 	echo "<tr><td align=\"right\" valign=\"top\"><font class=\"content\">" . _YOURADD . ":</font></td>";
-	echo "<td align=\"left\">&nbsp;<input name=\"youradd\"  size=\"45\" maxlength=\"40\"></td></tr>";
+	echo "<td align=\"left\">&nbsp;<input name=\"youradd\"  size=\"45\" maxlength=\"125\"></td></tr>";
 	echo "<tr><td align=\"right\" valign=\"top\"><font class=\"content\">" . _NSPHONENUM . ":</font></td>";
-	echo "<td align=\"left\">&nbsp;<input name=\"yourphone\" size=\"45\" maxlength=\"30\"></td></tr>";
+	echo "<td align=\"left\">&nbsp;<input name=\"yourphone\" size=\"45\" maxlength=\"125\"></td></tr>";
 	echo "<tr><td align=\"right\" valign=\"top\"><font class=\"content\">" . _YOUREMAIL . " <font color=\"#FF0000\">*</font>:</font></td>";
-	echo "<td align=\"left\">&nbsp;<input name=\"from\" size=\"45\" maxlength=\"30\" value=\"$ye\"></td></tr>";
+	echo "<td align=\"left\">&nbsp;<input name=\"from\" size=\"45\" maxlength=\"125\" value=\"$ye\"></td></tr>";
 	echo "<tr><td align=\"right\" valign=\"top\"><font class=\"content\">" . _PLEASESELECT . ":</font></td>";
 	echo "<td align=\"left\">&nbsp;<select name=\"dpid\">";
 	$result = $db->sql_query( "select did, dept_name from " . $prefix . "_contact_dept order by did" );
@@ -144,7 +144,7 @@ function contact_form()
 	}
 	echo "</select></td></tr>";
 	echo "<tr><td align=\"right\" valign=\"top\"><font class=\"content\">" . _YOURMESSAGE . " <font color=\"#FF0000\">*</font>:</font></td>";
-	echo "<td align=\"left\">&nbsp;<textarea cols=\"45\" name=\"message\"  rows=\"10\" ></textarea></td></tr>";
+	echo "<td align=\"left\">&nbsp;<textarea cols=\"45\" name=\"message\" rows=\"10\" ></textarea></td></tr>";
 
 	// add Scode
 	if ( extension_loaded("gd") and (! defined('IS_USER')) )
@@ -190,7 +190,7 @@ function contact_form()
  */
 function submit( $dpid, $cname, $youradd, $yourphone, $from, $email, $message )
 {
-	global $db, $module_name, $sitename, $prefix, $hourdiff, $sitekey;
+	global $db, $module_name, $sitename, $user, $prefix, $hourdiff, $cookie, $user_prefix, $sitekey;
 	include ( "header.php" );
 	//them phan xu ly scode
 	$gfx_check = intval( $_POST['gfx_check'] );
@@ -198,8 +198,57 @@ function submit( $dpid, $cname, $youradd, $yourphone, $from, $email, $message )
 	{
 		$index = 1;
 		OpenTable();
-		echo "<br><br><p align=\"center\"><b>" . _CHECKCODE . "</b><br><br>" . _GOBACK . "</p><br><br>";
+		echo "<br><br><p align=\"center\"><b>" . _CHECKCODE . "</b><br><br></p>";
 		CloseTable();
+		echo "<br>";
+		// Hien lai Form
+		OpenTable();
+		echo "\n\n<script>\n" . " function check_data3(Forma) {\n" . "if (Forma.cname.value == \"\") {\n" . "	alert(\"" . _CONT1 . "\");\n" . "	Forma.cname.focus();\n" . "	return false;\n" . "}\n" . "if(Forma.cname.value.length < 5){\n" . "	alert(\"" . _CONT2 . "\");\n" . "	Forma.cname.focus();\n" . "	return false;\n" . "}\n" . "if(Forma.cname.value.length > 50){\n" . "alert(\"" . _CONT3 . "\");\n" . "Forma.cname.focus();\n" . "return false;\n" . "}\n" . "if (Forma.from.value == \"\") {\n" . "	alert(\"" . _CONT4 . "\");\n" . "	Forma.from.focus();\n" . "	return false;\n" . "}\n" . "if(Forma.from.value.search(\" \") > 1){\n" . "alert(\"" . _CONT5 . "\");\n" . "Forma.from.focus();\n" . "return false;\n" . "}\n" . "if(Forma.from.value.search(\"@\") < 1){\n" . "alert(\"" . _CONT5 . "\");\n" . "Forma.from.focus();\n" . "return false;\n" . "}\n" . "if (Forma.message.value == \"\") {\n" . "alert(\"" . _CONT6 . "\");\n" . "Forma.message.focus();\n" . "return false;\n" . "}\n" .
+			"if(Forma.message.value.length < 25){\n" . "alert(\"" . _CONT7 . "\");\n" . "Forma.message.focus();\n" . "return false;\n" . "}\n" . "if(Forma.message.value.length > 1550){\n" . "alert(\"" . _CONT8 . "\");\n" . "Forma.message.focus();\n" . "return false;\n" . "}\n" . "if(Forma.gfx_check.value.length == \"\"){\n" . "alert(\"" . _CONT9 . "\");\n" . "Forma.message.focus();\n" . "return false;\n" . "}\n" . "if(Forma.gfx_check.value.length < 6){\n" . "alert(\"" . _CONT9 . "\");\n" . "Forma.message.focus();\n" . "return false;\n" . "}\n" . "return true; \n" . "}\n" . "</script>\n";
+
+		echo "<form onsubmit=\"return check_data3(this)\" action=\"modules.php?name=$module_name\" method=\"post\">";
+		echo "<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\" align=\"center\">\n<TBODY>\n";
+		echo "<tr><td align=\"right\" valign=\"top\"><font class=\"content\">" . _YOURNAME . " <font color=\"#FF0000\">*</font>:</font></td>";
+		echo "<td align=\"left\">&nbsp;<input name=\"cname\"  size=\"45\" maxlength=\"125\" value=\"$cname\"></td></tr>";
+		echo "<tr><td align=\"right\" valign=\"top\"><font class=\"content\">" . _YOURADD . ":</font></td>";
+		echo "<td align=\"left\">&nbsp;<input name=\"youradd\"  size=\"45\" maxlength=\"125\" value=\"$youradd\"></td></tr>";
+		echo "<tr><td align=\"right\" valign=\"top\"><font class=\"content\">" . _NSPHONENUM . ":</font></td>";
+		echo "<td align=\"left\">&nbsp;<input name=\"yourphone\" size=\"45\" maxlength=\"30\" value=\"$yourphone\"></td></tr>";
+		echo "<tr><td align=\"right\" valign=\"top\"><font class=\"content\">" . _YOUREMAIL . " <font color=\"#FF0000\">*</font>:</font></td>";
+		echo "<td align=\"left\">&nbsp;<input name=\"from\" size=\"45\" maxlength=\"125\" value=\"$from\"></td></tr>";
+		echo "<tr><td align=\"right\" valign=\"top\"><font class=\"content\">" . _PLEASESELECT . ":</font></td>";
+		echo "<td align=\"left\">&nbsp;<select name=\"dpid\">";
+		$result = $db->sql_query( "select did, dept_name from " . $prefix . "_contact_dept order by did" );
+		while ( list($did, $dept_name) = $db->sql_fetchrow($result) )
+		{
+			$did = intval( $did );
+			$dept_name = stripslashes( $dept_name );
+			echo "<option value=\"$did\"";
+			if ( $dpid == $did )
+			{
+				echo "selected";
+			}
+			echo ">$dept_name";
+		}
+		echo "</select></td></tr>";
+		echo "<tr><td align=\"right\" valign=\"top\"><font class=\"content\">" . _YOURMESSAGE . " <font color=\"#FF0000\">*</font>:</font></td>";
+		echo "<td align=\"left\">&nbsp;<textarea cols=\"45\" name=\"message\" rows=\"10\" >$message</textarea></td></tr>";
+
+		// add Scode
+		if ( extension_loaded("gd") and (! defined('IS_USER')) )
+		{
+			echo "<tr><td align=\"right\">" . _SECURITYCODE . ":</td><td align=\"left\">&nbsp;<img width=\"73\" height=\"17\" src='?gfx=gfx' border='1' alt='" . _SECURITYCODE . "' title='" . _SECURITYCODE . "'></td>\n";
+			echo "</tr><tr>";
+			echo "<td align=\"right\">" . _TYPESECCODE . " <font color=\"#FF0000\">*</font>:</td><td align=\"left\">&nbsp;<input type=\"text\" NAME=\"gfx_check\" SIZE=\"9\" MAXLENGTH=\"6\"></td>\n";
+			echo "</tr><tr>";
+			echo "</tr>";
+		}
+		// end
+		echo "<tr><td colspan=\"2\" align=\"center\" valign=\"middle\">" . "<input type=\"hidden\" name=\"op\" value=\"submit\">\n" . "<input type=\"submit\" value=\"" . _SEND . "\">";
+		echo "&nbsp;&nbsp;<input type=\"reset\" value=\"" . _CLEAR . "\"></td></tr>\n";
+		echo "</TBODY>\n</table></form>";
+		Closetable();
+		// End - hien lai Form
 		include ( "footer.php" );
 		exit;
 	}

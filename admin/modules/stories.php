@@ -3,8 +3,8 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC2
+* @Date: 		16.06.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -244,7 +244,7 @@ if ( $adm_access == 1 )
 	{
 		global $adminfile, $datafold;
 
-		global $articlecomm, $commentcheck, $addnews, $newsprint, $newssave, $newsfriend, $newshome, $catnewshome, $newspagenum, $catnewshomeimg, $sizecatnewshomeimg, $sizeimgskqa, $htatl, $catimgnewshome, $newsarticleimg, $sizenewsarticleimg, $hienthi_tlq, $hienthi_ccd, $comblbarstat, $block_atl, $sizeatl, $block_top10topic, $block_top10articles, $block_top10count, $temp_path, $path;
+		global $articlecomm, $commentcheck, $addnews, $newsprint, $newssave, $newsfriend, $newshome, $news2cot, $catnewshome, $newspagenum, $catnewshomeimg, $sizecatnewshomeimg, $sizeimgskqa, $htatl, $catimgnewshome, $newsarticleimg, $sizenewsarticleimg, $hienthi_tlq, $hienthi_ccd, $comblbarstat, $block_atl, $sizeatl, $block_top10topic, $block_top10articles, $block_top10count, $temp_path, $path;
 		include ( "../header.php" );
 
 		newstopbanner();
@@ -338,6 +338,20 @@ if ( $adm_access == 1 )
 			echo "<option name=\"xnewshome\" value=\"$d\" $seld>$ynewshome[$d]</option>\n";
 		}
 		echo "</select></td></tr>";
+		// Begin News 2 cot
+		echo "<tr><td>" . "" . _NEWS2 . ":</td><td><select name=\"xnews2cot\">";
+		$ynews2cot = array( _NEWS21, _NEWS22 );
+		for ( $d = 0; $d < 2; $d++ )
+		{
+			$seld = "";
+			if ( $d == $news2cot )
+			{
+				$seld = " selected";
+			}
+			echo "<option name=\"xnews2cot\" value=\"$d\" $seld>$ynews2cot[$d]</option>\n";
+		}
+		echo "</select></td></tr>";
+		// End News 2 cot
 		echo "<tr><td>" . _NEWSHOMESX2A . ":</td><td>&nbsp;</td></tr><tr><td>" . "<li>" . _NEWSHOMESX2A0 . ":</li></td><td><select name=\"xcatnewshome\">";
 		$ycatnewshome = array( _NEWSHOMESX2A1, _NEWSHOMESX2A2, _NEWSHOMESX2A3 );
 		for ( $d = 0; $d <= 2; $d++ )
@@ -511,6 +525,7 @@ if ( $adm_access == 1 )
 		$xnewssave = intval( $_POST['xnewssave'] );
 		$xnewsfriend = intval( $_POST['xnewsfriend'] );
 		$xnewshome = intval( $_POST['xnewshome'] );
+		$xnews2cot = intval( $_POST['xnews2cot'] );
 
 		$xcatnewshome = intval( $_POST['xcatnewshome'] );
 		$xnewspagenum = intval( $_POST['xnewspagenum'] );
@@ -550,6 +565,7 @@ if ( $adm_access == 1 )
 		$content .= "\$newsfriend = $xnewsfriend;\n";
 		$content .= "\n";
 		$content .= "\$newshome = $xnewshome;\n";
+		$content .= "\$news2cot = $xnews2cot;\n";
 
 		$content .= "\$catnewshome = $xcatnewshome;\n";
 		$content .= "\$newspagenum = $xnewspagenum;\n";
@@ -3958,9 +3974,9 @@ if ( $adm_access == 1 )
 		OpenTable();
 		$num_comok = $db->sql_fetchrow( $db->sql_query("SELECT COUNT(tid) FROM " . $prefix . "_stories_comments WHERE online='1'") );
 		$all_page = $num_comok[0] ? $num_comok[0] : 1;
-		$page = isset( $_GET['page2'] ) ? intval( $_GET['page2'] ) : 0;
+		$page = isset( $_GET['page'] ) ? intval( $_GET['page'] ) : 0;
 		$perpage = 10;
-		$base_url = "" . $adminfile . ".php?op=Comment";
+		$base_url = "" . $adminfile . ".php?op=Commentok";
 		$sql_comok = "SELECT a.tid as tid, a.sid as sid, a.name as name, a.comment as comment, b.title as title FROM " . $prefix . "_stories_comments a, " . $prefix . "_stories b WHERE b.sid=a.sid AND a.online=1 ORDER BY a.date DESC LIMIT $page, $perpage";
 		$res_comok = $db->sql_query( $sql_comok );
 		echo "<table width='100%' border='0' cellpadding='5' style='border-collapse: collapse'>\n";

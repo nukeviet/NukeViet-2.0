@@ -51,6 +51,7 @@ ob_start();
 <script type="text/javascript">
 <!--
 SpawEngine.spaw_dir = "<?php echo SpawConfig::getStaticConfigValue('SPAW_DIR') ?>";
+SpawEngine.setPlatform('php');
 
 function SpawDialog()
 {
@@ -93,7 +94,7 @@ SpawDialog.dialogInit = function()
     spawArguments = spawArgs.arguments;
   }
 
-  if (window.history.length == 0 || (window.sizeToContent && window.history.length == 1 /* Gecko */)) // no need to resize and center on reloads
+  if (window.history.length == 0 || (window.sizeToContent && window.history.length == 1 /* Gecko */) || (navigator.vendor && navigator.vendor.indexOf('Apple')>-1 && window.history.length == 1) /* Safari */) // no need to resize and center on reloads
   {
     SpawDialog.resizeDialogToContent();
     // center according to new dimensions
@@ -111,7 +112,7 @@ SpawDialog.returnValue = function(result)
 //-->
 </script>
 </head>
-<body onload="SpawDialog.dialogInit();">
+<body onload="SpawDialog.dialogInit();" dir="<?php echo $lang->getDir() ?>">
 <?php echo $htpl ?>
 <?php include(SpawConfig::getStaticConfigValue('SPAW_ROOT').'plugins/'.$module.'/dialogs/'.$dialog.'.inc.php'); ?>
 <?php echo $ftpl ?>

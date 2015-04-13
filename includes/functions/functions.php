@@ -3,8 +3,8 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC2
+* @Date: 		28.05.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -1013,25 +1013,18 @@ function nv_htmlspecialchars( $string )
 }
 
 /**
- * nv_capcha_txt()
- * 
- * @param mixed $seccode
- * @return
- */
+* nv_capcha_txt()
+*
+* @param mixed $seccode
+* @return
+*/
 function nv_capcha_txt( $seccode )
 {
-	global $sitekey;
-	$return = false;
-	$random_num = intval( $_SESSION['random_num'] );
-	$datekey = date( "F j" );
-	$rcode = hexdec( md5($_SERVER[HTTP_USER_AGENT] . $sitekey . $random_num . $datekey) );
-	if ( preg_match("/^[0-9]{6}$/", $seccode) and $seccode == substr($rcode, 2, 6) ) $return = true;
-
-	mt_srand( (double)microtime() * 1000000 );
-	$maxran = 1000000;
-	$random_num = mt_rand( 0, $maxran );
-	$_SESSION['random_num'] = $random_num;
-	return $return;
+   $return = false;
+   if ($seccode ==$_SESSION['random_num'] ) $return = true;
+   //echo $seccode . "<br>".$_SESSION['random_num'];
+   $_SESSION['random_num'] = mt_rand( 100000, 999999 );
+   return $return;
 }
 
 ?>

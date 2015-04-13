@@ -3,8 +3,8 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC2
+* @Date: 		07.07.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -181,6 +181,10 @@ if ( defined('IS_SPADMIN') )
 		$ech .= "<td><input type=\"text\" name=\"editor_flash_dir\" size=\"40\" value=\"" . $editorconfig['flash_dir'] . "\"></td>\n";
 		$ech .= "</tr>\n";
 		$ech .= "<tr>\n";
+		$ech .= "<td>" . _EDITOR111 . ":</td>\n";
+		$ech .= "<td><input type=\"text\" name=\"editor_files_dir\" size=\"40\" value=\"" . $editorconfig['files_dir'] . "\"></td>\n";
+		$ech .= "</tr>\n";
+		$ech .= "<tr>\n";
 		$ech .= "<td>" . _EDITOR12 . ":</td>\n";
 		$ech .= "<td><input type=\"text\" name=\"editor_doc_dir\" size=\"40\" value=\"" . $editorconfig['doc_dir'] . "\"></td>\n";
 		$ech .= "</tr>\n";
@@ -256,6 +260,7 @@ if ( defined('IS_SPADMIN') )
 		$editor_filetype_archives = ( $_POST['editor_filetype_archives'] ) ? intval( $_POST['editor_filetype_archives'] ) : 0;
 		$editor_img_dir = ( $_POST['editor_img_dir'] ) ? stripslashes( trim($_POST['editor_img_dir']) ) : "uploads/";
 		$editor_flash_dir = ( $_POST['editor_flash_dir'] ) ? stripslashes( trim($_POST['editor_flash_dir']) ) : "uploads/";
+		$editor_files_dir = ( $_POST['editor_files_dir'] ) ? stripslashes( trim($_POST['editor_files_dir']) ) : "uploads/";
 		$editor_doc_dir = ( $_POST['editor_doc_dir'] ) ? stripslashes( trim($_POST['editor_doc_dir']) ) : "uploads/";
 		$editor_arch_dir = ( $_POST['editor_arch_dir'] ) ? stripslashes( trim($_POST['editor_arch_dir']) ) : "uploads/";
 		$editor_pass = ( $_POST['editor_pass'] ) ? stripslashes( trim($_POST['editor_pass']) ) : $editor_pass2;
@@ -296,6 +301,7 @@ if ( defined('IS_SPADMIN') )
 		$content .= "\t'allowed_filetypes' => $allowed_filetypes,\n";
 		$content .= "\t'img_dir' => '$editor_img_dir',\n";
 		$content .= "\t'flash_dir' => '$editor_flash_dir',\n";
+		$content .= "\t'files_dir' => '$editor_files_dir',\n";
 		$content .= "\t'doc_dir' => '$editor_doc_dir',\n";
 		$content .= "\t'arch_dir' => '$editor_arch_dir',\n";
 		$content .= "\t'editor_pass' => '$editor_pass'\n";

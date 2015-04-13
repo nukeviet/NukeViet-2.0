@@ -3,7 +3,7 @@
  * @Program:	NukeViet CMS v2.0 RC1
  * @File name: 	Spaw2 Editor
  * @Version: 	2.0
- * @Date: 		01.05.2009
+ * @Date: 		07.07.2009
  * @Website: 	www.nukeviet.vn
  * @Copyright: 	(C) 2009
  * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -20,6 +20,7 @@ define("_EDITOR8","Chiều cao tối đa của hình tải lên (0 = không ki�
 define("_EDITOR9","Các tổ hợp files được phép tải lên");
 define("_EDITOR10","Thư mục lưu files hình ảnh (.gif, .jpg, .png)");
 define("_EDITOR11","Thư mục lưu files hình flash (.swf)");
+define("_EDITOR111","Thư mục lưu các loại files khác (.doc, .pdf, .zip, .gz,...)");
 define("_EDITOR12","Thư mục lưu files tài liệu (.doc, .pdf)");
 define("_EDITOR13","Thư mục lưu files nén (.zip, .gz)");
 define("_EDITOR14","Mã kiểm tra quyền sử dụng");

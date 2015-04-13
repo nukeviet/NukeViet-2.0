@@ -83,27 +83,30 @@
       }
       -->
       </style>
+      <?php
+      $predef_colors = $config->getConfigValue('colorpicker_predefined_colors');
+      ?>
       <table border="0" cellpadding="0" cellspacing="3">
       <tr>
         <td rowspan="2" id="color_sample" style="width: 40px; border: 1px solid black;">&nbsp;</td>
-        <td class="spawCPpredefColor" style="background: black; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
-        <td class="spawCPpredefColor" style="background: silver; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
-        <td class="spawCPpredefColor" style="background: gray; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
-        <td class="spawCPpredefColor" style="background: white; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
-        <td class="spawCPpredefColor" style="background: maroon; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
-        <td class="spawCPpredefColor" style="background: red; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
-        <td class="spawCPpredefColor" style="background: purple; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
-        <td class="spawCPpredefColor" style="background: fuchsia; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
+        <td class="spawCPpredefColor" style="background: <?php echo (empty($predef_colors[0])?'black':$predef_colors[0])?>; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
+        <td class="spawCPpredefColor" style="background: <?php echo (empty($predef_colors[1])?'silver':$predef_colors[1])?>; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
+        <td class="spawCPpredefColor" style="background: <?php echo (empty($predef_colors[2])?'gray':$predef_colors[2])?>; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
+        <td class="spawCPpredefColor" style="background: <?php echo (empty($predef_colors[3])?'white':$predef_colors[3])?>; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
+        <td class="spawCPpredefColor" style="background: <?php echo (empty($predef_colors[4])?'maroon':$predef_colors[4])?>; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
+        <td class="spawCPpredefColor" style="background: <?php echo (empty($predef_colors[5])?'red':$predef_colors[5])?>; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
+        <td class="spawCPpredefColor" style="background: <?php echo (empty($predef_colors[6])?'purple':$predef_colors[6])?>; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
+        <td class="spawCPpredefColor" style="background: <?php echo (empty($predef_colors[7])?'fuchsia':$predef_colors[7])?>; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
       </tr>
       <tr>
-        <td class="spawCPpredefColor" style="background: green; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
-        <td class="spawCPpredefColor" style="background: lime; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
-        <td class="spawCPpredefColor" style="background: olive; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
-        <td class="spawCPpredefColor" style="background: yellow; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
-        <td class="spawCPpredefColor" style="background: navy; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
-        <td class="spawCPpredefColor" style="background: blue; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
-        <td class="spawCPpredefColor" style="background: teal; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
-        <td class="spawCPpredefColor" style="background: aqua; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
+        <td class="spawCPpredefColor" style="background: <?php echo (empty($predef_colors[8])?'green':$predef_colors[8])?>; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
+        <td class="spawCPpredefColor" style="background: <?php echo (empty($predef_colors[9])?'lime':$predef_colors[9])?>; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
+        <td class="spawCPpredefColor" style="background: <?php echo (empty($predef_colors[10])?'olive':$predef_colors[10])?>; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
+        <td class="spawCPpredefColor" style="background: <?php echo (empty($predef_colors[11])?'yellow':$predef_colors[11])?>; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
+        <td class="spawCPpredefColor" style="background: <?php echo (empty($predef_colors[12])?'navy':$predef_colors[12])?>; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
+        <td class="spawCPpredefColor" style="background: <?php echo (empty($predef_colors[13])?'blue':$predef_colors[13])?>; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
+        <td class="spawCPpredefColor" style="background: <?php echo (empty($predef_colors[14])?'teal':$predef_colors[14])?>; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
+        <td class="spawCPpredefColor" style="background: <?php echo (empty($predef_colors[15])?'aqua':$predef_colors[15])?>; cursor: pointer;" onclick="SpawColorPicker.setCurrentColorFromHTML(this.style.backgroundColor, this);">&nbsp;</td>
       </tr>
       </table>
     </div>

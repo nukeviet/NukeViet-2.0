@@ -13,6 +13,7 @@ SpawPGcore.toggleBordersClick = function(editor, tbi, sender)
       editor.removeGlyphs(pdoc.body);
     }
     editor.updateToolbar();
+    editor.focus();
   }
 }
 SpawPGcore.toggleBordersPushed = function(editor, tbi)
@@ -34,5 +35,6 @@ SpawPGcore.codeCleanupClick = function(editor, tbi, sender)
   {
     editor.cleanPageCode(null);
     editor.updateToolbar();
+    editor.focus();
   }
 }

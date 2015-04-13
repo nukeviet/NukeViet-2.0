@@ -15,6 +15,7 @@ SpawPGcore.bgColorClickCallback = function(editor, result, tbi, sender)
   try
   {
     pdoc.execCommand('backcolor', false, result);
+    editor.focus();
   }
   catch(e)
   {}

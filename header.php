@@ -3,8 +3,8 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC2
+* @Date: 		31.05.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -92,11 +92,11 @@ function head()
 	$head .= "window.open(theURL,winName,features);\n";
 	$head .= "}\n";
 	$head .= "</script>\n";
-	$head .= "<link rel=\"StyleSheet\" href=\"" . $nukeurl . "/themes/" . $ThemeSel . "/style/style.css\" type=\"text/css\">\n";
-	$head .= "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"News - " . strip_tags( $sitename ) . "\" href=\"" . $nukeurl . "/modules.php?name=News&amp;file=rss\">\n";
-	$head .= "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"Files - " . strip_tags( $sitename ) . "\" href=\"" . $nukeurl . "/modules.php?name=Files&amp;file=rss\">\n";
-	$head .= "  <link rel=\"icon\" href=\"" . $nukeurl . "/favicon.ico\" type=\"image/vnd.microsoft.icon\">\n";
-	$head .= "  <link rel=\"shortcut icon\" href=\"" . $nukeurl . "/favicon.ico\" type=\"image/vnd.microsoft.icon\">\n";
+	$head .= "<link rel=\"StyleSheet\" href=\"" . INCLUDE_PATH . "themes/" . $ThemeSel . "/style/style.css\" type=\"text/css\">\n";
+	$head .= "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"News - " . strip_tags( $sitename ) . "\" href=\"" . INCLUDE_PATH . "modules.php?name=News&amp;file=rss\">\n";
+	$head .= "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"Files - " . strip_tags( $sitename ) . "\" href=\"" . INCLUDE_PATH . "modules.php?name=Files&amp;file=rss\">\n";
+	$head .= "  <link rel=\"icon\" href=\"" . INCLUDE_PATH . "favicon.ico\" type=\"image/vnd.microsoft.icon\">\n";
+	$head .= "  <link rel=\"shortcut icon\" href=\"" . INCLUDE_PATH . "favicon.ico\" type=\"image/vnd.microsoft.icon\">\n";
 	$head .= "</head>\n\n";
 	echo $head;
 	themeheader();

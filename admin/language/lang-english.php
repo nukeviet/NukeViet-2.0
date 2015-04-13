@@ -3,8 +3,8 @@
  * @Program:	NukeViet CMS
  * @File name: 	NukeViet System
  * @Editor: 	Nthanhbinh & member
- * @Version: 	2.0 RC1
- * @Date: 		01.05.2009
+ * @Version: 	2.0 RC2
+ * @Date: 		07.07.2009
  * @Website: 	www.nukeviet.vn
  * @Copyright: 	(C) 2009
  * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -757,16 +757,19 @@ define("_HERE","here");
 define("_NOIMGNEWS","No images. You must upload to");
 define('_SUPPORTADMIN','Support');
 
-define('_MODSKIN','Theme (only effective when selecting the Do not allow the change theme)');
+define('_MODSKIN','Theme');
+define('_MODSKIN2','only effective when selecting the <i>Do not allow change theme</i> in <i>Configure</i>');
 define('_NEWS2','Type Modules News');
 define('_NEWS21','one column');
 define('_NEWS22','two column');
 define('_LINKPROTECTON','Protect all link other sites as anonymously (<a href="../protect/english.php" target="_blank">help</a>).');
 define('_LINKPROTECTED','- Do not anonymize the following domains / keywords (comma separated: yourdomain.com,keyword1,keyword2 ...)');
 define('_CONTACT','Contact');
-define('_ANALYTICS','Turn on google-analytics.com');
-define('_ANALYTICS2','Your key google-analytics.com (use Gmail to register)');
-
+define('_FORUMS','Forums');
+//310509 - Anhtu
+define('_CHANGEACCOUNT','Change your account');
+define('_CURRENTPASSW','Current password');
+//END
 
 
 ?>

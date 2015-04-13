@@ -15,6 +15,7 @@ SpawPGcore.bgColorClickCallback = function(editor, result, tbi, sender)
   try
   {
     pdoc.execCommand('hilitecolor', false, result);
+    editor.focus();
   }
   catch(e)
   {}

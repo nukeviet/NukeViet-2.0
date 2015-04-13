@@ -4,8 +4,8 @@
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet Setup
 * @Author: 		NukeViet Group
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC2
+* @Date: 		07.07.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -105,7 +105,7 @@ define( "_STEP216", "Ngôn ngữ chính của site *" );
 define( "_STEP217", "Thư mục Data *" );
 define( "_STEP218", "Thư mục Admin *" );
 define( "_STEP219", "Tập tin Admin *" );
-define( "_STEP222", "<b>Các chú ý khi khai báo:</b><li>Tất cả các dòng đánh dấu hoa thị (*) phải được khai báo đầy đủ</li><li>Các thông số về CSDL được xác định từ nhà cung cấp hosting</li><li>Tên truy cập, Mật khẩu của Admin và Thành viên nhỏ hơn 10, lớn hơn 4 ký tự, chỉ dùng các chữ cái và số trong bảng chữ cái latin, không có khoảng trắng, không dùng những tên bị cấm như: anonimo, god, linux, nobody, root, operator, anonymous...</li><li>Email của Admin và Thành viên phải là email thật, được viết đúng theo nguyên tắc chung</li><li>Nếu bạn khai báo lại 'Thư mục Data' thì nó phải được tạo và CHMOD 777 trước khi cài đặt.</li>" );
+define( "_STEP222", "<b>Các chú ý khi khai báo:</b><li>Tất cả các dòng đánh dấu hoa thị (*) phải được khai báo đầy đủ</li><li>Các thông số về CSDL được xác định từ nhà cung cấp hosting</li><li>Tên truy cập, Mật khẩu của Admin và Thành viên nhỏ hơn 10, lớn hơn 4 ký tự, chỉ dùng các chữ cái và số trong bảng chữ cái latin, không có khoảng trắng, không dùng những tên bị cấm như: anonimo, god, linux, nobody, root, operator, anonymous...</li><li>Email của Admin và Thành viên phải là email thật, được viết đúng theo nguyên tắc chung</li><li>Vị trí 'thư mục data' mặc định là includes/data. Trong quá trình cài, nếu bạn khai báo lại 'Thư mục Data' thì nó phải di chuyển nó về vị trí đã khai báo và CHMOD 777 trước khi cài đặt.</li>" );
 define( "_STEP2222", "Quá trình cài đặt chỉ diễn ra khi tất cả các khai báo đầy đủ và chính xác!" );
 define( "_STEP32", "Quá trình tạo cơ sở dữ liệu cho hệ thống Nukeviet" );
 define( "_STEP33", "Tạo CSDL" );

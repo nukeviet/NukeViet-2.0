@@ -4,8 +4,8 @@
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
 * @Author: 		NukeViet Group
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC2
+* @Date: 		07.07.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -53,6 +53,25 @@ if ( ! file_exists($modpath) )
 	include ( "footer.php" );
 	exit;
 }
+    list( $adm_mod, $mod_theme, $bltype ) = $db->sql_fetchrow( $db->sql_query("SELECT `admins`, `theme`, `bltype` FROM `" . $prefix . "_modules` WHERE `title`='" . $name . "'") );
+    define( "MOD_BLTYPE", $bltype );
+
+    if ( ! $changtheme )
+    {
+       if ( ! empty($mod_theme) and file_exists("themes/" . $mod_theme . "/theme.php") ) $ThemeSel = $mod_theme;
+    }
+
+    $adm_mod = ( ! empty($adm_mod) ) ? explode( ",", $adm_mod ) : array();
+    if ( defined('IS_ADMIN') )
+    {
+       if ( $adm_super == 1 )
+       {
+          define( 'IS_ADMMOD', true );
+       } elseif ( ! empty($adm_mod) )
+       {
+          if ( ! empty($adm_name) and in_array($adm_name, $adm_mod) ) define( 'IS_ADMMOD', true );
+       }
+    }
 include ( $modpath );
 
 ?>

@@ -3,8 +3,8 @@
 /*
 * @Program:	NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC2
+* @Date: 		31.05.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -72,8 +72,8 @@ if ( $mod_active )
 {
 	$mop = ( isset($_POST['mop']) and ! empty($_POST['mop']) ) ? $_POST['mop'] : ( (isset($_GET['mop']) and ! empty($_GET['mop'])) ? $_GET['mop'] : "modload" );
 	$file = ( isset($_POST['file']) and ! empty($_POST['file']) ) ? $_POST['file'] : ( (isset($_GET['file']) and ! empty($_GET['file'])) ? $_GET['file'] : "index" );
-	if ( eregi("[^a-zA-Z0-9\_]", $file) or eregi("[^a-zA-Z0-9\_]", $mop) ) die( "You are so cool..." );
-	$set_view = false;
+	if ( stripos_clone($name, "..") || (isset($file) && stripos_clone($file, "..")) || stripos_clone($mop, "..") ) die( "You are so cool..." );
+	if ( eregi("[^a-zA-Z0-9\_\.]", $file) or eregi("[^a-zA-Z0-9\_]", $mop) ) die( "You are so cool..." );	$set_view = false;
 	if ( defined('IS_ADMMOD') )
 	{
 		$set_view = true;
@@ -85,11 +85,24 @@ if ( $mod_active )
 		$set_view = true;
 	}
 
-	if ( ! $set_view )
-	{
-		header( "Location: index.php" );
-		exit();
-	}
+    if ( ! $set_view )
+       {
+          if ( $view == 1 )
+          {
+             include ( "header.php" );
+             title( $sitename . ": " . _ACCESSDENIED );
+             OpenTable();
+             echo "<center><b>" . _RESTRICTEDAREA . "</b><br><br>" . _MODULEUSERS . _GOBACK;
+             echo "<meta http-equiv=\"refresh\" content=\"10;url=index.php\">";
+             CloseTable();
+             include ( "footer.php" );
+          }
+          else
+          {
+             header( "Location: index.php" );
+          }
+          die();
+       }
 
 	$modpath .= "modules/" . $name . "/" . $file . ".php";
 	if ( ! file_exists($modpath) )
@@ -103,6 +116,15 @@ if ( $mod_active )
 	}
 
 	include ( $modpath );
+}
+else
+{
+   include ( "header.php" );
+   OpenTable();
+   echo "<center>" . _MODULENOTACTIVE . "<br><br>" . _GOBACK . "</center>";
+   CloseTable();
+   include ( "footer.php" );
+   die();
 }
 
 ?>

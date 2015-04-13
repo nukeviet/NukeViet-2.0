@@ -53,7 +53,6 @@ $spaw_lang_data = array(
     'error_delete_subdirectories_forbidden' => 'Deleting directories is forbidden.',
     'error_delete_subdirectories_failed' => 'Directory could not be deleted. You may not have permissions required.',
     'error_delete_subdirectories_not_empty' => 'Directory is not empty.',
-    'createthumb_text' => 'Enter the new size-width:',
   ),
   'buttons' => array(
     'ok'        => '  OK  ',
@@ -62,7 +61,6 @@ $spaw_lang_data = array(
     'view_details' => 'View mode: details',
     'view_thumbs' => 'View mode: thumbnails',
     'rename'    => 'Rename...',
-    'thumbnail' => 'Create thumbnail',
     'delete'    => 'Delete',
     'go_up'     => 'Up',
     'upload'    =>  'Upload',

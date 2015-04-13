@@ -4,8 +4,8 @@
 * @Program:		NukeViet CMS v2.0 RC1
 * @File name: 	Module RSS generation
 * @Author: 		laser (Nukeviet Group)
-* @Version: 	3.0
-* @Date: 		01.05.2009
+* @Version: 	3.1
+* @Date: 		25.06.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -258,6 +258,27 @@ while ( $row2 = $db->sql_fetchrow($result2) )
 					echo " <a target=\"_blank\" href=\"" . $feedurl . "" . $nukeurl . "/modules.php%3Fname%3DAlbums%26file%3Drss%26catid%3D$id1\">" . $bookmarkrss . "</a>";
 					echo " <a href=\"modules.php?name=Albums&amp;op=viewcat&amp;catid=$id1\">$titlink</a><br>";
 
+				}
+				break;
+
+			case 'Support':
+				$result12 = $db->sql_query( "SELECT title, id FROM " . $prefix . "_nvsupport_cat where (subid='0' AND active='1') order by title, id" );
+				while ( $row12 = $db->sql_fetchrow($result12) )
+				{
+					$newslink = $row12['title'];
+					$cidnews = $row12['id'];
+					echo "" . $imgmid . "" . $imgmid2 . "<a href=\"modules.php?name=Support&amp;file=rss&amp;cat=" . $cidnews . "&amp;lang=" . $currentlang . "\">" . $iconrss . "</a>";
+					echo " <a target=\"_blank\" href=\"" . $feedurl . "" . $nukeurl . "/modules.php%3Fname%3DSupport%26file%3Drss%26cat%3D" . $cidnews . "%26lang%3D" . $currentlang . "\">" . $bookmarkrss . "</a>";
+					echo " <a href=\"modules.php?name=Support&amp;op=viewcat&amp;cat=$cidnews\">$newslink</a><br>";
+					$result12a = $db->sql_query( "SELECT title, id FROM " . $prefix . "_stories_cat where (subid='" . $cidnews . "' AND active='1') order by title, id" );
+					while ( $row10a = $db->sql_fetchrow($result12a) )
+					{
+						$newslink2 = $row12a['title'];
+						$cidnews2 = $row12a['id'];
+						echo "" . $imgmid . "" . $imgmid . "" . $imgmid2 . "<a href=\"modules.php?name=Support&amp;file=rss&amp;cat=" . $cidnews2 . "&amp;lang=" . $currentlang . "\">" . $iconrss . "</a>";
+						echo " <a target=\"_blank\" href=\"" . $feedurl . "" . $nukeurl . "/modules.php%3Fname%3DSupport%26file%3Drss%26cat%3D" . $cidnews2 . "%26lang%3D" . $currentlang . "\">" . $bookmarkrss . "</a>";
+						echo " <a href=\"modules.php?name=Support&amp;op=viewcat&amp;cat=$cidnews2\">$newslink2</a><br>";
+					}
 				}
 				break;
 		}

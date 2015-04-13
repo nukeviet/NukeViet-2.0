@@ -1,5 +1,15 @@
 <?php
 
+/*
+* @Program:		NukeViet CMS
+* @File name: 	NukeViet System Security
+* @Version: 	2.0 RC2
+* @Date: 		28.05.2009
+* @Website: 	www.nukeviet.vn
+* @Copyright: 	(C) 2009
+* @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
+*/
+
 
 if ( ! defined('NV_MAINFILE') ) die( 'Stop!!!' );
 
@@ -11,7 +21,7 @@ if ( phpversion() < "4.1.0" )
 	$_SERVER = $HTTP_SERVER_VARS;
 	$_FILES = $HTTP_POST_FILES;
 	$_ENV = $HTTP_ENV_VARS;
-	unset( $_REQUEST, $_COOKIE, $_SESSION );
+//	unset( $_REQUEST, $_COOKIE, $_SESSION );
 	if ( $_SERVER['REQUEST_METHOD'] == "POST" )
 	{
 		$_REQUEST = $_POST;
@@ -37,7 +47,7 @@ if ( $phpver >= '4.1.0' )
 	$HTTP_POST_FILES = $_FILES;
 	$HTTP_ENV_VARS = $_ENV;
 	$PHP_SELF = $_SERVER['PHP_SELF'];
-	unset( $HTTP_SESSION_VARS, $HTTP_COOKIE_VARS );
+//	unset( $HTTP_SESSION_VARS, $HTTP_COOKIE_VARS );
 	if ( isset($_SESSION) )
 	{
 		$HTTP_SESSION_VARS = $_SESSION;

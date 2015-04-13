@@ -1,10 +1,10 @@
 <?php
 
 /*
-* @Program:	NukeViet CMS v2.0 RC1
+* @Program:		NukeViet CMS v2.0 RC1
 * @File name: 	Module Files
-* @Version: 	2.1
-* @Date: 		01.05.2009
+* @Version: 	2.2
+* @Date: 		14.06.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -48,9 +48,13 @@ function getit()
 	{
 		Header( "Location: index.php" );
 		exit;
-	} elseif ( extension_loaded("gd") and (! nv_capcha_txt($gfx_check)) and ($fchecknum == 1) and ! defined('IS_ADMMOD') )
+	} elseif ( extension_loaded("gd") and (! nv_capcha_txt($gfx_check)) and ($fchecknum == 1) and (! defined('IS_ADMMOD') OR ! defined('IS_USER')) )
 	{
-		info_exit( "" . _WRONGCHECKNUM . "<br>" . _GOBACK . "" );
+		include ( "header.php" );
+		OpenTable();
+		echo "<center><br><br><b><a href=\"modules.php?name=$module_name&go=view_file&lid=$lid\">" . _WRONGCHECKNUM . "</a></b><br></center>";
+		CloseTable();
+		include ( "footer.php" );
 	}
 	else
 	{
@@ -1318,7 +1322,7 @@ function view_file()
 	echo "<tr><td><hr>\n";
 	// add Send to Yahoo - www.mangvn.org - 10-01-2009
 	echo "<a href=\"ymsgr:im?+&amp;msg=" . _SENDFILE1 . " '" . $title . "' " . _SENDFILE2 . ": " . $nukeurl . "modules%2Ephp%3Fname%3D$module_name%26go%3Dview_file%26lid%3D$lid%20\" onMouseOut=\"window.status=''; return true;\" onMouseOver=\"window.status='" . _SENDFILE3 . "'; return true;\"><img src=\"images/send_ym.gif\" border=\"0\" alt=\"" . _SENDFILE4 . "\" title=\"" . _SENDFILE3 . "\"></a>\n";
-	echo "<!-- AddThis Button BEGIN -->\n" . "<script type=\"text/javascript\">addthis_pub  = 'mangvn';</script>\n" . "<a href=\"http://www.addthis.com/bookmark.php\" onmouseover=\"return addthis_open(this, '', '[URL]', '[TITLE]')\" onmouseout=\"addthis_close()\" onclick=\"return addthis_sendto()\"><img src=\"http://s9.addthis.com/button1-bm.gif\" width=\"125\" height=\"16\" border=\"0\" alt=\"\" /></a><script type=\"text/javascript\" src=\"http://s7.addthis.com/js/152/addthis_widget.js\"></script>\n" . "<!-- AddThis Button END -->\n";
+	echo "<!-- AddThis Button BEGIN -->\n" . "<script type=\"text/javascript\">addthis_pub  = 'mangvn';</script>\n" . "<a href=\"http://www.addthis.com/bookmark.php\" onmouseover=\"return addthis_open(this, '', '[URL]', '[TITLE]')\" onmouseout=\"addthis_close()\" onclick=\"return addthis_sendto()\"><img src=\"".INCLUDE_PATH."images/button1-bm.gif\" width=\"125\" height=\"16\" border=\"0\" alt=\"\" /></a><script type=\"text/javascript\" src=\"http://s7.addthis.com/js/152/addthis_widget.js\"></script>\n" . "<!-- AddThis Button END -->\n";
 	echo "</td></tr>\n";
 	if ( ((defined('IS_USER')) and ($filesvote == 2)) || ($filesvote == 1) )
 	{
@@ -1340,7 +1344,7 @@ function view_file()
 	if ( defined('IS_ADMMOD') || ($download == 0) || ((defined('IS_USER')) and ($download == 1)) )
 	{
 		echo "<form method=\"POST\" action=\"modules.php?name=$module_name\" style=\"display: inline\">" . "<input type=\"hidden\" name=\"lid\" value=\"$lid\">";
-		if ( extension_loaded("gd") and ($fchecknum == 1) and ! defined('IS_ADMMOD') )
+		if ( extension_loaded("gd") and ($fchecknum == 1) and (! defined('IS_ADMMOD') OR ! defined('IS_USER')) )
 		{
 			echo "<center>" . _DOWNNOTES . "</center><br>";
 			echo "<b>" . _SECURITYCODE . ":</b> <img width=\"73\" height=\"17\" src='?gfx=gfx' border='1' alt='" . _SECURITYCODE . "' title='" . _SECURITYCODE . "'>\n" . "<b>" . _TYPESECCODE . ":</b> <input type=\"text\" NAME=\"gfx_check\" SIZE=\"11\" MAXLENGTH=\"6\">\n";
@@ -1386,11 +1390,23 @@ function view_file()
 				global $user_ar;
 				$tentv = explode( "|", $udt[intval($user_ar[0])] );
 				echo "<font class=option><b>" . _YOURNAME . ":</b> $tentv[1]</font><br>";
-				echo "<input type=\"hidden\" name=\"postname\" value=\"$tentv[1]\">\n" . "<input type=\"hidden\" name=\"postemail\" value=\"$tentv[2]\">\n" . "<input type=\"hidden\" name=\"posturl\" value=\"\">\n";
+				echo "<input type=\"hidden\" name=\"postname\" value=\"$tentv[1]\">\n" 
+				. "<input type=\"hidden\" name=\"postemail\" value=\"$tentv[2]\">\n" 
+				. "<input type=\"hidden\" name=\"posturl\" value=\"\">\n";
 			}
 			echo "<font class=\"option\"><b>" . _SUBJECT . ":</b></font><br>";
 			echo "<input type=\"text\" name=\"subject\" size=\"62\" value=\"$subject\"><br>";
-			echo "<font class=\"option\"><b>" . _UCOMMENT . ":</b></font><br>" . "<textarea wrap=\"virtual\" cols=\"62\" rows=\"5\" name=\"comment\"></textarea><br><br>" . "<input type=\"hidden\" name=\"lid\" value=\"$lid\">\n" . "<input type=\"hidden\" name=\"go\" value=\"savecomments\">\n" . "<input type=\"submit\" value=\"" . _COMMENTREPLY . "\"></form>\n";
+			echo "<font class=\"option\"><b>" . _UCOMMENT . ":</b></font><br>" 
+			. "<textarea wrap=\"virtual\" cols=\"62\" rows=\"5\" name=\"comment\"></textarea><br>";
+			if ( extension_loaded("gd") and (! defined('IS_ADMMOD') OR ! defined('IS_USER')) )
+			{
+				echo "<b>" . _TYPESECCODE . ":</b><br>\n";
+				echo "<img style=\"vertical-align: middle;\" width=\"73\" height=\"17\" src='?gfx=gfx' border='1' alt='" . _SECURITYCODE . "' title='" . _SECURITYCODE . "'>\n";
+				echo "<input type='text' name='gfx_check' id='gfx_check' size='11' maxlength='6'><br><br>\n";
+			}
+			echo "<input type=\"hidden\" name=\"lid\" value=\"$lid\">\n" 
+			. "<input type=\"hidden\" name=\"go\" value=\"savecomments\">\n" 
+			. "<input type=\"submit\" value=\"" . _COMMENTREPLY . "\"></form>\n";
 		}
 		echo "<hr><br><a name=com></a>";
 		$sql = "SELECT tid, UNIX_TIMESTAMP(date) as formatted, name, email, url, host_name, subject, comment FROM " . $prefix . "_files_comments WHERE lid='$lid' ORDER BY date DESC LIMIT 5";
@@ -1448,7 +1464,7 @@ function view_file()
  */
 function savecomments()
 {
-	global $client_ip, $prefix, $db, $module_name, $addcomments;
+	global $client_ip, $prefix, $db, $module_name, $addcomments, $sitekey;
 	if ( $addcomments == 0 )
 	{
 		Header( "Location: index.php" );
@@ -1460,6 +1476,7 @@ function savecomments()
 	$posturl = FixQuotes( filter_text($_POST['posturl'], "nohtml") );
 	$subject = FixQuotes( filter_text($_POST['subject'], "nohtml") );
 	$comment = $_POST['comment'];
+	$gfx_check = intval( $_POST['gfx_check'] );
 	if ( ! isset($lid) || $lid == 0 )
 	{
 		Header( "Location: index.php" );
@@ -1484,20 +1501,59 @@ function savecomments()
 	{
 		$result = 1;
 		$eror = "" . _ACEROR3 . "";
+	} elseif ( $postemail == "" )
+	{
+		$result = 1;
+		$eror = "" . _ACEROR4 . "";
 	} elseif ( $postname == "" )
 	{
-		$result = 4;
-		$eror = "" . _ACEROR4 . "";
+		$result = 1;
+		$eror = "" . _YOURNAME . "?";
 	}
+		if ( $eror == "" )
+		{
+			if ( extension_loaded("gd") and (! defined('IS_ADMMOD') OR ! defined('IS_USER')) )
+			{
+				if ( ! nv_capcha_txt($gfx_check) )
+				{
+					$result = 1;
+					$eror = "" . _WRONGCHECKNUM. "";
+				}
+			}
+		}
 	if ( $result != 0 )
 	{
-		info_exit( "<center><b>$eror<br><br>" . _GOBACK . "</b></center>" );
-	}
+		include ( "header.php" );
+		echo "<center><b>$eror<br><br></b></center>";
+		echo "<form action=\"modules.php?name=$module_name\" method=\"post\">";
+		echo "<font class=option><b>" . _YOURNAME . ":</b></font><br>";
+		echo "<input type=\"text\" name=\"postname\" size=\"62\" value=\"" . $postname . "\"><br>";
+		echo "<font class=option><b>" . _FYOUREMAIL . "</b></font><br>";
+		echo "<input type=\"text\" name=\"postemail\" size=\"62\" value=\"" . $postemail . "\"><br>";
+		echo "<font class=option><b>" . _URL . ":</b></font><br>";
+		echo "<input type=\"text\" name=\"posturl\" size=\"62\" value=\"" . $posturl . "\"><br>\n";
+		echo "<font class=\"option\"><b>" . _SUBJECT . ":</b></font><br>";
+		echo "<input type=\"text\" name=\"subject\" size=\"62\" value=\"" . $subject . "\"><br>";
+		echo "<font class=\"option\"><b>" . _UCOMMENT . ":</b></font><br>" 
+		. "<textarea wrap=\"virtual\" cols=\"62\" rows=\"5\" name=\"comment\">".$comment."</textarea><br>";
+		if ( extension_loaded("gd") and (! defined('IS_ADMMOD') OR ! defined('IS_USER')) )
+		{
+			echo "<b>" . _TYPESECCODE . ":</b><br>\n";
+			echo "<img style=\"vertical-align: middle;\" width=\"73\" height=\"17\" src='?gfx=gfx' border='1' alt='" . _SECURITYCODE . "' title='" . _SECURITYCODE . "'>\n";
+			echo "<input type='text' name='gfx_check' id='gfx_check' size='11' maxlength='6'><br><br>\n";
+		}
+		echo "<input type=\"hidden\" name=\"lid\" value=\"$lid\">\n" 
+		. "<input type=\"hidden\" name=\"go\" value=\"savecomments\">\n" 
+		. "<input type=\"submit\" value=\"" . _COMMENTREPLY . "\"></form>\n";
+		include ( "footer.php" );
+		// End hien thi lai form gui
+	} else {
 	$comment = nl2br( FixQuotes(filter_text($comment, "nohtml")) );
 	$ip = $client_ip;
 	$db->sql_query( "INSERT INTO " . $prefix . "_files_comments VALUES (NULL, '$lid', now(), '$postname', '$postemail', '$posturl', '$ip', '$subject', '$comment')" );
 	$db->sql_query( "UPDATE " . $prefix . "_files SET totalcomments=totalcomments+1 WHERE lid='$lid'" );
 	Header( "Location: modules.php?name=$module_name&go=view_file&lid=$lid#com" );
+	}
 }
 
 /**

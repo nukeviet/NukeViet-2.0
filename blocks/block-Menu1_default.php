@@ -4,8 +4,8 @@
 * @Program:		NukeViet CMS v2.0 RC1
 * @File name: 	Block Menu
 * @Author: 		Nguyen The Hung (Nukeviet Group)
-* @Version: 	3.0
-* @Date: 		01.05.2009
+* @Version: 	3.1
+* @Date: 		29.06.2009
 * @Website: 	http://mangvn.org
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -138,6 +138,24 @@ if ( defined('IS_ADMIN') )
 	}
 	$content .= "<TD $stylemenu height=\"$cao_menu\" onMouseOver=\"this.style.background='$nen_mouse'\" onMouseOut=\"this.style.background='$nen_menu'\">\n";
 	$content .= "<DIV $canhle><b><A $dinhdang href=\"" . INCLUDE_PATH . "" . $adminfold . "/" . $adminfile . ".php\">" . _ADMINPAGE . "</A> / <A $dinhdang href=\"" . INCLUDE_PATH . "" . $adminfold . "/" . $adminfile . ".php?op=logout\">" . _LOGOUT . "</A></b></DIV></TD>\n";
+	if ( $mau_menu == "1" )
+	{
+		$content .= "<TD $stylecanh width=8 bgColor=$canh_qts>\n";
+		$content .= "<IMG src=\"images/arrow2.gif\" height=5 width=10 border=0></TD>\n";
+	}
+	$content .= "</TR>\n";
+}
+
+if ( !defined('IS_ADMIN') AND file_exists("admin/admin.php") )
+{
+	$content .= "<TR>";
+	if ( $mau_menu == "2" )
+	{
+		$content .= "<TD $stylecanh width=8 bgColor=$canh_qts>\n";
+		$content .= "<IMG src=\"images/arrow2.gif\" height=5 width=10 border=0></TD>\n";
+	}
+	$content .= "<TD $stylemenu height=\"$cao_menu\" onMouseOver=\"this.style.background='$nen_mouse'\" onMouseOut=\"this.style.background='$nen_menu'\">\n";
+	$content .= "<DIV $canhle><b><A $dinhdang href=\"" . INCLUDE_PATH . "" . $adminfold . "/" . $adminfile . ".php\">" . _ADMINPAGE . "</A></b></DIV></TD>\n";
 	if ( $mau_menu == "1" )
 	{
 		$content .= "<TD $stylecanh width=8 bgColor=$canh_qts>\n";

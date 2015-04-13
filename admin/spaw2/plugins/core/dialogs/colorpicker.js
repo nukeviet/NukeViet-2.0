@@ -21,8 +21,16 @@ SpawColorPicker.getCurrentColor = function()
 }
 SpawColorPicker.setCurrentColorFromHTML = function(color, sender)
 {
-  var c = new SpawColor();
-  c.setRGBFromHTML(color);
+  var c;
+  if (color.toLowerCase().indexOf('rgb(') != -1)
+  {
+    c = SpawColor.parseRGB(color);
+  }
+  else
+  {
+    c = new SpawColor();
+    c.setRGBFromHTML(color);
+  }
   SpawColorPicker.setCurrentColor(c, sender);
 }
 SpawColorPicker.hsClick = function(event, sender)

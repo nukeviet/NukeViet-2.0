@@ -5,7 +5,7 @@
 * @File name: 	Module Addnews
 * @Author: 		Nguyen Anh Tu (Nukeviet Group)
 * @Version: 	2.0
-* @Date: 		01.05.2009
+* @Date: 		06.07.2009
 * @Website: 	www.nukeviet.vn
 * @Contact: 	anht@mail.ru
 * @Copyright: 	(C) 2009
@@ -24,10 +24,24 @@ $index = ( defined('MOD_BLTYPE') ) ? MOD_BLTYPE : 1;
 
 if ( ! defined('IS_ADMMOD') )
 {
-	if ( $addnews == 0 or ($addnews == 2 and ! defined('IS_USER')) )
+	if ( ! $addnews )
 	{
-		Header( "Location: index.php" );
-		exit();
+	  include ( "header.php" );
+	  OpenTable();
+	  echo "<center>" . _MODULENOTACTIVE . "<br><br>" . _GOBACK . "</center>";
+	  CloseTable();
+	  include ( "footer.php" );
+	  die();
+	} elseif($addnews == 2 and ! defined('IS_USER'))
+	{
+	  include ( "header.php" );
+	  title( $sitename . ": " . _ACCESSDENIED );
+	  OpenTable();
+	  echo "<center><b>" . _RESTRICTEDAREA . "</b><br><br>" . _MODULEUSERS . _GOBACK;
+	  echo "<meta http-equiv=\"refresh\" content=\"10;url=index.php\">";
+	  CloseTable();
+	  include ( "footer.php" );
+	  die();
 	}
 }
 

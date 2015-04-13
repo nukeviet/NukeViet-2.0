@@ -39,7 +39,7 @@ SpawUtils.trimLineBreaks = function(txt)
 }
 SpawUtils.htmlEncode = function(txt)
 {
-  return txt.replace('&','&amp;').replace('<','&lt;').replace('>', '&gt;').replace(/\u00A0/g, "&nbsp;");
+  return txt.replace(/&/gm,'&amp;').replace(/</gm,'&lt;').replace(/>/gm, '&gt;').replace(/\u00A0/g, "&nbsp;");
 }
 SpawUtils.getPageOffsetLeft = function(obj)
 {
@@ -61,4 +61,3 @@ SpawUtils.getPageOffsetTop = function(obj)
     }
     return y;
 }
-

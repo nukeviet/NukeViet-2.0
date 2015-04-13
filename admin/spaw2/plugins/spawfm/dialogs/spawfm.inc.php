@@ -118,6 +118,8 @@ foreach ($all_types as $key=>$type) {
 // check selected type for validity
 if ($curr_type and (!in_array($curr_type, $all_types) or !isset($filetypes[$curr_type]))) {
   $curr_type = false;
+} else {
+  $spawfm->setCurrentType($curr_type);
 }
 
 // filter out directories not matching current type, reset $curr_dir if needed
@@ -195,249 +197,33 @@ if ($spawfm->getCurrentDirSetting('recursive') and !empty($curr_dir_subdir)) {
 }
 
 // handle file delete
-if ($del_file = SpawVars::getPostVar('delete_file')) {
-  // filter file/dir name
-  $del_file = basename($del_file);
-  
-  if (file_exists($spawfm->getCurrentFsDir().$del_file)) {
-    if (is_dir($spawfm->getCurrentFsDir().$del_file)) {
-      if (!$spawfm->getCurrentDirSetting('recursive') or
-          !$spawfm->getCurrentDirSetting('allow_modify_subdirectories')) 
-      {
-        $error_msg = $lang->m('error_delete_subdirectories_forbidden', 'spawfm');
-      } else {
-        // check if directory is empty
-        $empty = true;
-        if ($dh = opendir($spawfm->getCurrentFsDir().$del_file)) {
-          while (($file = readdir($dh)) !== false) {
-            if ($file != '.' and $file != '..') {
-              $empty = false;
-              break;
-            }
-          }
-          closedir($dh);
-        }
-      
-        if (!$empty) {
-          $error_msg = $lang->m('error_delete_subdirectories_not_empty', 'spawfm');
-        } elseif (!@rmdir($spawfm->getCurrentFsDir().$del_file)) {
-          $error_msg = $lang->m('error_delete_subdirectories_failed', 'spawfm');
-        }
-      }
-    } else {
-      if (!$spawfm->getCurrentDirSetting('allow_modify')) {
-        $error_msg = $lang->m('error_delete_forbidden', 'spawfm');
-      } elseif (!@unlink($spawfm->getCurrentFsDir().$del_file)) {
-        $error_msg = $lang->m('error_delete_failed', 'spawfm');
-      }
-    }
-  }
+if ($del_file = SpawVars::getPostVar('delete_file') and !$spawfm->deleteFile($del_file)) {
+  $error_msg = $spawfm->getError();
 }
 
 // handle file rename
 if ($ren_old_name = SpawVars::getPostVar('rename_from') and 
-    $ren_new_name = SpawVars::getPostVar('rename_to')) 
+    $ren_new_name = SpawVars::getPostVar('rename_to') and
+    !$spawfm->renameFile($ren_old_name, $ren_new_name)) 
 {
-  // cleanup/filter file/directory names
-  $ren_old_name = basename($ren_old_name);
-  $ren_new_name = basename(trim($ren_new_name));
-  
-  // check if file/directory can be renamed
-  if (!file_exists($spawfm->getCurrentFsDir().$ren_old_name)) {
-    $error_msg = $lang->m('error_rename_file_missing', 'spawfm');
-  } elseif (is_dir($spawfm->getCurrentFsDir().$ren_old_name) and 
-            !$spawfm->getCurrentDirSetting('allow_modify_subdirectories')) 
-  {
-    $error_msg = $lang->m('error_rename_directories_forbidden', 'spawfm');
-  } elseif (!is_dir($spawfm->getCurrentFsDir().$ren_old_name) and 
-            !$spawfm->getCurrentDirSetting('allow_modify')) 
-  {
-    $error_msg = $lang->m('error_rename_forbidden', 'spawfm');
-  } elseif (file_exists($spawfm->getCurrentFsDir().$ren_new_name)) {
-    $error_msg = str_replace('[*FILE*]', $ren_new_name, $lang->m('error_rename_file_exists', 'spawfm'));
-  } else {
-    // check if filetype doesn't change
-    if ($spawfm->getFileExtension($ren_old_name) != $spawfm->getFileExtension($ren_new_name)) {
-      $error_msg = $lang->m('error_rename_extension_changed', 'spawfm');
-    } elseif (!@rename($spawfm->getCurrentFsDir().$ren_old_name, $spawfm->getCurrentFsDir().$ren_new_name)) {
-      $error_msg = $lang->m('error_rename_failed', 'spawfm');
-    }
-  }
+  $error_msg = $spawfm->getError();
 }
-
-//NV010207
-//thumbnail_file
-if ($thumbnail_file = SpawVars::getPostVar('thumbnail_file') and 
-    $size_width_to = SpawVars::getPostVar('size_width_to')) 
-{
-	$thumbnail_file = basename($thumbnail_file);
-	$size_width_to = intval($size_width_to);
-	$allowed_type = $spawfm->getAllowedMimetypes();
-	if($imgsize = @getimagesize($spawfm->getCurrentFsDir().$thumbnail_file) AND extension_loaded("gd")) {
-		if($size_width_to < $imgsize[0] AND $size_width_to >= 30 AND in_array($imgsize['mime'],$allowed_type))
-		{
-			$thumbnail_file_name = "small_" . $thumbnail_file;
-			for($d=0;$d < 100;$d++)
-			{
-				$s = ($d!=0) ? "_".$d."_" : "_";
-				if(!file_exists($spawfm->getCurrentFsDir() . "small" . $s . $thumbnail_file))
-				{
-					$thumbnail_file_name = "small" . $s . $thumbnail_file;
-					break;
-				}
-			}
-			if($imgsize['mime'] == "image/jpeg" || $imgsize['mime']=="image/pjpeg") {
-				$src_img= ImageCreateFromJpeg($spawfm->getCurrentFsDir().$thumbnail_file);
-			} elseif($imgsize['mime'] == "image/gif") {
-				$src_img= imageCreateFromGIF($spawfm->getCurrentFsDir().$thumbnail_file);
-			} elseif($imgsize['mime'] == "image/png" || $imgsize['mime']=="image/x-png") {
-				$src_img= imageCreateFromPNG($spawfm->getCurrentFsDir().$thumbnail_file);
-			}
-			
-			$src_width= $imgsize[0];
-			$src_height= $imgsize[1];
-			$dest_width = $size_width_to;
-			$dest_height = $src_height/($src_width/$dest_width);
-			$dest_img=ImageCreateTrueColor($dest_width, $dest_height);
-			ImageCopyResampled($dest_img, $src_img, 0, 0, 0, 0, $dest_width, $dest_height, $src_width, $src_height);
-			if($imgsize['mime'] == "image/jpeg" || $imgsize['mime']=="image/pjpeg") {
-				ImageJpeg($dest_img, $spawfm->getCurrentFsDir().$thumbnail_file_name, 90);
-			} elseif($imgsize['mime'] == "image/gif") {
-				Imagegif($dest_img, $spawfm->getCurrentFsDir().$thumbnail_file_name);
-			} elseif($imgsize['mime'] == "image/png" || $imgsize['mime']=="image/x-png") {
-				Imagepng($dest_img, $spawfm->getCurrentFsDir().$thumbnail_file_name);
-			}
-			ImageDestroy($dest_img);
-			$onload_select = $thumbnail_file_name;
-		}
-	}
-}
-//END
 
 // handle new directory creation
-if ($dir_name = SpawVars::getPostVar('new_folder')) 
-{
-  if ($spawfm->getCurrentDirSetting('recursive') and 
-      $spawfm->getCurrentDirSetting('allow_create_subdirectories'))
-  {
-    // filter dir name
-    $dir_name = trim(basename($dir_name));
-    
-    if (preg_match('#[:<>|?*"/\\\\]+#', $dir_name)) {
-      $error_msg = $lang->m('error_create_directories_name_invalid', 'spawfm');
-    }
-    // check if name is not used already
-    elseif (file_exists($spawfm->getCurrentFsDir().$dir_name)) {
-      $error_msg = $lang->m('error_create_directories_name_used', 'spawfm');
-    } else {
-      // chmod created directory if specified
-      if (strlen($spawfm->getCurrentDirSetting('chmod_to'))) {
-        $res = @mkdir($spawfm->getCurrentFsDir().$dir_name, $spawfm->getCurrentDirSetting('chmod_to'));
-      } else {
-        $res = @mkdir($spawfm->getCurrentFsDir().$dir_name);
-      }
-      if (!$res) {
-        $error_msg = $lang->m('error_create_directories_failed', 'spawfm');
-      } else {
-      	$onload_select = $dir_name;
-      }
-    }    
+if ($dir_name = SpawVars::getPostVar('new_folder')) {
+  if (!$spawfm->createDirectory($dir_name)) {
+    $error_msg = $spawfm->getError();
   } else {
-    $error_msg = $lang->m('error_create_directories_forbidden', 'spawfm');
+  	$onload_select = $dir_name;
   }
 }
 
 // handle file upload
 if ($uplfile = SpawVars::getFilesVar('upload_file') and !empty($uplfile['size'])) {
-  // check if upload is allowed
-  if (!$spawfm->getCurrentDirSetting('allow_upload')) {
-    $error_msg = $lang->m('error_upload_forbidden', 'spawfm');
+  if (!$uplfile_name = $spawfm->uploadFile($uplfile)) {
+    $error_msg = $spawfm->getError();
   } else {
-    if (is_uploaded_file($uplfile['tmp_name'])) {
-      // check filetype
-      $ext = SpawFm::getFileExtension($uplfile['name']);
-      $allowed_ext = $spawfm->getAllowedExtensions();
-      //NV010207
-      //if (in_array('.*', $allowed_ext) or in_array($ext, $allowed_ext)) {
-      $file_type = $uplfile['type'];
-      $allowed_type = $spawfm->getAllowedMimetypes();
-      if (in_array('.*', $allowed_ext) OR 
-      (in_array($ext, $allowed_ext) AND 
-      isset($allowed_type) AND $allowed_type!=array() AND in_array($file_type,$allowed_type))) {
-      //END
-        // check filesize
-        if (!$spawfm->getCurrentDirSetting('max_upload_filesize') or 
-            $uplfile['size'] <= $spawfm->getCurrentDirSetting('max_upload_filesize'))
-        {
-          $ok = true;
-          $err = array();
-          /*
-            check image dimensions: try to read image dimensions (this step is 
-            omitted if getimagesize() does not recognize file as image or fails 
-            to read it's dimensions
-          */
-          if (($spawfm->getCurrentDirSetting('max_img_width') or
-              $spawfm->getCurrentDirSetting('max_img_height')) and 
-              $imgsize = @getimagesize($uplfile['tmp_name'])) 
-          {
-            // check if dimensions not too big if specified   
-            if ($spawfm->getCurrentDirSetting('max_img_width') and 
-                $imgsize[0] > $spawfm->getCurrentDirSetting('max_img_width')) 
-            {
-              $ok = false;
-              $err[] = str_replace('[*MAXWIDTH*]', $spawfm->getCurrentDirSetting('max_img_width'), $lang->m('error_img_width_max', 'spawfm'));
-            }
-            if ($spawfm->getCurrentDirSetting('max_img_height') and 
-                $imgsize[0] > $spawfm->getCurrentDirSetting('max_img_height')) 
-            {
-              $ok = false;
-              $err[] = str_replace('[*MAXHEIGHT*]', $spawfm->getCurrentDirSetting('max_img_height'), $lang->m('error_img_height_max', 'spawfm'));
-            }
-          }
-          if (!$ok) {
-            $error_msg = implode('<br />', $err);
-          } else {
-          //NV010207
-            //// proceed saving uploaded file
-            //$uplfile_name = $uplfile['name'];
-            //$i = 1;
-            //// pick unused file name
-            //while (file_exists($spawfm->getCurrentFsDir().$uplfile_name)) {
-             // $uplfile_name = ereg_replace('(.*)(\.[a-zA-Z]+)$', '\1_'.$i.'\2', $uplfile['name']);
-             // $i++;
-             //}
-			$datakod = date("U");
-			$uplfile_name = "".$datakod.".nv".$ext."";
-          //END
-          
-            if (!@move_uploaded_file($uplfile['tmp_name'], $spawfm->getCurrentFsDir().$uplfile_name)) {
-              $error_msg = $lang->m('error_upload_failed', 'spawfm');
-            } else {
-              if (strlen($spawfm->getCurrentDirSetting('chmod_to'))) {
-                // chmod uploaded file
-                if (!@chmod($spawfm->getCurrentFsDir().$uplfile_name, $spawfm->getCurrentDirSetting('chmod_to'))) {
-                  $error_msg = $lang->m('error_chmod_uploaded_file', 'spawfm');
-                }
-              }
-              // mark file to select on load
-              $onload_select = $uplfile_name;
-            }
-          }
-        } else {
-          $error_msg = $lang->m('error_max_filesize', 'spawfm').' '.round($spawfm->getCurrentDirSetting('max_upload_filesize') / 1024, 2).' KB';
-        }
-      } else {
-        $error_msg = $lang->m('error_bad_filetype', 'spawfm');
-      }
-    } else {
-      if ($uplfile['error'] == 1 or $uplfile['error'] == 2) {
-        $error_msg = $lang->m('error_upload_file_too_big', 'spawfm');
-      } elseif ($uplfile['error'] == 3) {
-        $error_msg = $lang->m('error_upload_file_incomplete', 'spawfm');
-      } else {
-        $error_msg = $lang->m('error_upload_failed', 'spawfm');
-      }
-    }    
+  	$onload_select = $uplfile_name;
   }
 }
 
@@ -540,7 +326,8 @@ if ($spawfm->getCurrentFsDir()) {
 <script type="text/javascript">
 <?php
 // populate directories list
-foreach ($directories as $c => $directory) {
+$c = 0;
+foreach ($directories as $directory) {
   echo 'SpawFm.addDirectory(\''.SpawFm::escJsStr($directory['name'])."', '".
                             $directory['size']."', '".
                             date('Y-m-d H:i:s', $directory['date'])."', '".
@@ -553,10 +340,12 @@ foreach ($directories as $c => $directory) {
   if (!empty($onload_select) and $directory['name'] == $onload_select) {
     $onload_select = $c;
   }
+  $c++;
 }
 
 // populate files list
-foreach ($files as $c => $file) {
+$c = 0;
+foreach ($files as $file) {
   echo 'SpawFm.addFile(\''.SpawFm::escJsStr($file['name'])."', '".
                             $file['size']."', '".
                             date('Y-m-d H:i:s', $file['date'])."', '".
@@ -570,6 +359,7 @@ foreach ($files as $c => $file) {
   if (!empty($onload_select) and $file['name'] == $onload_select) {
     $onload_select = sizeof($directories) + $c;
   }
+  $c++;
 }
 ?>
 
@@ -580,11 +370,10 @@ SpawFm.txtFileDate = '<?php echo SpawFm::escJsStr($lang->m('date', 'file_details
 SpawFm.txtConfirmDelete = '<?php echo SpawFm::escJsStr($lang->m('confirm_delete', 'spawfm')); ?>';
 SpawFm.txtDownload = '<?php echo SpawFm::escJsStr($lang->m('download_file', 'spawfm')); ?>';
 SpawFm.txtRename = '<?php echo SpawFm::escJsStr($lang->m('rename_text', 'spawfm')); ?>';
-SpawFm.txtThumbnail = '<?php echo SpawFm::escJsStr($lang->m('createthumb_text', 'spawfm')); ?>';
 SpawFm.txtCreateDirectory = '<?php echo SpawFm::escJsStr($lang->m('newdirectory_text', 'spawfm')); ?>';
 SpawFm.txtConfirmDeleteDir = '<?php echo SpawFm::escJsStr($lang->m('confirmdeletedir_text', 'spawfm')); ?>';
 
-SpawFm.filePath = '<?php echo $spawfm->getCurrentDir(); ?>';
+SpawFm.filePath = '<?php echo addslashes($spawfm->getCurrentDir()); ?>';
 SpawFm.allowModify = <?php echo $spawfm->getCurrentDirSetting('allow_modify') ? 'true' : 'false'; ?>;
 SpawFm.allowModifySubdirectories = <?php echo $spawfm->getCurrentDirSetting('allow_modify_subdirectories') ? 'true' : 'false'; ?>;
 
@@ -603,8 +392,6 @@ SpawFm.onloadSelectFile = <?php echo $onload_select; ?>;
 <input type="hidden" name="new_folder" value="" />
 <input type="hidden" name="rename_from" value="" />
 <input type="hidden" name="rename_to" value="" />
-<input type="hidden" name="thumbnail_file" value="" />
-<input type="hidden" name="size_width_to" value="" />
 <input type="hidden" name="subdir" value="<?php echo isset($curr_dir_pos) and $curr_dir_pos !== false ? $curr_dir_pos : ''; ?>" />
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
@@ -628,16 +415,16 @@ SpawFm.onloadSelectFile = <?php echo $onload_select; ?>;
       <td valign="middle" nowrap="nowrap">
         <?php
         if (!empty($curr_dir_subdir)) {
-          echo '<input type="image" onclick="SpawFm.goUpClick();" src="../plugins/spawfm/img/btn_up.gif" title="'.$lang->m('go_up', 'buttons').'" class="bt" style="width: 24px; height: 24px; margin: 1px;"'.$st.' />';
+          echo '<input type="image" onclick="SpawFm.goUpClick();" src="../plugins/spawfm/img/btn_up.gif" title="'.$lang->m('go_up', 'buttons').'" class="bt" style="width: 24px; height: 24px; margin: 1px;" />';
         } else {
-          echo '<input type="image" src="../plugins/spawfm/img/btn_up_off.gif" title="'.$lang->m('go_up', 'buttons').'" class="bt" style="width: 24px; height: 24px; margin: 1px;"'.$st.' disabled="disabled" />';
+          echo '<input type="image" src="../plugins/spawfm/img/btn_up_off.gif" title="'.$lang->m('go_up', 'buttons').'" class="bt" style="width: 24px; height: 24px; margin: 1px;" disabled="disabled" />';
         }
         if (!$spawfm->getCurrentDirSetting('recursive') or 
             !$spawfm->getCurrentDirSetting('allow_create_subdirectories')) 
         {
-          echo '<input type="image" src="../plugins/spawfm/img/btn_new_folder_off.gif" title="'.$lang->m('create_directory', 'buttons').'" class="bt" style="width: 24px; height: 24px; margin: 1px;"'.$st.' disabled="disabled" />';
+          echo '<input type="image" src="../plugins/spawfm/img/btn_new_folder_off.gif" title="'.$lang->m('create_directory', 'buttons').'" class="bt" style="width: 24px; height: 24px; margin: 1px;" disabled="disabled" />';
         } else {
-          echo '<input type="image" onclick="SpawFm.createDirectoryClick();" src="../plugins/spawfm/img/btn_new_folder.gif" title="'.$lang->m('create_directory', 'buttons').'" class="bt" style="width: 24px; height: 24px; margin: 1px;"'.$st.' />';
+          echo '<input type="image" onclick="SpawFm.createDirectoryClick();" src="../plugins/spawfm/img/btn_new_folder.gif" title="'.$lang->m('create_directory', 'buttons').'" class="bt" style="width: 24px; height: 24px; margin: 1px;" />';
         }
         ?>
       </td>
@@ -651,12 +438,12 @@ SpawFm.onloadSelectFile = <?php echo $onload_select; ?>;
           <?php
           foreach ($all_types as $type) {
             $st = ($curr_type == $type) ? ' selected="selected"' : '';
-            echo '<option value="'.htmlentities($type).'"'.$st.'>';
+            echo '<option value="'.SpawFm::escapeHtml($type).'"'.$st.'>';
             $title = strlen($lang->m($type, 'filetypes')) ? $lang->m($type, 'filetypes') : $type;
             if (isset($filetypes[$type])) {
-              $title .= str_replace('.', '', ' ('.implode(', ', $filetypes[$type]).')');
+              $title .= str_replace('.', '', '('.implode(', ', $filetypes[$type]).')');
             }
-            echo $title;
+            echo SpawFm::escapeHtml($title);
             echo '</option>'."\n";
           }
           ?>
@@ -686,7 +473,7 @@ SpawFm.onloadSelectFile = <?php echo $onload_select; ?>;
         <div id="details_type" class="details_header_col"><?php echo $lang->m('type', 'file_details'); ?></div>
         <div id="details_date" class="details_header_col"><?php echo $lang->m('date', 'file_details'); ?></div>
       </div>
-      <iframe src="../empty/empty.html" id="dir_cont" onload="SpawFm.initIframe();" name="dir_cont" scrolling="auto" width="100%" height="100%" frameborder="0"></iframe>
+      <iframe src="../empty/empty.html?<?php echo microtime(); ?>" id="dir_cont" onload="SpawFm.initIframe();" name="dir_cont" scrolling="auto" width="100%" height="100%" frameborder="0"></iframe>
     </div>
   </td>
   <td width="180" nowrap="nowrap" valign="top" style="border-bottom: 1px solid #000000;">
@@ -697,7 +484,6 @@ SpawFm.onloadSelectFile = <?php echo $onload_select; ?>;
   <td colspan="2" nowrap="nowrap" style="border-bottom: 1px solid #000000;">
     <input type="button" name="delete_button" value="<?php echo $lang->m('delete', 'buttons')?>" class="bt" disabled="disabled" onclick="SpawFm.deleteClick()" />
     <input type="button" name="rename_button" value="<?php echo $lang->m('rename', 'buttons')?>" class="bt" disabled="disabled" onclick="SpawFm.renameClick()" />
-    <input type="button" name="thumbnail_button" value="<?php echo $lang->m('thumbnail', 'buttons')?>" class="bt" disabled="disabled" onclick="SpawFm.thumbnailClick()" />
     <?php    
     if (!is_writeable($spawfm->getCurrentFsDir()) or !$spawfm->getCurrentDirSetting('allow_upload'))
       $st = ' disabled="disabled"';

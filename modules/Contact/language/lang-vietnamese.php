@@ -3,8 +3,8 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC2
+* @Date: 		07.07.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -17,7 +17,7 @@ define( "_ERROR", "<font color=\"#CC0000\">Địa chỉ email của bạn không
 define( "_GETBACK", "Chúng tôi sẽ trả lời bạn trong thời gian sớm nhất." );
 define( "_EMAILSENT", "Email của bạn đã gửi thành công." );
 define( "_BACK", "Quay lại" );
-define( "_FORMHEADER", "Liên hệ với" );
+define( "_FORMHEADER", "Liên hệ với BQT" );
 define( "_INVALIDEMAIL", " Địa chỉ Email bạn nhập không đúng." );
 define( "_NOFULL", "Bạn chưa chưa nhập đầy đủ thông tin!" );
 define( "_PLEASEFULL", "Chú ý: Tất cả ô đánh dấu hoa thị đỏ cần được khai báo đầy đủ, chính xác " );

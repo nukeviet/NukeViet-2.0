@@ -4,7 +4,7 @@
 * @Program:		NukeViet CMS v2.0 RC1
 * @File name: 	Module News
 * @Version: 	2.0
-* @Date: 		01.05.2009
+* @Date: 		13.06.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -43,7 +43,7 @@ if ( file_exists("" . $datafold . "/ncatlist.php") )
  */
 function main()
 {
-	global $nvcat, $nvcat2, $adminfold, $adminfile, $newspagenum, $home, $module_name, $linkshome, $sizecatnewshomeimg, $path, $catnewshomeimg, $catimgnewshome, $newshome, $adminfold, $db, $prefix, $multilingual, $currentlang, $articlecomm, $pagenum;
+	global $nvcat, $nvcat2, $adminfold, $adminfile, $newspagenum, $home, $module_name, $linkshome, $sizecatnewshomeimg, $path, $catnewshomeimg, $catimgnewshome, $newshome, $news2cot, $adminfold, $db, $prefix, $multilingual, $currentlang, $articlecomm, $pagenum;
 	if ( $multilingual == 1 )
 	{
 		$querylang = "AND (alanguage='$currentlang' OR alanguage='')";
@@ -55,8 +55,18 @@ function main()
 	include ( "header.php" );
 	automated_news();
 	$mau = 0;
+	$rong = 120; // for News 2 cot
 	if ( ($newshome == 1) and ($home == 1) )
 	{
+		// Begin 1/3 - News 2 cot
+		if ($news2cot==1)
+		{      
+		$tabcolumn = 2;
+		$cont = 0;
+		$tdwidth = intval(100/$tabcolumn);
+		echo "<center><table border=\"0\" cellspacing=\"3\" cellpadding=\"3\"><tr><td valign=\"top\" width=\"".$tdwidth."%\">";
+		}
+		// End 1/3 - News 2 cot
 		for ( $nvc = 0; $nvc < sizeof($nvcat); $nvc++ )
 		{
 			if ( $nvcat[$nvc] != "" )
@@ -207,9 +217,22 @@ function main()
 						themeindex( $aid, $time, $title, $hometext, $story_pic, $notes, $story_link, $com_link, $tot_hits, $mau );
 						$mau++;
 					}
+					//  Begin 2/3 - News 2 cot
+					if ($news2cot==1){
+					$cont++;
+					if ($cont < $tabcolumn) { echo "</td><td valign=\"top\" width=\"".$tdwidth."%\">"; }
+					if ($cont == $tabcolumn) { echo "</td></tr><tr><td valign=\"top\" width=\"".$tdwidth."%\">"; $cont = 0; }
+					}
+					// End 2/3 - News 2 cot
 				}
 			}
 		}
+		// Begin 3/3 - News 2 cot
+		if ($news2cot==1)
+		{      
+		echo "</td></tr></table><center>";
+		}
+		// End 3/3 - News 2 cot
 	}
 	else
 	{
@@ -687,7 +710,7 @@ function showcomm( $sid )
 		$sender_host = $row['host_name'];
 		$com_text = $row['comment'];
 		$ip = "<a title=\"" . _TOP_PAGE . "\" href=\"#top\" onMouseOut=\"window.status=''; return true;\" onMouseOver=\"window.status='" . _TOP_PAGE . "'; return true;\"><font face=\"Arial\" color=\"#DC0312\" size=\"2\"><span style=\"text-decoration: none\">&#9650;</span></font></a>\n";
-		$delcomm = "<a href=\"#\" onClick=\"MM_openBrWindow('modules.php?name=$module_name&file=comm&sid=$sid','','scrollbars=no,width=500,height=500')\" onMouseOut=\"window.status=''; return true;\" onMouseOver=\"window.status='" . _COMMENTSQ . "'; return true;\"><img border=\"0\" src=\"images/modules/$module_name/comm_element.gif\" width=\"24\" height=\"24\" hspace=\"3\" vspace=\"3\" alt=\"" . _COMMENTSQ . "\" title=\"" . _COMMENTSQ . "\"></a>";
+		$delcomm = "<img border=\"0\" src=\"images/modules/$module_name/comm_element.gif\" width=\"24\" height=\"24\" hspace=\"3\" vspace=\"3\" alt=\"" . _COMMENTSQ . "\" title=\"" . _COMMENTSQ . "\">";
 		if ( defined('IS_ADMMOD') )
 		{
 			$ip = "IP: <a href=\"" . $adminfold . "/" . $adminfile . ".php?op=ConfigureBan&bad_ip=$sender_host\">$sender_host</a>\n";
@@ -796,11 +819,11 @@ function viewst()
 	// add Send to Yahoo - www.mangvn.org - 04-09-2008
 	echo "<p align=\"right\">";
 	echo "<a href=\"ymsgr:im?+&amp;msg=" . _REDSTORY . ": " . $nukeurl . "modules%2Ephp%3Fname%3D$module_name%26op%3Dviewst%26sid%3D$sid%20\" onMouseOut=\"window.status=''; return true;\" onMouseOver=\"window.status='" . _FRIEND1 . "'; return true;\"><img src=\"images/send_ym.gif\" border=\"0\" alt=\"" . _FRIEND1 . "\" title=\"" . _FRIEND1 . "\"></a>\n";
-	echo "<!-- AddThis Button BEGIN -->\n" . "<script type=\"text/javascript\">addthis_pub  = 'mangvn';</script>\n" . "<a href=\"http://www.addthis.com/bookmark.php\" onmouseover=\"return addthis_open(this, '', '[URL]', '[TITLE]')\" onmouseout=\"addthis_close()\" onclick=\"return addthis_sendto()\"><img src=\"http://s9.addthis.com/button1-bm.gif\" width=\"125\" height=\"16\" border=\"0\" alt=\"\" /></a><script type=\"text/javascript\" src=\"http://s7.addthis.com/js/152/addthis_widget.js\"></script>\n" . "<!-- AddThis Button END -->\n";
+	echo "<!-- AddThis Button BEGIN -->\n" . "<script type=\"text/javascript\">addthis_pub  = 'mangvn';</script>\n" . "<a href=\"http://www.addthis.com/bookmark.php\" onmouseover=\"return addthis_open(this, '', '[URL]', '[TITLE]')\" onmouseout=\"addthis_close()\" onclick=\"return addthis_sendto()\"><img src=\"".INCLUDE_PATH."images/button1-bm.gif\" width=\"125\" height=\"16\" border=\"0\" alt=\"\" /></a><script type=\"text/javascript\" src=\"http://s7.addthis.com/js/152/addthis_widget.js\"></script>\n" . "<!-- AddThis Button END -->\n";
 	echo "</p>\n";
 	userbar( $sid, $acomm, $comments );
 	//
-	//---- the hien comments - Da bo sung va fix loi bao mat----------------
+	//---- the hien comments ----------------
 	if ( ! $acomm )
 	{
 		if ( $articlecomm == 1 or ($articlecomm == 2 and defined('IS_USER')) )

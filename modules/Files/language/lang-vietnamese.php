@@ -3,8 +3,8 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC2
+* @Date: 		07.07.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -27,7 +27,7 @@ define( "_VOTE1", "Bình chọn nhiều" );
 define( "_VOTE2", "Bình chọn ít" );
 define( "_EXPRESSCAT", "Di chuyển nhanh" );
 define( "_DOWNNOTES", "Vui lòng nhập lại mã kiểm tra dưới đây rồi bấm nút <b>Tải file</b> để download file này" );
-define( "_WRONGCHECKNUM", "Lỗi:Mã kiểm tra mà bạn đưa vào không đúng,vui lòng quay lại và sửa chữa" );
+define( "_WRONGCHECKNUM", "Lỗi: Mã kiểm tra mà bạn đưa vào không đúng, vui lòng quay lại và sửa chữa" );
 define( "_VIEWFILE", "Xem file" );
 define( "_MEMBERRIQUIRED", "Chỉ thành viên có đăng ký mới được cấp quyền tải file<br>Hãy :<a href=modules.php?name=Your_Account><b>Đăng nhập</b></a> hoặc <a href=modules.php?name=Your_Account&op=new_user><b>Đăng ký</b></a>" );
 define( "_PBACK", "Quay lại" );

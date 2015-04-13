@@ -2,8 +2,8 @@
 /*
  * @Program:	NukeViet CMS
  * @File name: 	NukeViet System
- * @Version: 	2.0 RC1
- * @Date: 		01.05.2009
+ * @Version: 	2.0 RC2
+ * @Date: 		07.07.2009
  * @Website: 	www.nukeviet.vn
  * @Copyright: 	(C) 2009
  * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -476,7 +476,7 @@ define("_BADNICKADMIN","Bí danh này không đúng chuẩn mực hoặc đã đ
 define("_BADMAILADMIN","Email này không đúng chuẩn mực hoặc đã được sử dụng");
 define("_BADPASSADMIN","Mật khẩu mà bạn đưa vào không đúng quy định. Nó phải lớn hơn 5, nhỏ hơn 12 ký tự, không có khoảng trống, không dùng những ký tự đặc biệt cũng như dấu tiếng Việt");
 define("_BADPASSADMIN2","Hai mật khẩu mà bạn đưa vào không giống nhau");
-define("_BADPASSADMIN3","Không mật không đúng");
+define("_BADPASSADMIN3","Mật khẩu không đúng");
 define("_ADDADMINOK","Người điều hành mới đã được tạo");
 define("_MAILADMININFO1","Thong bao ve viec them admin moi");
 define("_MAILADMININFO2","Việc thêm người điều hành mới vừa được thực hiện trên site của bạn. Sau đây là thông tin về người điều hành mới");
@@ -756,16 +756,19 @@ define("_HERE","tại đây");
 define("_NOIMGNEWS","Chưa có hình. Vui lòng upload hình lên thư mục");
 define('_SUPPORTADMIN','Support');
 
-define('_MODSKIN','Giao diện (Chỉ hiệu lực khi chọn chế độ Không cho phép thay đổi giao diện)');
+define('_MODSKIN','Giao diện');
+define('_MODSKIN2','Chỉ hiệu lực khi <i>Không cho khách thay đổi giao diện site</i> trong mục <i>Cấu hình</i>');
 define('_NEWS2','Kiểu thể hiện module News');
 define('_NEWS21','một cột');
 define('_NEWS22','hai cột');
 define('_LINKPROTECTON','Bật chế độ bảo mật trước các liên kết đến Website khác <a href="../protect/vietnamese.php" target="_blank">xem hướng dẫn</a>.');
 define('_LINKPROTECTED','- Loại bỏ các từ khóa & domains (phân cách bằng dấu phẩy, ví dụ: yourdomain.com,keyword1,keyword2 ...)');
 define('_CONTACT','Liên hệ');
-define('_ANALYTICS','Bật tính năng thống kê của google-analytics.com');
-define('_ANALYTICS2','Mã tài khoản google-analytics.com của bạn (sử dụng Gmail đăng ký)');
-
+define('_FORUMS','Diễn đàn');
+//310509 - Anhtu
+define('_CHANGEACCOUNT','Thay đổi thông tin tài khoản');
+define('_CURRENTPASSW','Mật khẩu hiện tại của bạn');
+//END
 
 
 ?>

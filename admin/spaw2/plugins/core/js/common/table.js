@@ -15,6 +15,7 @@ SpawPGcore.tableCreateClickCallback = function(editor, result, tbi, sender)
     editor.insertNodeAtSelection(result);
   }
   editor.updateToolbar();
+  editor.focus();
 }
 
 SpawPGcore.tablePropClick = function(editor, tbi, sender)
@@ -36,6 +37,7 @@ SpawPGcore.tablePropClickCallback = function(editor, result, tbi, sender)
     editor.insertNodeAtSelection(result);
   }
   editor.updateToolbar();
+  editor.focus();
 }
 SpawPGcore.isTablePropertiesEnabled = function(editor, tbi)
 {
@@ -171,6 +173,7 @@ SpawPGcore.insertTableRowClick = function(editor, tbi, sender)
       }
     }
     editor.updateToolbar();
+    editor.focus();
   }
 }
 
@@ -248,6 +251,7 @@ SpawPGcore.insertTableColumnClick = function(editor, tbi, sender)
       }
     }
     editor.updateToolbar();
+    editor.focus();
   }
 } // insert column
 
@@ -328,6 +332,7 @@ SpawPGcore.mergeTableCellRightClick = function(editor, tbi, sender)
       }
     }
     editor.updateToolbar();
+    editor.focus();
   }
 } // merge right
 
@@ -406,6 +411,7 @@ SpawPGcore.mergeTableCellDownClick = function(editor, tbi, sender)
       }
     }
     editor.updateToolbar();
+    editor.focus();
   }
 } // merge down
 
@@ -524,6 +530,7 @@ SpawPGcore.deleteTableRowClick = function(editor, tbi, sender)
       }
     }
     editor.updateToolbar();
+    editor.focus();
   }
 } // delete row
 
@@ -600,6 +607,7 @@ SpawPGcore.deleteTableColumnClick = function(editor, tbi, sender)
       }
     }
     editor.updateToolbar();
+    editor.focus();
   }
 } // delete column
 
@@ -687,6 +695,7 @@ SpawPGcore.splitTableCellVerticallyClick = function(editor, tbi, sender)
       }
     }
     editor.updateToolbar();
+    editor.focus();
   }
 } // vertical split
 
@@ -814,5 +823,6 @@ SpawPGcore.splitTableCellHorizontallyClick = function(editor, tbi, sender)
       }
     }
     editor.updateToolbar();
+    editor.focus();
   }
 } // horizontal split

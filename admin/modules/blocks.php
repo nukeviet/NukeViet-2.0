@@ -3,8 +3,8 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC2
+* @Date: 		05.07.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -38,12 +38,11 @@ if ( defined('IS_SPADMIN') )
 	{
 		global $editor, $prefix, $db, $currentlang, $multilingual, $adminfile, $listmods;
 		include ( "../header.php" );
-		GraphicAdmin();
+//		GraphicAdmin();
 		OpenTable();
-		echo "<center><font class=\"title\"><b>" . _BLOCKSADMIN . " | <a href=" . $adminfile . ".php?op=HeadlinesAdmin>RSS Reader Block Admin</a></b></font></center>";
+		echo "<center><font class=\"title\"><b><a href=" . $adminfile . ".php?op=BlocksAdmin>"._BLOCKSADMIN."</a> | <a href=" . $adminfile . ".php?op=HeadlinesAdmin>RSS Reader Block Admin</a></b></font></center>";
 		CloseTable();
 		echo "<br>";
-		OpenTable();
 		$blanguage2 = ( isset($_POST['blanguage']) ) ? $_POST['blanguage'] : $_GET['blanguage'];
 		if ( $multilingual == 1 )
 		{
@@ -67,11 +66,23 @@ if ( defined('IS_SPADMIN') )
 			$blanguage = $currentlang;
 		}
 
-		echo "<br><table border=\"1\" width=\"100%\"><tr>" . "<td align=\"center\"><b>" . _TITLE . "</b></td>" . "<td align=\"center\"><b>" . _POSITION . "</b></td>" . "<td align=\"center\" colspan=\"2\"><b>" . _WEIGHT . "</b></td>" . "<td align=\"center\"><b>" . _TYPE . "</b></td>" . "<td align=\"center\"><b>" . _STATUS . "</b></td>" . "<td align=\"center\"><b>" . _VIEW . "</b></td><td align=\"center\"><b>" . _FUNCTIONS . "</b></tr>";
+		echo "<table style=\"border-collapse: collapse;border: 1px solid #CCCCCC; width: 100%\">\n";
+		echo "<tr>\n";
+		echo "<td style=\"padding:1px\">\n";
+		echo "<table style=\"border-collapse: collapse;width: 100%\"><tr  style=\"background-color: #E4E4E4;font-weight: bold\">
+		" . "<td style=\"border-style: solid; border-width: 0px 1px 0px 0px; border-color: #CCCCCC;padding: 5px; text-align: center;white-space: nowrap;\"><b>" . _TITLE . "</b></td>
+		" . "<td style=\"border-style: solid; border-width: 0px 1px 0px 0px; border-color: #CCCCCC;padding: 5px; text-align: center;white-space: nowrap;\"><b>" . _POSITION . "</b></td>
+		" . "<td style=\"border-style: solid; border-width: 0px 1px 0px 0px; border-color: #CCCCCC;padding: 5px; text-align: center;white-space: nowrap;\"><b>" . _WEIGHT . "</b></td>
+		" . "<td style=\"border-style: solid; border-width: 0px 1px 0px 0px; border-color: #CCCCCC;padding: 5px; text-align: center;white-space: nowrap;\"><b>" . _TYPE . "</b></td>
+		" . "<td style=\"border-style: solid; border-width: 0px 1px 0px 0px; border-color: #CCCCCC;padding: 5px; text-align: center;white-space: nowrap;\"><b>" . _STATUS . "</b></td>
+		" . "<td style=\"border-style: solid; border-width: 0px 1px 0px 0px; border-color: #CCCCCC;padding: 5px; text-align: center;white-space: nowrap;\"><b>" . _VIEW . "</b></td>
+		<td style=\"border-style: solid; border-width: 0px 1px 0px 0px; border-color: #CCCCCC;padding: 5px; text-align: center;white-space: nowrap;\"><b>" . _FUNCTIONS . "</b></tr>";
 		$sql = "select bid, bkey, title, url, bposition, weight, active, blockfile, view, link, module from " . $prefix . "_blocks WHERE blanguage='$blanguage' order by bposition, weight";
 		$result = $db->sql_query( $sql );
+		$a = 1;
 		while ( $row = $db->sql_fetchrow($result) )
 		{
+			$a++;
 			$bid = $row[bid];
 			$bkey = intval( $row[bkey] );
 			$title = $row[title];
@@ -82,20 +93,11 @@ if ( defined('IS_SPADMIN') )
 			$blockfile = $row[blockfile];
 			$view = $row[view];
 			$link = $row[link];
-			$sql = "select bid, weight from " . $prefix . "_blocks where (weight < $weight) AND bposition='$bposition' AND blanguage='$blanguage' ORDER BY weight DESC LIMIT 1";
-			$res = $db->sql_query( $sql );
-			$row = $db->sql_fetchrow( $res );
-			$bid1 = $row[bid];
-			$con1 = "$bid1";
-			$weight1 = intval( $row['weight'] );
-			$sql = "select bid, weight from " . $prefix . "_blocks where (weight > $weight) AND bposition='$bposition' AND blanguage='$blanguage' ORDER BY weight LIMIT 1";
+			$sql = "select bid from " . $prefix . "_blocks where bposition='$bposition' AND blanguage='$blanguage'";
 			$res2 = $db->sql_query( $sql );
-			$row = $db->sql_fetchrow( $res2 );
-			$bid2 = $row[bid];
-			$con2 = "$bid2";
-			$weight3 = intval( $row['weight'] );
-
-			echo "<tr>" . "<td align=\"center\" title=\"Url: $link\">$title</td>";
+			$row = $db->sql_numrows( $res2 );
+			$bgcolor = ( $a % 2 == 0 ) ? "#FFFFF" : "#E4E4E4";
+			echo "<tr style=\"background-color: " . $bgcolor . ";\">" . "<td style=\"border-style: solid; border-width: 0px 1px 0px 0px; border-color: #CCCCCC; padding: 5px; text-align: left;\" title=\"Url: $link\">$title</td>";
 			if ( $bposition == "l" )
 			{
 				$bposition = "<img src=\"../images/center_r.gif\" border=\"0\" alt=\"" . _LEFTBLOCK . "\" title=\"" . _LEFTBLOCK . "\" hspace=\"5\"> " . _LEFT . "";
@@ -109,16 +111,17 @@ if ( defined('IS_SPADMIN') )
 			{
 				$bposition = "<img src=\"../images/center_l.gif\" border=\"0\" alt=\"" . _CENTERBLOCK . "\" title=\"" . _CENTERBLOCK . "\">&nbsp;" . _CENTERDOWN . "&nbsp;<img src=\"../images/center_r.gif\" border=\"0\" alt=\"" . _CENTERBLOCK . "\" title=\"" . _CENTERBLOCK . "\">";
 			}
-			echo "<td align=\"center\">$bposition</td>" . "<td align=\"center\">" . "&nbsp;$weight&nbsp;</td><td align=\"center\">";
-			if ( $con1 )
+			
+		echo "<td style=\"border-style: solid; border-width: 0px 1px 0px 0px; border-color: #CCCCCC;padding: 5px; text-align: center;white-space: nowrap;\">$bposition</td>" ;	
+		echo "<td style=\"border-style: solid; border-width: 0px 1px 0px 0px; border-color: #CCCCCC;padding: 5px; text-align: center;white-space: nowrap;\">\n";
+			echo "<form method=\"get\">\n";
+			echo "<select name=\"select1_" . $bid . "\" onchange=\"top.location.href=this.options[this.selectedIndex].value\">\n";
+			for ( $i = 1; $i <= $row; $i++ )
 			{
-				echo "<a href=\"" . $adminfile . ".php?op=BlockOrder&amp;weight=$weight&amp;bidori=$bid&amp;weightrep=$weight1&amp;bidrep=$con1\"><img src=\"../images/up.gif\" alt=\"" . _BLOCKUP . "\" title=\"" . _BLOCKUP . "\" border=\"0\" hspace=\"3\"></a>";
+				echo "<option value=\"" . $adminfile . ".php?op=BlockOrder&amp;id=" . $bid . "&amp;new=" . $i . "&amp;blanguage=$blanguage\"" . ( ($weight == $i) ? " selected=\"selected\"" : "" ) . ">" . $i . "</option>\n";
 			}
-			if ( $con2 )
-			{
-				echo "<a href=\"" . $adminfile . ".php?op=BlockOrder&amp;weight=$weight&amp;bidori=$bid&amp;weightrep=$weight3&amp;bidrep=$con2\"><img src=\"../images/down.gif\" alt=\"" . _BLOCKDOWN . "\" title=\"" . _BLOCKDOWN . "\" border=\"0\" hspace=\"3\"></a>";
-			}
-			echo "</td>";
+			echo "</select></form>\n";
+				echo "</td>\n";
 			if ( $bkey == "2" )
 			{
 				$type = "RSS/RDF";
@@ -130,7 +133,7 @@ if ( defined('IS_SPADMIN') )
 			{
 				$type = _BLOCKFILE2;
 			}
-			echo "<td align=\"center\">$type</td>";
+			echo "<td style=\"border-style: solid; border-width: 0px 1px 0px 0px; border-color: #CCCCCC;padding: 5px; text-align: center;white-space: nowrap;\">$type</td>";
 			$block_act = $active;
 			if ( $active == 1 )
 			{
@@ -141,7 +144,7 @@ if ( defined('IS_SPADMIN') )
 				$active = "<i>" . _INACTIVE . "</i>";
 				$change = _ACTIVATE;
 			}
-			echo "<td align=\"center\">$active</td>";
+			echo "<td style=\"border-style: solid; border-width: 0px 1px 0px 0px; border-color: #CCCCCC;padding: 5px; text-align: center;white-space: nowrap;\">$active</td>";
 			if ( $view == 0 )
 			{
 				$who_view = _MVALL;
@@ -155,20 +158,13 @@ if ( defined('IS_SPADMIN') )
 			{
 				$who_view = _MVANON;
 			}
-			echo "<td align=\"center\">$who_view</td>";
-			echo "<td align=\"center\"><font class=\"content\">[ <a href=\"" . $adminfile . ".php?op=BlocksEdit&amp;bid=$bid\">" . _EDIT . "</a> | <a href=\"" . $adminfile . ".php?op=ChangeStatus&amp;bid=$bid\">$change</a> | ";
-			echo "<a href=\"" . $adminfile . ".php?op=BlocksDelete&amp;bid=$bid\">" . _DELETE . "</a> | ";
-			if ( $block_act == 0 )
-			{
-				echo "<a href=\"" . $adminfile . ".php?op=block_show&bid=$bid\">" . _SHOW . "</a> ]</font></td></tr>";
-			}
-			else
-			{
-				echo "" . _SHOW . " ]</font></td></tr>";
-			}
+			echo "<td style=\"border-style: solid; border-width: 0px 1px 0px 0px; border-color: #CCCCCC;padding: 5px; text-align: center;white-space: nowrap;\">$who_view</td>";
+			echo "<td style=\"border-style: solid; border-width: 0px 1px 0px 0px; border-color: #CCCCCC;padding: 5px; text-align: center;white-space: nowrap;\"><font class=\"content\">[ <a href=\"" . $adminfile . ".php?op=BlocksEdit&amp;bid=$bid\">" . _EDIT . "</a> | <a href=\"" . $adminfile . ".php?op=ChangeStatus&amp;bid=$bid\">$change</a> | ";
+			echo "<a href=\"" . $adminfile . ".php?op=BlocksDelete&amp;bid=$bid\">" . _DELETE . "</a> | <a href=\"" . $adminfile . ".php?op=block_show&bid=$bid\">" . _SHOW . "</a> ]</font></td></tr>";
 		}
-		echo "</table>" . "<br><br>" . "<center>[ <a href=\"" . $adminfile . ".php?op=fixweight2&blanguage=$blanguage\">" . _FIXBLOCKS . "</a> ]</center><br>";
-		CloseTable();
+		echo "</table></table><br>";
+		echo "<center>[ <a href=\"" . $adminfile . ".php?op=fixweight2&blanguage=$blanguage\">" . _FIXBLOCKS . "</a> ]</center><br>";
+		
 		echo "<br>";
 		OpenTable();
 		echo "<a name='add'></a>";
@@ -316,11 +312,10 @@ if ( defined('IS_SPADMIN') )
 	{
 		global $prefix, $db, $adminfile, $datafold;
 		include ( "../header.php" );
-		GraphicAdmin();
-		title( "" . _BLOCKSADMIN . "" );
+//		GraphicAdmin();
 		OpenTable2();
 		$bid = intval( $bid );
-		$sql = "select bid, bkey, title, url, bposition, blockfile, link, blanguage from " . $prefix . "_blocks where bid='$bid'";
+		$sql = "select * from " . $prefix . "_blocks where bid='$bid'";
 		$result = $db->sql_query( $sql );
 		$row = $db->sql_fetchrow( $result );
 		$bid = $row[bid];
@@ -331,7 +326,16 @@ if ( defined('IS_SPADMIN') )
 		$blockfile = $row[blockfile];
 		$link = $row[link];
 		$blanguage = $row['blanguage'];
+		$active = $row[active];
 
+		title( "<a href=\"" . $adminfile . ".php?op=BlocksAdmin&blanguage=$blanguage\">" . _BLOCKSADMIN . "</a>" );
+		if ( $active == 1 )
+		{
+			$change = _DEACTIVATE;
+		} elseif ( $active == 0 )
+		{
+			$change = _ACTIVATE;
+		}
 		if ( $bkey == 0 )
 		{
 			$block_path = "" . INCLUDE_PATH . "blocks/";
@@ -368,41 +372,55 @@ if ( defined('IS_SPADMIN') )
 		CloseTable2();
 		echo "<br>";
 		OpenTable();
-		echo "<center><font class=\"option\"><b>" . _BLOCKSADMIN . ": " . _FUNCTIONS . "</b></font><br><br>" . "[ <a href=\"" . $adminfile . ".php?op=ChangeStatus&bid=$bid\">" . _ACTIVATE . "</a> | <a href=\"" . $adminfile . ".php?op=BlocksEdit&bid=$bid\">" . _EDIT . "</a> | ";
-		if ( $bkey == "" )
-		{
-			echo "<a href=\"" . $adminfile . ".php?op=BlocksDelete&bid=$bid\">" . _DELETE . "</a> | ";
-		}
-		else
-		{
-			echo "" . _DELETE . " | ";
-		}
+		echo "<center><font class=\"option\"><b>" . _FUNCTIONS . "</b></font><br><br>" . "[ <a href=\"" . $adminfile . ".php?op=ChangeStatus&bid=$bid\">" . $change . "</a> | <a href=\"" . $adminfile . ".php?op=BlocksEdit&bid=$bid\">" . _EDIT . "</a> | ";
+		echo "<a href=\"" . $adminfile . ".php?op=BlocksDelete&bid=$bid\">" . _DELETE . "</a> | ";
 		echo "<a href=\"" . $adminfile . ".php?op=BlocksAdmin&blanguage=$blanguage\">" . _BLOCKSADMIN . "</a> ]</center>";
 		CloseTable();
+		echo "<br>";
 		include ( "../footer.php" );
 	}
 
 	/**
 	 * BlockOrder()
-	 * 
-	 * @param mixed $weightrep
-	 * @param mixed $weight
-	 * @param mixed $bidrep
-	 * @param mixed $bidori
 	 * @return
 	 */
-	function BlockOrder( $weightrep, $weight, $bidrep, $bidori )
+	 
+	function BlockOrder()
 	{
-
-		global $prefix, $db, $adminfile;
-		$bidrep = intval( $bidrep );
-		$bidori = intval( $bidori );
-		$db->sql_query( "UPDATE " . $prefix . "_blocks set weight='$weight' where bid='$bidrep'" );
-		$db->sql_query( "UPDATE " . $prefix . "_blocks set weight='$weightrep' where bid='$bidori'" );
-		blist();
-		list( $blanguage ) = $db->sql_fetchrow( $db->sql_query("SELECT blanguage FROM " . $prefix . "_blocks WHERE bid='$bidrep'") );
+		global $db, $prefix, $adminfile, $currentlang, $multilingual;
+		$blanguage2 = ( isset($_POST['blanguage']) ) ? $_POST['blanguage'] : $_GET['blanguage'];
+		if ( isset($blanguage2) and (file_exists(INCLUDE_PATH . "language/lang-" . $blanguage2 . ".php")) and (! eregi("\.", "" . $blanguage2 . "")) )
+		{
+			$blanguage = $blanguage2;
+		}
+		else
+		{
+			$blanguage = $currentlang;
+		}
+		$id = intval( $_REQUEST['id'] );
+		$newk = intval( $_REQUEST['new'] );
+		if ( $id and $newk )
+		{
+			$result = $db->sql_query(" select bposition from " . $prefix . "_blocks WHERE bid = '$id'");
+			$row = $db->sql_fetchrow($result);
+			if ($row)
+			{
+					$subid = $row['bposition'];
+					$weight = 0;
+					$chami = $db->sql_query( "select * from " . $prefix . "_blocks WHERE bposition = '$subid' AND bid != '$id'AND blanguage = '$blanguage2' ORDER BY weight" );
+ 					while ($row2 = $db->sql_fetchrow($chami)) {
+						$weight++;
+						if ( $weight == $newk ){	$weight++; }
+						$db->sql_query( "UPDATE " . $prefix . "_blocks SET weight=" . $weight . " WHERE bid=" . $row2['bid'] );
+						}
+					$db->sql_query( "UPDATE " . $prefix . "_blocks SET weight=" . $newk . " WHERE bid=" . $id );
+				
+	}
+	}
 		Header( "Location: " . $adminfile . ".php?op=BlocksAdmin&blanguage=$blanguage" );
 	}
+	
+
 
 	/**
 	 * rssfail()
@@ -604,9 +622,9 @@ if ( defined('IS_SPADMIN') )
 	{
 		global $editor, $prefix, $db, $multilingual, $datafold, $listmods, $adminfile;
 		include ( "../header.php" );
-		GraphicAdmin();
+//		GraphicAdmin();
 		OpenTable();
-		echo "<center><font class=\"title\"><b>" . _EDITBLOCK . "</b></font></center>";
+		echo "<center><font class=\"title\"><b><a href=\"" . $adminfile . ".php?op=BlocksAdmin\">" . _BLOCKSADMIN . "</a><br>" . _EDITBLOCK . "</b></font></center>";
 		CloseTable();
 		echo "<br>";
 		$bid = intval( $bid );
@@ -997,7 +1015,7 @@ if ( defined('IS_SPADMIN') )
 			$title = $row[title];
 			$content = $row[content];
 			include ( "../header.php" );
-			GraphicAdmin();
+//			GraphicAdmin();
 			echo "<br>";
 			OpenTable();
 			echo "<center><font class=\"option\"><b>" . _BLOCKACTIVATION . "</b></font></center>";
@@ -1042,7 +1060,6 @@ if ( defined('IS_SPADMIN') )
 			@unlink( "" . INCLUDE_PATH . "" . $datafold . "/" . $blockfile . "" );
 			fixweight();
 			blist();
-
 			Header( "Location: " . $adminfile . ".php?op=BlocksAdmin&blanguage=$blanguage" );
 		}
 		else
@@ -1053,7 +1070,7 @@ if ( defined('IS_SPADMIN') )
 			$title = $row[title];
 			$blanguage = $row['blanguage'];
 			include ( "../header.php" );
-			GraphicAdmin();
+//			GraphicAdmin();
 			OpenTable();
 			echo "<center><font class=\"title\"><b>" . _BLOCKSADMIN . "</b></font></center>";
 			CloseTable();
@@ -1075,9 +1092,9 @@ if ( defined('IS_SPADMIN') )
 	{
 		global $bgcolor1, $bgcolor2, $prefix, $db, $adminfile;
 		include ( "../header.php" );
-		GraphicAdmin();
+//		GraphicAdmin();
 		OpenTable();
-		echo "<center><font class=\"title\"><b><a href=" . $adminfile . ".php?op=BlocksAdmin>BlocksAdmin</a> | <a href=" . $adminfile . ".php?op=HeadlinesAdmin>RSS Reader Block Admin</a></b><br>" . _HEADLINESADMIN . "</font></center>";
+		echo "<center><font class=\"title\"><b><a href=" . $adminfile . ".php?op=BlocksAdmin>"._BLOCKSADMIN."</a> | <a href=" . $adminfile . ".php?op=HeadlinesAdmin>RSS Reader Block Admin</a></b><br>" . _HEADLINESADMIN . "</font></center>";
 		CloseTable();
 		echo "<br>";
 		OpenTable();
@@ -1111,7 +1128,7 @@ if ( defined('IS_SPADMIN') )
 	{
 		global $prefix, $db, $adminfile;
 		include ( "../header.php" );
-		GraphicAdmin();
+//		GraphicAdmin();
 		OpenTable();
 		echo "<center><font class=\"title\"><b><a href=" . $adminfile . ".php?op=HeadlinesAdmin>RSS Reader Block Admin</a></b><br>" . _HEADLINESADMIN . "</font></center>";
 		CloseTable();
@@ -1224,10 +1241,6 @@ if ( defined('IS_SPADMIN') )
 			BlocksDelete( $bid, $ok );
 			break;
 
-		case "BlockOrder":
-			BlockOrder( $weightrep, $weight, $bidrep, $bidori );
-			break;
-
 		case "HeadlinesDel":
 			HeadlinesDel( $hid, $ok );
 			break;
@@ -1248,6 +1261,10 @@ if ( defined('IS_SPADMIN') )
 			HeadlinesEdit( $hid );
 			break;
 
+		case "BlockOrder":
+			BlockOrder();
+			break;
+			
 		case "fixweight2":
 			fixweight2( $blanguage );
 			break;

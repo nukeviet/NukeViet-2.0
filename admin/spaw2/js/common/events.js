@@ -103,6 +103,9 @@ SpawEngine.getEventTargetObject = function(evt_target, page, editor)
     case "page_doc":
       ev_obj = editor.getPageDoc(page.name);
       break;
+    case "page_body":
+      ev_obj = editor.getPageDoc(page.name).body;
+      break;
     case "form":
       ev_obj = editor.getPageInput(editor.getActivePage().name).form;
       break;

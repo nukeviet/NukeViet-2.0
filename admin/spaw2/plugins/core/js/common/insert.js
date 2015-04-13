@@ -21,7 +21,7 @@ SpawPGcore.hyperlinkClickCallback = function(editor, result, tbi, sender)
     {
       // new link
       var sel = editor.getNodeAtSelection();
-      if (sel.nodeType == 1) // workaround for IE
+      if (sel.nodeType == 1 && sel.tagName.toLowerCase() == 'span' ) // workaround for IE
       {
         newa.innerHTML = sel.innerHTML;
       }
@@ -29,10 +29,24 @@ SpawPGcore.hyperlinkClickCallback = function(editor, result, tbi, sender)
       {
         newa.appendChild(sel);
       }
+      
+      // if link is set on empty space use links title or url as link text
+      if (SpawUtils.trim(newa.innerHTML) == '' && SpawUtils.trim(newa.href) != '' && newa.href != pdoc.location.href) // protect anchors from this action
+      {
+        if (newa.title)
+          newa.innerHTML = newa.title;
+        else
+          newa.innerHTML = editor.getStrippedAbsoluteUrl(newa.href, false);
+      }
+      
+      if (newa.href == pdoc.location.href)
+        newa.removeAttribute("href");
+      
       editor.insertNodeAtSelection(newa);
     }
   }
   editor.updateToolbar();
+  editor.focus();
 }
 
 SpawPGcore.isHyperlinkEnabled = function(editor, tbi)
@@ -49,6 +63,27 @@ SpawPGcore.isHyperlinkEnabled = function(editor, tbi)
 
 
 // image
+SpawPGcore.imageClick = function(editor, tbi, sender)
+{
+  if (tbi.is_enabled)
+  {
+    SpawEngine.openDialog('spawfm', 'spawfm', editor, '', 'type=images', 'SpawPGcore.imageClickCallback', null, null);  
+  }
+}
+SpawPGcore.imageClickCallback = function(editor, result, tbi, sender)
+{
+  if (result)
+  {
+    var img = document.createElement("IMG");
+    img.src = result;
+    img.border = 0;
+    img.alt = "";
+    editor.insertNodeAtSelection(img);
+  }
+  editor.updateToolbar();
+  editor.focus();
+}
+
 SpawPGcore.imagePropClick = function(editor, tbi, sender)
 {
   if (tbi.is_enabled)
@@ -74,6 +109,7 @@ SpawPGcore.imagePropClickCallback = function(editor, result, tbi, sender)
     editor.insertNodeAtSelection(result);
   }
   editor.updateToolbar();
+  editor.focus();
 }
 SpawPGcore.flashPropClick = function(editor, tbi, sender)
 {
@@ -100,6 +136,7 @@ SpawPGcore.flashPropClickCallback = function(editor, result, tbi, sender)
     editor.insertNodeAtSelection(result);
   }
   editor.updateToolbar();
+  editor.focus();
 }
 
 // horizontal rule (hr)

@@ -3,63 +3,54 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC2
+* @Date: 		07.07.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
-if ( isset($_POST['admf']) )
+if ( ! file_exists("../mainfile.php") ) exit();
+define( 'NV_ADMIN', true );
+@require_once ( "../mainfile.php" );
+
+/**
+ * Kiem tra admin
+ */
+unset( $admin, $aid, $pwd );
+if ( defined("IS_ADMIN") or defined("IS_SPADMIN") ) die();
+if ( isset($_SESSION[ADMIN_COOKIE]) && ! empty($_SESSION[ADMIN_COOKIE]) )
 {
-	$admf = $_POST['admf'];
-	if ( ! ereg("[^a-zA-Z0-9._-]", $admf) )
+	$admin = addslashes( base64_decode($_SESSION[ADMIN_COOKIE]) );
+	$admin = explode( "#:#", $admin );
+	$aid = addslashes( $admin[0] );
+	$pwd = $admin[1];
+	if ( ! empty($aid) and ! empty($pwd) and (! empty($admin[4]) and $admin[4] == substr(trim($_SERVER['HTTP_USER_AGENT']), 0, 80)) )
 	{
-		if ( ! ereg(".php", $admf) )
+		$aid = substr( $aid, 0, 25 );
+		$bossresult = $db->sql_query( "SELECT `name`, `pwd`, `checknum`, `agent`, `last_ip` FROM `" . $prefix . "_authors` WHERE `aid`='" . $aid . "'" );
+		if ( $bossresult )
 		{
-			$admf = "" . $admf . ".php";
-		}
-		if ( file_exists("" . $admf . "") )
-		{
-			$info = base64_encode( "$admf" );
-			setcookie( "admf", "$info" );
-			Header( "Location: index.php" );
-			exit();
+			list( $radminname, $rpwd, $rchecknum, $ragent, $rlast_ip ) = $db->sql_fetchrow( $bossresult );
+			if ( (! empty($rpwd) and $rpwd == $pwd) and (! empty($rchecknum) and $rchecknum == $admin[3]) and (! empty($ragent) and $ragent == $admin[4]) and (! empty($rlast_ip) and $rlast_ip == $admin[5]) )
+			{
+				define( 'IS_ADMIN', true );
+			}
 		}
 	}
+
+	if ( ! defined("IS_ADMIN") ) unset( $_SESSION[ADMIN_COOKIE], $admin, $aid, $pwd, $admlanguage );
 }
 
-if ( isset($_COOKIE['admf']) && ! ereg("[^a-zA-Z0-9._-]", addslashes(base64_decode($_COOKIE['admf']))) && file_exists("" . addslashes(base64_decode($_COOKIE['admf'])) . "") )
+if ( defined("IS_ADMIN") )
 {
-	Header( "Location: " . addslashes(base64_decode($_COOKIE['admf'])) . "" );
+	Header( "Location: " . $adminfile . ".php" );
+	exit;
+}
+else
+{
+	Header( "Location: " . INCLUDE_PATH . "index.php" );
 	exit;
 }
 
 ?>
-<html>
-
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Welcome</title>
-</head>
-
-<body>
-
-<table border="0" cellpadding="0" style="border-collapse: collapse" width="100%" height="100%">
-	<tr>
-		<td align="center">
-		<form method="POST" action="index.php">
-			<table border="0" cellpadding="3" style="border-collapse: collapse" cellspacing="3">
-				<tr>
-					<td><b>Admin File</b></td>
-					<td><input type="password" name="admf" size="20" maxlength="20"><input type="submit" value="Go" style="font-weight: bold"></td>
-				</tr>
-			</table>
-		</form>
-		</td>
-	</tr>
-</table>
-
-</body>
-
-</html>

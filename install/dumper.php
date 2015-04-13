@@ -4,8 +4,8 @@
 * @Program:	NukeViet CMS
 * @File name: 	NukeViet Setup
 * @Author: 	NukeViet Group
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC2
+* @Date: 		07.07.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -66,36 +66,25 @@ $db->sql_query( "CREATE TABLE " . $prefix . "_blocks (
 )" );
 
 $db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '1', '0', 'Tiện ích trên site', '', 'l', '1', '1', '0', '1240857254', 'vietnamese', 'block-Menu1_default.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '2', '0', 'Thành viên có mặt', '', 'l', '15', '1', '0', '1240857254', 'vietnamese', 'block-Online.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '3', '0', 'Đăng nhập/Đăng ký', '', 'l', '7', '1', '0', '1240857254', 'vietnamese', 'block-Login.php', '3', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '4', '0', 'Thăm dò dư luận', '', 'r', '7', '1', '0', '1240857254', 'vietnamese', 'block-RandomVoting.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '5', '0', 'Đăng ký nhận tin', '', 'l', '8', '1', '0', '1240857254', 'vietnamese', 'block-Letter.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '6', '0', 'Đổi giao diện', '', 'r', '1', '0', '0', '1240857254', 'vietnamese', 'block-Themes.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '7', '0', 'Modules', '', 'l', '2', '1', '0', '1240857254', 'english', 'block-Menu1_default.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '8', '0', 'Online', '', 'l', '3', '1', '0', '1240857254', 'english', 'block-Online.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '9', '0', 'Login', '', 'r', '3', '1', '0', '1240857254', 'english', 'block-Login.php', '3', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '10', '0', 'Votings', '', 'r', '4', '1', '0', '1240857254', 'english', 'block-RandomVoting.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '11', '0', 'Newsletter', '', 'r', '5', '1', '0', '1240857254', 'english', 'block-Letter.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '12', '0', 'Themes', '', 'l', '4', '1', '0', '1240857254', 'english', 'block-Themes.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '13', '0', 'Languages', '', 'l', '5', '1', '0', '1152915038', 'english', 'block-Languages.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '14', '0', 'Your Language', '', 'r', '2', '1', '0', '1152915038', 'vietnamese', 'block-Languages.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '15', '0', 'Tìm kiếm', '', 'r', '8', '1', '0', '1240921639', 'vietnamese', 'block-SearchNew.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '16', '0', 'Lịch vạn sự', '', 'r', '9', '1', '0', '1240934502', 'vietnamese', 'block-Amlich.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '17', '0', 'Tin mới', '', 'l', '6', '1', '0', '1240934616', 'vietnamese', 'block-Last10_articles.php', '0', '0', 'd', '', 'News')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '18', '0', 'Tiêu điểm', '', 'r', '10', '1', '0', '1240934635', 'vietnamese', 'block-Top_New.php', '0', '0', 'd', '', 'News')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '21', '0', 'Danh ngôn tình yêu và cuộc sống', '', 'd', '1', '1', '0', '1240978552', 'vietnamese', 'block-Danhngon_ty_cs.php', '0', '0', 'd', '', 'home')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '23', '0', 'Chủ đề chính', '', 'r', '6', '1', '0', '1240978660', 'vietnamese', 'block-Categories.php', '0', '0', 'd', 'http://nukeviet.ws/home/modules.php?name=News', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '26', '0', 'Lunar', '', 'l', '9', '1', '0', '1241013437', 'english', 'block-Amlich.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '27', '0', 'Category', '', 'r', '11', '1', '0', '1241013510', 'english', 'block-Categories.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '28', '0', 'New', '', 'l', '10', '1', '0', '1241013552', 'english', 'block-Last10_articles.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '29', '0', 'Files', '', 'r', '12', '1', '0', '1241013579', 'english', 'block-New_Files.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '30', '0', 'Minichat', '', 'l', '11', '1', '0', '1241013603', 'english', 'block-MiniChat.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '31', '0', 'Comment', '', 'r', '13', '1', '0', '1241013622', 'english', 'block-New_comment.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '32', '0', 'Voting', '', 'l', '12', '1', '0', '1241013643', 'english', 'block-Voting.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '33', '0', 'Search New', '', 'r', '14', '1', '0', '1241013666', 'english', 'block-SearchNew.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '34', '0', 'Search', '', 'l', '13', '1', '0', '1241013683', 'english', 'block-Search.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '35', '0', 'Hot', '', 'r', '15', '1', '0', '1241083051', 'english', 'block-Top_New.php', '0', '0', 'd', '', 'all')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '40', '0', 'Tra bài theo ngày', '', 'l', '14', '1', '0', '1241209378', 'vietnamese', 'block-Calendar.php', '0', '0', 'd', '', 'home')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '2', '0', 'Tra bài theo ngày', '', 'l', '2', '1', '0', '1246781227', 'vietnamese', 'block-Calendar.php', '0', '0', 'd', '', 'all')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '3', '0', 'Nhận tin qua mail', '', 'l', '3', '1', '0', '1246781289', 'vietnamese', 'block-Letter.php', '0', '0', 'd', '', 'all')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '4', '0', 'Trực tuyến trên site', '', 'l', '4', '1', '0', '1246781347', 'vietnamese', 'block-Online.php', '0', '0', 'd', '', 'all')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '5', '0', 'Select language', '', 'r', '1', '1', '0', '1246781398', 'vietnamese', 'block-Languages.php', '0', '0', 'd', '', 'all')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '6', '0', 'Tìm kiếm', '', 'r', '2', '1', '0', '1246781442', 'vietnamese', 'block-Search.php', '0', '0', 'd', '', 'all')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '7', '0', 'Danh mục tin', '', 'r', '3', '1', '0', '1246781473', 'vietnamese', 'block-Categories.php', '0', '0', 'd', '', 'all')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '8', '0', 'Bình chọn', '', 'r', '4', '1', '0', '1246781535', 'vietnamese', 'block-RandomVoting.php', '0', '0', 'd', '', 'all')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '9', '0', 'Lịch vạn sự', '', 'r', '5', '1', '0', '1246781644', 'vietnamese', 'block-Amlich.php', '0', '0', 'd', '', 'all')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '10', '0', 'Danh ngôn', '', 'c', '1', '1', '0', '1246782623', 'vietnamese', 'block-Danhngon_ty_cs.php', '0', '0', 'd', '', 'all')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '11', '0', 'Main menu', '', 'l', '1', '1', '0', '1240857254', 'english', 'block-Menu1_default.php', '0', '0', 'd', '', 'all')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '12', '0', 'Calendar', '', 'l', '2', '1', '0', '1246781227', 'english', 'block-Calendar.php', '0', '0', 'd', '', 'all')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '13', '0', 'Newsletter', '', 'l', '3', '1', '0', '1246781289', 'english', 'block-Letter.php', '0', '0', 'd', '', 'all')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '14', '0', 'Online', '', 'l', '4', '1', '0', '1246781347', 'english', 'block-Online.php', '0', '0', 'd', '', 'all')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '15', '0', 'Select language', '', 'r', '1', '1', '0', '1246781398', 'english', 'block-Languages.php', '0', '0', 'd', '', 'all')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '16', '0', 'Search', '', 'r', '2', '1', '0', '1246781442', 'english', 'block-Search.php', '0', '0', 'd', '', 'all')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '17', '0', 'Categories', '', 'r', '3', '1', '0', '1246781473', 'english', 'block-Categories.php', '0', '0', 'd', '', 'all')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '18', '0', 'Random Voting', '', 'r', '4', '1', '0', '1246781535', 'english', 'block-RandomVoting.php', '0', '0', 'd', '', 'all')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '19', '0', 'Lunar Calendar', '', 'r', '5', '1', '0', '1246781644', 'english', 'block-Amlich.php', '0', '0', 'd', '', 'all')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_blocks VALUES ( '20', '0', 'Famous saying', '', 'c', '1', '1', '0', '1246782623', 'english', 'block-Danhngon_ty_cs.php', '0', '0', 'd', '', 'all')" );
 
 $db->sql_query( "DROP TABLE IF EXISTS " . $prefix . "_files" );
 $db->sql_query( "CREATE TABLE " . $prefix . "_files (
@@ -205,16 +194,16 @@ $db->sql_query( "CREATE TABLE " . $prefix . "_modules (
 )" );
 
 $db->sql_query( "INSERT INTO " . $prefix . "_modules VALUES ( '1', 'News', 'Tin tức', '1', '0', '1', '4', '', '')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_modules VALUES ( '2', 'Contact', 'Liên hệ', '1', '0', '1', '4', 'nv_green', '')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_modules VALUES ( '2', 'Contact', 'Liên hệ', '1', '0', '1', '4', '', '')" );
 $db->sql_query( "INSERT INTO " . $prefix . "_modules VALUES ( '3', 'Search', 'Tìm kiếm', '1', '0', '4', '4', '', '')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_modules VALUES ( '4', 'Voting', 'Thăm dò dư luận', '1', '0', '1', '4', 'nv_green', '')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_modules VALUES ( '4', 'Voting', 'Thăm dò dư luận', '1', '0', '1', '4', '', '')" );
 $db->sql_query( "INSERT INTO " . $prefix . "_modules VALUES ( '5', 'Your_Account', 'Thông tin thành viên', '1', '0', '3', '1', '', '')" );
 $db->sql_query( "INSERT INTO " . $prefix . "_modules VALUES ( '6', 'Newsletter', 'Tin tức qua email', '1', '0', '4', '1', '', '')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_modules VALUES ( '7', 'Files', 'Tải Files', '1', '0', '1', '4', 'nv_orange', '')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_modules VALUES ( '8', 'AutoTranslate', 'Dịch tự động', '1', '0', '1', '1', 'nv_green', '')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_modules VALUES ( '7', 'Files', 'Tải Files', '1', '0', '1', '4', '', '')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_modules VALUES ( '8', 'AutoTranslate', 'Dịch tự động', '1', '0', '1', '1', '', '')" );
 $db->sql_query( "INSERT INTO " . $prefix . "_modules VALUES ( '9', 'Sitemap', 'Sơ đồ site', '1', '0', '4', '3', '', '')" );
 $db->sql_query( "INSERT INTO " . $prefix . "_modules VALUES ( '10', 'Weblinks', 'Weblinks', '1', '0', '1', '1', '', '')" );
-$db->sql_query( "INSERT INTO " . $prefix . "_modules VALUES ( '11', 'Addnews', 'Gửi bài', '1', '0', '1', '2', 'nv_silver', '')" );
+$db->sql_query( "INSERT INTO " . $prefix . "_modules VALUES ( '11', 'Addnews', 'Gửi bài', '1', '0', '1', '2', '', '')" );
 $db->sql_query( "INSERT INTO " . $prefix . "_modules VALUES ( '12', 'Rss', 'Rss', '1', '0', '1', '0', '', '')" );
 $db->sql_query( "INSERT INTO " . $prefix . "_modules VALUES ( '13', 'Support', 'Support', '1', '0', '1', '1', '', '')" );
 

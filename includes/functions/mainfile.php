@@ -3,8 +3,8 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC2
+* @Date: 		28.05.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -113,8 +113,34 @@ else
 /**
  * session_start
  */
+$rootdir = str_replace( "\\", "/", realpath(dirname(__FILE__) . "/../..") );
+if ( ! ereg('/$', $rootdir) ) $rootdir = $rootdir . '/';
+if ( is_dir($rootdir . 'tmp') ) ini_set( 'session.save_path', $rootdir . 'tmp' );
 session_name( "NVS" );
 session_start();
+
+
+/**
+* Tao ma truy cap
+*/
+if ( isset($_GET['gfx']) and $_GET['gfx'] == "gfx" )
+{
+   $_SESSION['random_num'] = mt_rand( 100000, 999999 );
+   $image = ImageCreateFromJPEG( INCLUDE_PATH . "images/code_bg.jpg" );
+   if ( ! $image )
+   {
+      $image = imagecreate( 73, 15 );
+      $bgc = imagecolorallocate( $image, 240, 240, 240 );
+      imagefilledrectangle( $image, 0, 0, 73, 15, $bgc );
+   }
+   $text_color = ImageColorAllocate( $image, 50, 50, 50 );
+   Header( "Content-type: image/jpeg" );
+   ImageString( $image, 5, 11, 1, $_SESSION['random_num'], $text_color );
+   ImageJPEG( $image, '', 90 );
+   ImageDestroy( $image );
+   die();
+   break;
+}
 
 /**
  * client_ip
@@ -286,6 +312,10 @@ if ( $multilingual and (isset($_GET['newlang']) || isset($_POST['newlang'])) )
 	if ( ! eregi("[^a-zA-Z0-9_]", $newlang) and file_exists(INCLUDE_PATH . "language/lang-" . $newlang . ".php") )
 	{
 		setcookie( "lang", $newlang, time() + intval($live_cookie_time) * 86400, $cookie_path, $cookie_domain );
+		if ( defined('IS_USER') and (file_exists(INCLUDE_PATH . "modules/Forums/language/lang_" . $newlang . "/lang_main.php")) )
+		{
+			$db->sql_query( "UPDATE " . $user_prefix . "_users SET user_lang='" . $newlang . "' WHERE user_id='" . intval($user_ar[0]) . "'" );
+		}
 		header( "Location: index.php" );
 		exit;
 	}
@@ -340,32 +370,5 @@ if ( $disable_site )
 	}
 }
 
-/**
- * Tao ma truy cap
- */
-if ( isset($_GET['gfx']) and $_GET['gfx'] == "gfx" )
-{
-	mt_srand( (double)microtime() * 1000000 );
-	$maxran = 1000000;
-	$random_num = mt_rand( 0, $maxran );
-	$_SESSION['random_num'] = $random_num;
-	$datekey = date( "F j" );
-	$rcode = hexdec( md5($_SERVER[HTTP_USER_AGENT] . $sitekey . $random_num . $datekey) );
-	$code = substr( $rcode, 2, 6 );
-	$image = ImageCreateFromJPEG( "" . INCLUDE_PATH . "images/code_bg.jpg" );
-	if ( ! $image )
-	{
-		$image = imagecreate( 73, 15 );
-		$bgc = imagecolorallocate( $image, 240, 240, 240 );
-		imagefilledrectangle( $image, 0, 0, 73, 15, $bgc );
-	}
-	$text_color = ImageColorAllocate( $image, 50, 50, 50 );
-	Header( "Content-type: image/jpeg" );
-	ImageString( $image, 5, 11, 1, $code, $text_color );
-	ImageJPEG( $image, '', 90 );
-	ImageDestroy( $image );
-	die();
-	break;
-}
 
 ?>

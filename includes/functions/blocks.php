@@ -3,8 +3,8 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC2
+* @Date: 		06.07.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -27,7 +27,7 @@ if ( ! defined('NV_MAINFILE') ) die( 'Stop!!!' );
 function fixweight()
 {
 	global $prefix, $db;
-	$sql = "SELECT * FROM " . $prefix . "_blocks ORDER BY bposition, weight";
+	$sql = "SELECT * FROM " . $prefix . "_blocks ORDER BY blanguage, bposition, weight";
 	$result = $db->sql_query( $sql );
 	$xweight = 1;
 	while ( $row = $db->sql_fetchrow($result) )

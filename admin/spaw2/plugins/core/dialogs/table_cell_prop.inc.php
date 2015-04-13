@@ -2,6 +2,8 @@
 $lang->setModule("core");
 $lang->setBlock("table_cell_prop");
 $theme_path = SpawConfig::getStaticConfigValue('SPAW_DIR').'plugins/core/lib/theme/'.$theme->getName().'/';
+
+$spaw_table_cell_styles = $config->getConfigValue("table_cell_styles");
 ?>
 <script type="text/javascript" src="<?php echo SpawConfig::getStaticConfigValue('SPAW_DIR') ?>plugins/core/dialogs/table_cell_prop.js"></script>
 
@@ -21,7 +23,7 @@ echo 'spawErrorMessages["error_height_nan"] = "' . $lang->m('error_height_nan') 
   <td nowrap colspan="3">
     <select id="ccssclass" name="ccssclass" id="ccssclass" size="1" class="input" onchange="SpawTableCellPropDialog.cssClassChanged();">
 	<?php
-	foreach($spaw_dropdown_data["td_style"] as $key => $text)
+	foreach($spaw_table_cell_styles as $key => $text)
 	{
 		echo '<option value="'.$key.'">'.$text.'</option>'."\n";
 	}

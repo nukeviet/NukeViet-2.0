@@ -2,9 +2,11 @@
 
 /*
 * @Program:		NukeViet CMS
-* @File name: 	NukeViet System
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @File name: 	admin.php
+* @Version: 	2.0 RC2
+* @Date: 		15.06.2009
+* @author: 		Nguyen Anh Tu (Nukeviet Group)
+* @contact: 	anht@mail.ru
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -16,41 +18,24 @@ if ( file_exists("../install/install.php") )
 	exit;
 }
 if ( ! file_exists("../mainfile.php") ) exit();
-
 define( 'NV_ADMIN', true );
 @require_once ( "../mainfile.php" );
+get_lang( 'admin' );
+$module_title = _ADMINPAGE;
 @require ( "../" . $datafold . "/config_admin.php" );
 if ( $editor )
 {
-	if ( file_exists("spaw2/spaw.inc.php") )
-	{
-		@require_once ( "spaw2/spaw.inc.php" );
-	} elseif ( file_exists("" . INCLUDE_PATH . "spaw/spaw_control.class.php") )
-	{
-		@require_once ( "" . INCLUDE_PATH . "spaw/spaw_control.class.php" );
-	}
-}
-if ( isset($aid) )
-{
-	if ( $aid and (! isset($_SESSION[ADMIN_COOKIE]) or empty($_SESSION[ADMIN_COOKIE])) and $op != 'login' )
-	{
-		unset( $aid );
-		unset( $_SESSION[ADMIN_COOKIE] );
-		die( "Access Denied" );
-	}
+	if ( file_exists("spaw2/spaw.inc.php") ) @require_once ( "spaw2/spaw.inc.php" );
+	elseif ( file_exists(INCLUDE_PATH . "spaw/spaw_control.class.php") ) @require_once ( INCLUDE_PATH . "spaw/spaw_control.class.php" );
 }
 
-$checkurl = $_SERVER['REQUEST_URI'];
+$op = ( isset($_POST['op']) and ! empty($_POST['op']) ) ? $_POST['op'] : $_GET['op'];
+if ( ! empty($op) ) $op = trim( $op );
 
-if ( (stripos_clone($_SERVER["QUERY_STRING"], 'AddAuthor')) || (stripos_clone($_SERVER["QUERY_STRING"], 'VXBkYXRlQXV0aG9y')) || (stripos_clone($_SERVER["QUERY_STRING"], 'QWRkQXV0aG9y')) || (stripos_clone($_SERVER["QUERY_STRING"], 'UpdateAuthor')) || (preg_match("/\?admin/", "$checkurl")) || (preg_match("/\&admin/", "$checkurl")) )
-{
-	die( "Illegal Operation" );
-}
-
-get_lang( 'admin' );
-$module_title = _ADMINPAGE;
-
-if ( ($block_admin_ip) and ($allowed_admin_ip != "") )
+/**
+ * Kiem tra IP
+ */
+if ( $block_admin_ip and ! empty($allowed_admin_ip) )
 {
 	switch ( $ip_test_fields )
 	{
@@ -66,235 +51,98 @@ if ( ($block_admin_ip) and ($allowed_admin_ip != "") )
 		default:
 			$ip_mask = "//";
 	}
-
-	$client_ip = $_SERVER['HTTP_CLIENT_IP'];
-	if ( ! strstr($client_ip, ".") ) $client_ip = $_SERVER['REMOTE_ADDR'];
-	if ( ! strstr($client_ip, ".") ) $client_ip = getenv( "REMOTE_ADDR" );
-	$client_ip = trim( $client_ip );
 	$client_ip_tmp = preg_replace( $ip_mask, "", $client_ip );
 	$allowed_admin_array = explode( "|", $allowed_admin_ip );
-	for ( $j = 0; $j < sizeof($allowed_admin_array); $j++ )
+	$allowed_admin_ip_tmp = array();
+	foreach ( $allowed_admin_array as $ip_tmp )
 	{
-		$allowed_admin_ip_tmp[$j] = preg_replace( $ip_mask, "", $allowed_admin_array[$j] );
+		$allowed_admin_ip_tmp = preg_replace( $ip_mask, "", $ip_tmp );
 	}
-	if ( ! in_array($client_ip_tmp, $allowed_admin_ip_tmp) )
-	{
-		die();
-	}
+	if ( ! in_array($client_ip_tmp, $allowed_admin_ip_tmp) ) die();
 }
 
-
-if ( ($firewall) and ($adv_admin != "") )
+/**
+ * Tuong lua
+ */
+if ( $firewall and ! empty($adv_admin) )
 {
-	if ( $op == "logout" )
+	$adv_admin_array = explode( "|", $adv_admin );
+	if ( isset($_POST["adv_op"]) && $_POST["adv_op"] == "go" )
 	{
-		setcookie( "adv_sdmin_test", "", 0, $cookie_path, $cookie_domain );
+		$adv_admin_name_post = trim( $_POST['adv_admin_name_post'] );
+		$adv_admin_pass_post = trim( $_POST['adv_admin_pass_post'] );
+		$adv_admin_post_tmp = $adv_admin_name_post . ":" . $adv_admin_pass_post;
+		if ( ! in_array($adv_admin_post_tmp, $adv_admin_array) )
+		{
+			header( "Location: " . $adminfile . ".php" );
+			exit;
+		}
+		setcookie( "adv_sdmin_test", md5($adv_admin_post_tmp), time() + $expiring_login, $cookie_path, $cookie_domain );
 	}
 	else
 	{
-		$adv_admin_array = explode( "|", $adv_admin );
-		if ( isset($_POST["adv_op"]) && $_POST["adv_op"] == "go" )
+		$yes_firewall = true;
+		if ( isset($_COOKIE["adv_sdmin_test"]) and ! empty($_COOKIE["adv_sdmin_test"]) )
 		{
-			$adv_admin_name_post = trim( $_POST['adv_admin_name_post'] );
-			$adv_admin_pass_post = trim( $_POST['adv_admin_pass_post'] );
-			$adv_admin_post_tmp = "$adv_admin_name_post:$adv_admin_pass_post";
-			if ( ! in_array($adv_admin_post_tmp, $adv_admin_array) )
+			foreach ( $adv_admin_array as $adv_admin_ar )
 			{
-				header( "Location: " . $adminfile . ".php" );
-				exit;
-			}
-			setcookie( "adv_sdmin_test", md5($adv_admin_post_tmp), time() + $expiring_login, $cookie_path, $cookie_domain );
-		}
-		else
-		{
-			for ( $l = 0; $l < sizeof($adv_admin_array); $l++ )
-			{
-				$adv_admin_tmp[$l] = md5( $adv_admin_array[$l] );
-			}
-			if ( ! in_array($_COOKIE["adv_sdmin_test"], $adv_admin_tmp) )
-			{
-				echo "<html>\n\n<head>\n" . "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=" . _CHARSET . "\">\n" . "<link rel=\"StyleSheet\" href=\"../templates/$ThemeSel/style/style.css\" type=\"text/css\">\n" . "<title>Firewall</title>\n</head>\n\n" . "<body topmargin=\"20\" leftmargin=\"20\" rightmargin=\"20\" bottommargin=\"20\">\n\n" . "<table border=\"0\" cellpadding=\"0\" style=\"border-collapse: collapse\" width=\"100%\" height=\"100%\">\n" . "<tr>\n<td align=\"center\">\n" . "<table border=\"4\" cellpadding=\"5\" style=\"border-collapse: collapse\" bordercolor=\"#808000\" bgcolor=\"#FFFF9F\" cellspacing=\"5\">\n" . "<tr>\n<td align=\"center\"><b>Firewall</b><br><br>\n" . "<form method=\"POST\" action=\"" . $adminfile . ".php\">\n" . "<table border=\"0\" cellpadding=\"0\" style=\"border-collapse: collapse\" width=\"100%\">\n" . "<tr>\n<td><b>" . _NICKNAME . ":</b>&nbsp;&nbsp;</td>\n" . "<td><input type=\"text\" name=\"adv_admin_name_post\" size=\"20\" maxlength=\"50\"></td>\n</tr>\n" .
-					"<tr>\n<td><b>" . _PASSWORD . ":</b>&nbsp;&nbsp;</td>\n" . "<td><input type=\"password\" name=\"adv_admin_pass_post\" size=\"20\" maxlength=\"30\"></td>\n</tr>\n" . "<tr><td>&nbsp;</td><td>\n" . "<input type=\"hidden\" name=\"adv_op\" value=\"go\">\n" . "<input type=\"submit\" value=\"" . _LOGIN . "\">\n" . "</td></tr></table></form>\n</td>\n</tr>\n</table>\n</td>\n</tr>\n</table>\n\n</body>\n\n</html>";
-				exit();
-			}
-		}
-	}
-}
-
-if ( ! file_exists("../$datafold/admlock.php") )
-{
-	/**
-	 * create_first()
-	 * 
-	 * @return
-	 */
-	function create_first()
-	{
-		global $adminfile, $prefix, $db, $nukeurl, $adminmail;
-		$first = $db->sql_numrows( $db->sql_query("SELECT * FROM " . $prefix . "_authors") );
-		if ( $first == 0 )
-		{
-			$name = $_POST['name'];
-			$pwd = $_POST['pwd'];
-			$email = $_POST['email'];
-			$url = $_POST['url'];
-			$$user_new = $_POST['user_new'];
-			$stop = "";
-			if ( (! $name) || ($name == "") || (ereg("[^a-zA-Z0-9_-]", $name)) )
-			{
-				$stop = "" . _ERRORINVNICK . "";
-			} elseif ( strlen($name) > 25 )
-			{
-				$stop = "" . _NICK2LONG . "";
-			} elseif ( strlen($name) < 5 )
-			{
-				$stop = "" . _NICKADJECTIVE . "";
-			} elseif ( strrpos($name, ' ') > 0 )
-			{
-				$stop = "" . _NICKNOSPACES . "";
-			} elseif ( strlen($pwd) > 40 )
-			{
-				$stop = "" . _PASSLENGTH . "";
-			} elseif ( strlen($pwd) < 5 )
-			{
-				$stop = "" . _PASSLENGTH1 . "";
-			} elseif ( strrpos($pwd, ' ') > 0 )
-			{
-				$stop = "" . _PASSNOSPACES . "";
-			}
-			if ( $stop != "" )
-			{
-				info_exit( $stop );
-			}
-			$pwd = md5( $pwd );
-			$the_adm = "God";
-			$db->sql_query( "INSERT INTO " . $prefix . "_authors (aid, name, url, email, pwd, radminsuper, admlanguage) VALUES ('$name', '$the_adm', '$url', '$email', '$pwd', '1','')" );
-			@chmod( "../$datafold/admlock.php", 0777 );
-			@$file = fopen( "../$datafold/admlock.php", "w" );
-			$content = "<?php\n\n";
-			$content .= "?>";
-			@$writefile = fwrite( $file, $content );
-			@fclose( $file );
-			@chmod( "../$datafold/admlock.php", 0604 );
-			if ( $user_new == 1 )
-			{
-				$user_regdate = date( "M d, Y" );
-				if ( $url == "http://" )
+				if ( ! empty($adv_admin_ar) and $_COOKIE["adv_sdmin_test"] == md5($adv_admin_ar) )
 				{
-					$url = "";
+					$yes_firewall = false;
+					break;
 				}
-				$db->sql_query( "INSERT INTO " . $user_prefix . "_users (user_id, username, user_email, user_website, user_regdate, user_password, theme, user_lang) VALUES (NULL,'$name','$email','$url','$user_regdate','$pwd','$Default_Theme','')" );
 			}
-			login();
 		}
-	}
 
-	$the_first = $db->sql_numrows( $db->sql_query("SELECT * FROM " . $prefix . "_authors") );
-	if ( $the_first == 0 )
-	{
-		if ( ! $name )
+		if ( $yes_firewall )
 		{
-			echo "<html>\n\n<head>\n" . "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=" . _CHARSET . "\">\n" . "<link rel=\"StyleSheet\" href=\"../templates/$ThemeSel/style/style.css\" type=\"text/css\">\n" . "<title>" . _NOADMINYET . "</title>\n</head>\n\n" . "<body topmargin=\"20\" leftmargin=\"20\" rightmargin=\"20\" bottommargin=\"20\">\n\n" . "<table border=\"0\" cellpadding=\"0\" style=\"border-collapse: collapse\" width=\"100%\" height=\"100%\">\n" . "<tr>\n<td align=\"center\">\n" . "<table width=\"300\" border=\"4\" cellpadding=\"5\" style=\"border-collapse: collapse\" bordercolor=\"#808000\" bgcolor=\"#FFFF9F\" cellspacing=\"5\">\n" . "<tr>\n<td align=\"center\"><b>" . _NOADMINYET . "</b><br><br>\n" . "<form method=\"POST\" action=\"" . $adminfile . ".php\">\n" . "<table border=\"0\" cellpadding=\"0\" style=\"border-collapse: collapse\" width=\"100%\">\n" . "<tr>\n<td><b>" . _NICKNAME . ":</b>&nbsp;&nbsp;</td>\n" . "<td><input type=\"text\" name=\"name\" size=\"20\" maxlength=\"25\"></td>\n</tr>\n" .
-				"<tr>\n<td><b>" . _EMAIL . ":</b>&nbsp;&nbsp;</td>\n" . "<td><input type=\"text\" name=\"email\" size=\"20\" maxlength=\"100\"></td>\n</tr>\n" . "<tr>\n<td><b>" . _PASSWORD . ":</b>&nbsp;&nbsp;</td>\n" . "<td><input type=\"password\" name=\"pwd\" size=\"20\" maxlength=\"40\"></td>\n</tr>\n" . "<tr><td>&nbsp;</td><td>\n" . "<input type=\"hidden\" name=\"url\" value=\"$nukeurl\">" . "<input type=\"hidden\" name=\"user_new\" value=\"1\">" . "<input type=\"hidden\" name=\"fop\" value=\"create_first\">\n" . "<input type=\"submit\" value=\"" . _CREATEADMIN . "\">\n" . "</td></tr></table></form>\n</td>\n</tr>\n</table>\n</td>\n</tr>\n</table>\n\n</body>\n\n</html>";
-		}
-		switch ( $fop )
-		{
-			case "create_first":
-				create_first();
-				break;
-		}
-		die();
-	}
-}
-
-if ( isset($aid) && (ereg("[^a-zA-Z0-9_-]", trim($aid))) )
-{
-	die( "Begone" );
-}
-
-if ( isset($aid) )
-{
-	$aid = substr( $aid, 0, 25 );
-}
-if ( isset($pwd) )
-{
-	$pwd = substr( $pwd, 0, 40 );
-}
-if ( (isset($aid)) && (isset($pwd)) && (isset($op)) && ($op == "login") )
-{
-	session_register( "adm_log" );
-	session_register( "schet" );
-
-	if ( ! isset($_SESSION['schet']) )
-	{
-		$_SESSION['schet'] = 0;
-	}
-	if ( ! isset($_SESSION['adm_log']) || ($_SESSION['adm_log'] >= time() + 86400) )
-	{
-		$_SESSION['adm_log'] = time();
-	}
-	if ( isset($_SESSION['adm_log']) && ($_SESSION['adm_log'] >= time()) && isset($_SESSION['schet']) && ($_SESSION['schet'] >= 5) )
-	{
-		$timeout2 = $_SESSION['adm_log'] - time() + 1;
-		$info = "<script language=\"JavaScript\">\n";
-		$info .= "var Timeout = $timeout2;\n";
-		$info .= "var timeBegin = new Date();\n";
-		$info .= "var msBegin = timeBegin.getTime();\n";
-		$info .= "function showSeconds()\n";
-		$info .= "{\n";
-		$info .= "var timeCurrent = new Date();\n";
-		$info .= "var msCurrent = timeCurrent.getTime();\n";
-		$info .= "var ms = Math.round((msCurrent - msBegin)/1000);\n";
-		$info .= "document.secForm.secField.value = Timeout - ms;\n";
-		$info .= "if( Timeout <= ms )\n";
-		$info .= "location.reload();\n";
-		$info .= "}\n";
-		$info .= "timerID = setInterval(\"showSeconds()\", 1000);\n";
-		$info .= "</script>\n";
-		$info .= "<p align=\"center\"><img border=\"0\" src=\"images/load_bar.gif\" width=\"97\" height=\"19\"></p>\n";
-		$info .= "<form name=\"secForm\">\n";
-		$info .= "" . _INFTIMEOUT . " " . $_SESSION['schet'] . " " . _INFTIMEOUT2 . "\n";
-		$info .= "<input type=\"text\" align=\"right\" name=\"secField\" readonly Size=1>\n";
-		$info .= "" . _SECONDS . ".\n";
-		$info .= "</form>\n";
-		info_exit( $info );
-	}
-	$_SESSION['schet']++;
-	if ( $_SESSION['schet'] >= 5 )
-	{
-		$_SESSION['adm_log'] = time() + ( $_SESSION['schet'] - 4 ) * 300;
-	}
-
-	if ( extension_loaded("gd") and (! nv_capcha_txt($gfx_check)) and ($gfx_chk == 1 or $gfx_chk == 5 or $gfx_chk == 6 or $gfx_chk == 7) )
-	{
-		Header( "Location: " . $adminfile . ".php" );
-		die();
-	}
-	if ( ! empty($aid) and ! empty($pwd) )
-	{
-		$pwd = md5( $pwd );
-		list( $rpwd, $admlanguage, $bemail ) = $db->sql_fetchrow( $db->sql_query("SELECT pwd, admlanguage, email FROM " . $prefix . "_authors WHERE aid='$aid'") );
-		$admlanguage = addslashes( $admlanguage );
-		if ( $rpwd == $pwd and $bemail == $_POST['email'] )
-		{
-			mt_srand( (double)microtime() * 1000000 );
-			$maxran = 1000000;
-			$checknum = mt_rand( 0, $maxran );
-			$checknum = md5( $checknum );
-			$agent = substr( trim($_SERVER['HTTP_USER_AGENT']), 0, 80 );
-			$addr_ip = substr( trim($client_ip), 0, 15 );
-			$db->sql_query( "UPDATE " . $prefix . "_authors SET checknum = '$checknum', last_login = '" . time() . "', last_ip = '$addr_ip', agent = '$agent' WHERE aid='$aid'" );
-			session_register( "" . ADMIN_COOKIE . "" );
-			$_SESSION[ADMIN_COOKIE] = base64_encode( "" . $aid . "#:#" . $pwd . "#:#" . $admlanguage . "#:#" . $checknum . "#:#" . $agent . "#:#" . $addr_ip . "" );
-			unset( $_SESSION['schet'] );
-			$_SESSION['adm_log'] = time();
-			unset( $op );
+			echo "<html>\n\n";
+			echo "<head>\n";
+			echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=" . _CHARSET . "\">\n";
+			echo "<link rel=\"StyleSheet\" href=\"../themes/" . $ThemeSel . "/style/style.css\" type=\"text/css\">\n";
+			echo "<title>Firewall</title>\n";
+			echo "</head>\n\n";
+			echo "<body topmargin=\"20\" leftmargin=\"20\" rightmargin=\"20\" bottommargin=\"20\">\n\n";
+			echo "<table border=\"0\" cellpadding=\"0\" style=\"border-collapse: collapse\" width=\"100%\" height=\"100%\">\n";
+			echo "<tr>\n";
+			echo "<td align=\"center\">\n";
+			echo "<table border=\"4\" cellpadding=\"5\" style=\"border-collapse: collapse\" bordercolor=\"#808000\" bgcolor=\"#FFFF9F\" cellspacing=\"5\">\n";
+			echo "<tr>\n";
+			echo "<td align=\"center\"><b>Firewall</b><br><br>\n";
+			echo "<form method=\"POST\" action=\"" . $adminfile . ".php\">\n";
+			echo "<table border=\"0\" cellpadding=\"0\" style=\"border-collapse: collapse\" width=\"100%\">\n";
+			echo "<tr>\n";
+			echo "<td><b>" . _NICKNAME . ":</b>&nbsp;&nbsp;</td>\n";
+			echo "<td><input type=\"text\" name=\"adv_admin_name_post\" style=\"width:200px;\" maxlength=\"50\"></td>\n";
+			echo "</tr>\n";
+			echo "<tr>\n";
+			echo "<td><b>" . _PASSWORD . ":</b>&nbsp;&nbsp;</td>\n";
+			echo "<td><input type=\"password\" name=\"adv_admin_pass_post\" style=\"width:200px;\" maxlength=\"30\"></td>\n";
+			echo "</tr>\n";
+			echo "<tr><td>&nbsp;</td>\n";
+			echo "<td><input type=\"hidden\" name=\"adv_op\" value=\"go\">\n";
+			echo "<input type=\"submit\" value=\"" . _LOGIN . "\"></td>\n";
+			echo "</tr>\n";
+			echo "</table>\n";
+			echo "</form>\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+			echo "</table>\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+			echo "</table>\n\n";
+			echo "</body>\n\n";
+			echo "</html>";
+			exit();
 		}
 	}
-	nvheader( "" . $adminfile . ".php" );
-	exit;
 }
 
+/**
+ * Kiem tra admin
+ */
+unset( $admin, $aid, $pwd, $radminsuper );
+if ( defined("IS_ADMIN") or defined("IS_SPADMIN") ) die();
 if ( isset($_SESSION[ADMIN_COOKIE]) && ! empty($_SESSION[ADMIN_COOKIE]) )
 {
 	$admin = addslashes( base64_decode($_SESSION[ADMIN_COOKIE]) );
@@ -302,42 +150,160 @@ if ( isset($_SESSION[ADMIN_COOKIE]) && ! empty($_SESSION[ADMIN_COOKIE]) )
 	$aid = addslashes( $admin[0] );
 	$pwd = $admin[1];
 	$admlanguage = $admin[2];
-	if ( empty($aid) or empty($pwd) )
+	if ( ! empty($aid) and ! empty($pwd) and (! empty($admin[4]) and $admin[4] == substr(trim($_SERVER['HTTP_USER_AGENT']), 0, 80)) )
 	{
-		$admintest = 0;
-		echo "<html>\n";
-		echo "<title>INTRUDER ALERT!!!</title>\n";
-		echo "<body bgcolor=\"#FFFFFF\" text=\"#000000\">\n\n<br><br><br>\n\n";
-		echo "<center><img src=\"images/eyes.gif\" border=\"0\"><br><br>\n";
-		echo "<font face=\"Verdana\" size=\"+4\"><b>Get Out!</b></font></center>\n";
-		echo "</body>\n";
-		echo "</html>\n";
-		exit;
-	}
-	$aid = substr( $aid, 0, 25 );
-	$bossresult = $db->sql_query( "SELECT name, pwd, radminsuper FROM " . $prefix . "_authors WHERE aid='$aid' AND checknum = '$admin[3]' AND agent = '$admin[4]' AND last_ip = '$admin[5]'" );
-	if ( ! $bossresult or ($admin[4] != substr(trim($_SERVER['HTTP_USER_AGENT']), 0, 80)) )
-	{
-		unset( $_SESSION[ADMIN_COOKIE] );
-		header( "Location: " . $adminfile . ".php" );
-		exit;
-	}
-	else
-	{
-		list( $rname, $rpwd, $xradminsuper ) = $db->sql_fetchrow( $bossresult );
-		if ( $rpwd == $pwd && ! empty($rpwd) )
+		$aid = substr( $aid, 0, 25 );
+		//310509 - Anhtu
+		//$bossresult = $db->sql_query( "SELECT `name`, `pwd`, `radminsuper`, `checknum`, `agent`, `last_ip` FROM `" . $prefix . "_authors` WHERE `aid`='" . $aid . "'" );
+		$bossresult = $db->sql_query( "SELECT `name`, `pwd`, `radminsuper`, `checknum`, `agent`, `last_ip`, `email` FROM `" . $prefix . "_authors` WHERE `aid`='" . $aid . "'" );
+		//END
+		if ( $bossresult )
 		{
-			define( 'IS_ADMIN', true );
-			$radminsuper = intval( $xradminsuper );
-			$radminname = $rname;
-			if ( $radminsuper == 1 )
+			//310509 - Anhtu
+			//list( $radminname, $rpwd, $radminsuper, $rchecknum, $ragent, $rlast_ip ) = $db->sql_fetchrow( $bossresult );
+			list( $radminname, $rpwd, $radminsuper, $rchecknum, $ragent, $rlast_ip, $radminemail ) = $db->sql_fetchrow( $bossresult );
+			//END
+			if ( (! empty($rpwd) and $rpwd == $pwd) and (! empty($rchecknum) and $rchecknum == $admin[3]) and (! empty($ragent) and $ragent == $admin[4]) and (! empty($rlast_ip) and $rlast_ip == $admin[5]) )
 			{
-				define( 'IS_SPADMIN', true );
+				define( 'IS_ADMIN', true );
+				$radminsuper = intval( $radminsuper );
+				$radminname = trim( $radminname );
+				//310509 - Anhtu
+				$radminemail = trim( $radminemail );
+				//END
+				if ( $radminsuper )
+				{
+					define( 'IS_SPADMIN', true );
+				}
 			}
 		}
 	}
+
+	if ( ! defined("IS_ADMIN") ) unset( $_SESSION[ADMIN_COOKIE], $admin, $aid, $pwd, $admlanguage );
 }
 
+/**
+ * Neu khong phai la admin
+ */
+if ( ! defined("IS_ADMIN") )
+{
+	$error = "";
+	if ( $op == "login" )
+	{
+		$aid = strip_tags( trim($_POST['aid']) );
+		$aid = substr( $aid, 0, 25 );
+		$pwd = strip_tags( trim($_POST['pwd']) );
+		$pwd = substr( $pwd, 0, 25 );
+		$email = strip_tags( trim($_POST['email']) );
+		$gfx_check = strip_tags( trim($_POST['gfx_check']) );
+		if ( extension_loaded("gd") and ($gfx_chk == 1 or $gfx_chk == 5 or $gfx_chk == 6 or $gfx_chk == 7) and ! nv_capcha_txt($gfx_check) )
+		{
+			$gfx_check = "";
+			$error = "Seurity Code is incorrect";
+		} elseif ( empty($aid) or ereg("[^a-zA-Z0-9_-]", $aid) )
+		{
+			$aid = "";
+			$error = "NickName is empty or invalid";
+		} elseif ( empty($pwd) or ereg("[^a-zA-Z0-9_-]", $pwd) )
+		{
+			$pwd = "";
+			$error = "Password is empty or invalid";
+		} elseif ( empty($email) || ! eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,6}$", $email) || strrpos($email, ' ') > 0 )
+		{
+			$email = "";
+			$error = "E-mail is empty or invalid";
+		}
+		else
+		{
+			list( $rpwd, $admlanguage, $bemail ) = $db->sql_fetchrow( $db->sql_query("SELECT `pwd`, `admlanguage`, `email` FROM `" . $prefix . "_authors` WHERE `aid`='" . $aid . "'") );
+			{
+				if ( $rpwd != md5($pwd) or $bemail != $email )
+				{
+					$aid = $email = $pwd = "";
+					$error = "You have declared wrong nickname, email or password";
+				}
+				else
+				{
+					$admlanguage = addslashes( $admlanguage );
+					mt_srand( (double)microtime() * 1000000 );
+					$maxran = 1000000;
+					$checknum = md5( mt_rand(0, $maxran) );
+					$agent = substr( trim($_SERVER['HTTP_USER_AGENT']), 0, 80 );
+					$addr_ip = substr( trim($client_ip), 0, 15 );
+					$query = "UPDATE `" . $prefix . "_authors` SET `checknum` = '" . $checknum . "', `last_login` = '" . time() . "', `last_ip` = '" . $addr_ip . "', agent = '" . $agent . "' WHERE `aid`='" . $aid . "'";
+					$db->sql_query( $query );
+					$_SESSION[ADMIN_COOKIE] = base64_encode( $aid . "#:#" . md5($pwd) . "#:#" . $admlanguage . "#:#" . $checknum . "#:#" . $agent . "#:#" . $addr_ip );
+					Header( "Location: " . $adminfile . ".php" );
+					exit;
+				}
+			}
+		}
+	}
+
+	$html = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n";
+	$html .= "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
+	$html .= "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n";
+	$html .= "<head>\n";
+	$html .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
+	$html .= "<title>" . _ADMINLOGIN . "</title>\n";
+	$html .= "<style type=\"text/css\">\n";
+	$html .= "*{MARGIN:0;PADDING:0;}\n";
+	$html .= "BODY{BACKGROUND:#002D59 none repeat scroll 0% 0%;COLOR:#666;DISPLAY:block;FONT:normal normal 400 10pt/normal Arial,sans-serif;HEIGHT:auto;}\n";
+	$html .= "#adminlogin{background:#FFF;border:2px solid #DFDFDF;margin:200px auto auto auto;width:400px;}\n";
+	$html .= "#adminlogin DIV.div1{margin:1em;}\n";
+	$html .= "#adminlogin DIV.div2{color:#036;font:bold 1.2em Arial,Helvetica,sans-serif;margin-bottom:0.6em;text-align:center;}\n";
+	$html .= "#adminlogin DIV.div3{color:#800000;font:bold 0.9em Arial,Helvetica,sans-serif;margin-bottom:0.6em;text-align:center;}\n";
+	$html .= "#adminlogin DIV.div4{background:#F5F5F5;margin-bottom:2px;margin-top:2px;padding:0.5em;}\n";
+	$html .= "#adminlogin DIV.div4 IMG{float:right;margin-right:1em;vertical-align:middle;}\n";
+	$html .= "#adminlogin DIV.div4 INPUT.t{float:right;width:200px;}\n";
+	$html .= "#adminlogin DIV.div4 INPUT.t2{float:right;width:80px;}\n";
+	$html .= "#adminlogin DIV.div4 LABEL{font-weight:bold;}\n";
+	$html .= "#adminlogin DIV.div5{margin-top:1em;text-align:center;}\n";
+	$html .= "</style>\n";
+	$html .= "</head>\n";
+	$html .= "<body>\n";
+	$html .= "<div id=\"adminlogin\">\n";
+	$html .= "<div class=\"div1\">\n";
+	$html .= "<div class=\"div2\">" . _ADMINLOGIN . "</div>\n";
+	if ( ! empty($error) ) $html .= "<div class=\"div3\">" . $error . "</div>\n";
+	$html .= "<form method=\"post\" action=\"" . $adminfile . ".php\">\n";
+	$html .= "<input name=\"op\" type=\"hidden\" value=\"login\" />\n";
+	$html .= "<div class=\"div4\">\n";
+	$html .= "<input name=\"aid\" type=\"text\" class=\"t\" value=\"" . $aid . "\" id=\"aid\" maxlength=\"25\" /> <label>" . _NICKNAME . "</label>\n";
+	$html .= "</div>\n";
+	$html .= "<div class=\"div4\">\n";
+	$html .= "<input name=\"email\" type=\"text\" class=\"t\" value=\"" . $email . "\" id=\"email\" maxlength=\"255\" /> <label>" . _EMAIL . "</label>\n";
+	$html .= "</div>\n";
+	$html .= "<div class=\"div4\">\n";
+	$html .= "<input name=\"pwd\" type=\"password\" class=\"t\" value=\"" . $pwd . "\" id=\"pwd\" maxlength=\"25\" /> <label>" . _PASSWORD . "</label>\n";
+	$html .= "</div>\n";
+	if ( extension_loaded("gd") and ($gfx_chk == 1 or $gfx_chk == 5 or $gfx_chk == 6 or $gfx_chk == 7) )
+	{
+		$html .= "<div class=\"div4\">\n";
+		$html .= "<input name=\"gfx_check\" type=\"text\" class=\"t2\" id=\"gfx_check\" maxlength=\"6\" /> <img alt=\"" . _SECURITYCODE . "\" title=\"" . _SECURITYCODE . "\" src=\"?gfx=gfx\" /> <label>" . _SECURITYCODE . "</label>\n";
+		$html .= "</div>\n";
+	}
+	$html .= "<div class=\"div5\">\n";
+	$html .= "<input type=\"submit\" name=\"submit\" />\n";
+	$html .= "</div>\n";
+	$html .= "</form>\n";
+	$html .= "</div>\n";
+	$html .= "</div>\n";
+	$html .= "</body>\n";
+	$html .= "</html>\n";
+	echo $html;
+	exit();
+}
+
+/**
+ * Duoi day chi danh cho Admin
+ */
+
+if ( empty($op) ) $op = "adminMain";
+
+/**
+ * Kiem tra modules
+ */
 $testmodhandle = @opendir( '../modules' );
 $modlist = array();
 while ( $file = @readdir($testmodhandle) )
@@ -377,102 +343,31 @@ foreach ( $modlist as $mod )
 }
 $listmods = array_merge( $listmods, $newmods );
 
-if ( ! isset($op) )
-{
-	$op = "adminMain";
-}
-
-
 /**
- * login()
+ * checkmodac()
  * 
+ * @param mixed $checkmodname
  * @return
  */
-function login()
+function checkmodac( $checkmodname )
 {
-	global $adminfile, $gfx_chk, $ThemeSel;
-	session_register( "adm_log" );
-	session_register( "schet" );
-	if ( ! isset($_SESSION['schet']) )
+	global $radminname, $radminsuper, $listmods, $listadmins;
+	if ( $radminsuper ) return true;
+	if ( $checkmodname == "stories" ) $checkmodname = "News";
+	if ( $checkmodname == "editusers" ) $checkmodname = "Your_Account";
+	if ( $checkmodname == "forums" ) $checkmodname = "Forums";
+	$checkmodname = ucfirst( $checkmodname );
+	$auth_user = false;
+	foreach ( $listmods as $key => $mod )
 	{
-		$_SESSION['schet'] = 0;
-	}
-	if ( ! isset($_SESSION['adm_log']) || ($_SESSION['adm_log'] >= time() + 86400) )
-	{
-		$_SESSION['adm_log'] = time();
-		$_SESSION['schet'] = 0;
-	}
-	if ( isset($_SESSION['adm_log']) && ($_SESSION['adm_log'] >= time()) && isset($_SESSION['schet']) && ($_SESSION['schet'] >= 5) )
-	{
-		$timeout2 = $_SESSION['adm_log'] - time() + 1;
-		$info = "<script language=\"JavaScript\">\n";
-		$info .= "var Timeout = $timeout2;\n";
-		$info .= "var timeBegin = new Date();\n";
-		$info .= "var msBegin = timeBegin.getTime();\n";
-		$info .= "function showSeconds()\n";
-		$info .= "{\n";
-		$info .= "var timeCurrent = new Date();\n";
-		$info .= "var msCurrent = timeCurrent.getTime();\n";
-		$info .= "var ms = Math.round((msCurrent - msBegin)/1000);\n";
-		$info .= "document.secForm.secField.value = Timeout - ms;\n";
-		$info .= "if( Timeout <= ms )\n";
-		$info .= "location.reload();\n";
-		$info .= "}\n";
-		$info .= "timerID = setInterval(\"showSeconds()\", 1000);\n";
-		$info .= "</script>\n";
-		$info .= "<p align=\"center\"><img border=\"0\" src=\"../images/load_bar.gif\" width=\"97\" height=\"19\"></p>\n";
-		$info .= "<form name=\"secForm\">\n";
-		$info .= "" . _INFTIMEOUT . " " . $_SESSION['schet'] . " " . _INFTIMEOUT2 . "\n";
-		$info .= "<input type=\"text\" name=\"secField\" readonly Size=2>\n";
-		$info .= "" . _SECONDS . ".\n";
-		$info .= "</form>\n";
-		info_exit( $info );
-	}
-	echo "<html>\n\n<head>\n" . "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=" . _CHARSET . "\">\n" . "<link rel=\"StyleSheet\" href=\"../themes/$ThemeSel/style/style.css\" type=\"text/css\">\n" . "<title>" . _ADMINLOGIN . "</title>\n";
-
-	echo "
-<script type=\"text/javascript\">
-	function dissc() {
-		document.settform.B1.disabled = true;
-		return true;
-	}
-	function Check_S() {
-		var a = document.getElementById('l_aid');
-		var b = document.getElementById('l_email');
-		var c = document.getElementById('l_pwd');\n";
-	if ( extension_loaded("gd") and ($gfx_chk == 1 or $gfx_chk == 5 or $gfx_chk == 6 or $gfx_chk == 7) )
-	{
-		echo "		var d = document.getElementById('gfx_check');\n";
-	}
-	echo "		var set = /^([a-zA-Z0-9_])+$/;
-		var filter  = /^[A-Za-z0-9]+([_\.\-]{1}[A-Za-z0-9]+)*@[A-Za-z0-9]+([_\.\-]{1}[A-Za-z0-9]+)*\.[A-Za-z]{2,6}$/;\n";
-	if ( extension_loaded("gd") and ($gfx_chk == 1 or $gfx_chk == 5 or $gfx_chk == 6 or $gfx_chk == 7) )
-	{
-		echo "		var set2 = /^([0-9])+$/;
-		if(a.value.length>4 && a.value.length<20 && set.test(a.value) && b.value.length>7 && filter.test(b.value) && 	c.value.length>4 && c.value.length<20 && set.test(c.value) && d.value.length==6 && set2.test(d.value)) {\n";
-	}
-	else
-	{
-		echo "		if(a.value.length>4 && a.value.length<20 && set.test(a.value) && b.value.length>7 && filter.test(b.value) && 	c.value.length>4 && c.value.length<20 && set.test(c.value)) {\n";
-	}
-	echo "			document.settform.B1.disabled = false;
-		} else {
-			document.settform.B1.disabled = true;
+		if ( $checkmodname == $mod and ! empty($listadmins[$key]) )
+		{
+			$admins = explode( ",", $listadmins[$key] );
+			if ( ! empty($radminname) and in_array($radminname, $admins) ) $auth_user = true;
 		}
 	}
-</script>\n";
-
-	echo "</head>\n\n" . "<body topmargin=\"20\" leftmargin=\"20\" rightmargin=\"20\" bottommargin=\"20\">\n\n";
-	echo "<table border=\"0\" cellpadding=\"0\" style=\"border-collapse: collapse\" width=\"100%\" height=\"100%\">\n" . "<tr>\n<td align=\"center\">\n" . "<table border=\"4\" cellpadding=\"5\" style=\"border-collapse: collapse\" bordercolor=\"#2179FF\" bgcolor=\"#CCE6FF\" cellspacing=\"5\">\n" . "<tr>\n<td align=\"center\"><b>" . _ADMINLOGIN . "</b><br><br>\n" . "<form name=\"settform\" id=\"settform\" onsubmit=\"return dissc();\" method=\"POST\" action=\"" . $adminfile . ".php\">\n" . "<table border=\"0\" cellpadding=\"0\" style=\"border-collapse: collapse\" width=\"100%\">\n" . "<tr>\n<td><b>" . _NICKNAME . ":</b>&nbsp;&nbsp;</td>\n" . "<td><input type=\"text\" name=\"aid\" id=\"l_aid\" size=\"20\" maxlength=\"25\" onkeypress=\"Check_S();\" onkeyup=\"Check_S();\" onblur=\"Check_S();\"></td>\n</tr>\n" . "<tr>\n<td><b>" . _EMAIL . ":</b>&nbsp;&nbsp;</td>\n" . "<td><input type=\"text\" name=\"email\" id=\"l_email\" size=\"20\" maxlength=\"50\" onkeypress=\"Check_S();\" onkeyup=\"Check_S();\" onblur=\"Check_S();\"></td>\n</tr>\n" .
-		"<tr>\n<td><b>" . _PASSWORD . ":</b>&nbsp;&nbsp;</td>\n" . "<td><input type=\"password\" name=\"pwd\" id=\"l_pwd\" size=\"20\" maxlength=\"40\" onkeypress=\"Check_S();\" onkeyup=\"Check_S();\" onblur=\"Check_S();\"></td>\n</tr>\n";
-	if ( extension_loaded("gd") and ($gfx_chk == 1 or $gfx_chk == 5 or $gfx_chk == 6 or $gfx_chk == 7) )
-	{
-		echo "<tr><td><b>" . _SECURITYCODE . ":</b></td><td><img src='?gfx=gfx' border='1' alt='" . _SECURITYCODE . "' title='" . _SECURITYCODE . "'></td></tr>\n" . "<tr><td><b>" . _TYPESECCODE . ":</b></td><td><input type=\"text\" NAME=\"gfx_check\" id=\"gfx_check\" size=\"6\" maxlength=\"6\" onkeypress=\"Check_S();\" onkeyup=\"Check_S();\" onblur=\"Check_S();\" SIZE=\"11\" MAXLENGTH=\"6\"></td></tr>\n";
-	}
-	echo "<tr><td>&nbsp;</td><td>\n" . "<input type=\"hidden\" name=\"op\" value=\"login\">\n" . "<input type=\"submit\" value=\"" . _LOGIN . "\" name=\"B1\" id=\"B1\" disabled=\"disabled\">\n" . "</td></tr></table></form>\n</td>\n</tr>\n</table>\n</td>\n</tr>\n</table>\n\n";
-	echo "</body>\n\n</html>";
+	return $auth_user;
 }
-
 
 /**
  * adminmenu()
@@ -484,70 +379,9 @@ function login()
  */
 function adminmenu( $url, $title, $image )
 {
-	global $counter, $admingraphic;
-	$image = "../images/admin/$image";
-	if ( $admingraphic == 1 )
-	{
-		$img = "<img src=\"$image\" border=\"0\" alt=\"$title\" title=\"$title\"></a><br>";
-		$close = "";
-	}
-	else
-	{
-		$image = "";
-		$close = "</a>";
-	}
-	echo "<td align=\"center\" width=\"17%\"><font class=\"content\"><a href=\"$url\">$img<b>$title</b>$close<br><br></font></td>";
-	if ( $counter == 5 )
-	{
-		echo "</tr><tr>";
-		$counter = 0;
-	}
-	else
-	{
-		$counter++;
-	}
-}
-
-/**
- * checkmodac()
- * 
- * @param mixed $checkmodname
- * @return
- */
-function checkmodac( $checkmodname )
-{
-	global $radminname, $radminsuper, $listmods, $listadmins;
-	if ( $checkmodname == "stories" )
-	{
-		$checkmodname = "News";
-	}
-	if ( $checkmodname == "editusers" )
-	{
-		$checkmodname = "Your_Account";
-	}
-	if ( $checkmodname == "forums" )
-	{
-		$checkmodname = "Forums";
-	}
-	$checkmodname = ucfirst( $checkmodname );
-	$auth_user = 0;
-	for ( $l = 0; $l < sizeof($listmods); $l++ )
-	{
-		if ( $checkmodname == $listmods[$l] )
-		{
-			$admins = explode( ",", $listadmins[$l] );
-			if ( $listadmins[$l] != "" && in_array($radminname, $admins) )
-			{
-				$auth_user = 1;
-			}
-		}
-	}
-	$adm_access = 0;
-	if ( $radminsuper == 1 || $auth_user == 1 )
-	{
-		$adm_access = 1;
-	}
-	return ( $adm_access );
+	global $admingraphic;
+	$image = ( $admingraphic ) ? "<a href=\"" . $url . "\"><img src=\"../images/admin/" . $image . "\" border=\"0\" alt=\"" . $title . "\" title=\"" . $title . "\"></a><br>" : "";
+	echo "<td align=\"center\" width=\"17%\">" . $image . "<a href=\"" . $url . "\" class=\"content\"><b>" . $title . "</b></a><br><br></td>\n";
 }
 
 /**
@@ -558,37 +392,45 @@ function checkmodac( $checkmodname )
 function GraphicAdmin()
 {
 	global $adminfile, $radminsuper, $radminname, $listmods, $listadmins;
-	OpenTable();
-	echo "<center><a href=\"" . $adminfile . ".php\"><font class='title'><b>" . _ADMINMENU . "</b></font></a>";
-	echo "<br><br>";
-	echo "<table border=\"0\" width=\"100%\" cellspacing=\"1\"><tr>";
-	$linksdir = dir( "links" );
-	while ( $func = $linksdir->read() )
+	$handle = opendir( "links" );
+	$links = array();
+	while ( $file = readdir($handle) )
 	{
-		if ( substr($func, 0, 6) == "links." )
+		if ( substr($file, 0, 6) == "links." )
 		{
-			$testtest = explode( ".", $func );
-			$checkmodname = $testtest[1];
-			$adm_access = checkmodac( $checkmodname );
-			if ( $adm_access == 1 )
+			$explode = explode( ".", $file );
+			if ( checkmodac($explode[1]) )
 			{
-				$menulist .= "$func ";
+				ob_start();
+				include ( "links/" . $file );
+				$links[] = ob_get_contents();
+				ob_end_clean();
 			}
 		}
 	}
-	closedir( $linksdir->handle );
-	$menulist = explode( " ", $menulist );
-	sort( $menulist );
-	for ( $i = 0; $i < sizeof($menulist); $i++ )
+	closedir( $handle );
+	sort( $links );
+
+	ob_start();
+	adminmenu( $adminfile . ".php?op=logout", _ADMINLOGOUT, "logout.gif" );
+	$links[] = ob_get_contents();
+	ob_end_clean();
+
+	OpenTable();
+	echo "<center>\n";
+	echo "<a href=\"" . $adminfile . ".php\" class=\"title\"><b>" . _ADMINMENU . "</b></a><br><br>\n";
+	echo "<table border=\"0\" width=\"100%\" cellspacing=\"1\">\n";
+	echo "<tr>\n";
+	$a = 1;
+	foreach ( $links as $link )
 	{
-		if ( $menulist[$i] != "" )
-		{
-			$counter = 0;
-			include ( $linksdir->path . "/$menulist[$i]" );
-		}
+		echo $link;
+		if ( $a % 5 == 0 ) echo "</tr>\n<tr>\n";
+		$a++;
 	}
-	adminmenu( "" . $adminfile . ".php?op=logout", "" . _ADMINLOGOUT . "", "logout.gif" );
-	echo "</tr></table></center>";
+	echo "</tr>\n";
+	echo "</table>\n";
+	echo "</center>";
 	CloseTable();
 	echo "<br>";
 }
@@ -601,108 +443,189 @@ function GraphicAdmin()
  */
 function adminMain()
 {
-	global $prefix, $db, $sitename, $user_prefix, $bgcolor2, $nukeurl, $startdate;
-	include ( "../header.php" );
-	GraphicAdmin();
-	OpenTable();
-	$resulsadmin = $db->sql_query( "SELECT aid, name, radminsuper, email FROM " . $prefix . "_authors" );
-	$admintc = "";
-	$adminsuper = "";
-	$adminmods = "";
-	while ( $rowadmin = $db->sql_fetchrow($resulsadmin) )
+	global $prefix, $db, $sitename, $user_prefix, $bgcolor2, $nukeurl, $startdate, $aid, $pwd, $adminfile, $radminemail;
+	$save = intval( $_POST['save'] );
+	//310509 - Anhtu
+	$error = "";
+	if ( $save )
 	{
-		$redadmin = "<a href=\"mailto:$rowadmin[email]\">$rowadmin[aid]</a>";
-		if ( $rowadmin['name'] == "God" )
+		$admin_email = trim( $_POST['admin_email'] );
+		$check_pass = strip_tags( trim($_POST['check_pass']) );
+		$check_pass = substr( $check_pass, 0, 25 );
+		$admin_password1 = substr( strip_tags(trim($_POST['admin_password1'])), 0, 15 );
+		$admin_password2 = substr( strip_tags(trim($_POST['admin_password2'])), 0, 15 );
+		if(empty($check_pass) OR md5($check_pass)!=$pwd)
 		{
-			if ( $admintc != "" )
-			{
-				$admintc .= ", ";
-			}
-			$admintc .= "" . $redadmin . "";
-		} elseif ( $rowadmin['radminsuper'] == 1 )
+			$error = _BADPASSADMIN3;
+		}
+		elseif ( ! eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,6}$", $admin_email) )
 		{
-			if ( $adminsuper != "" )
-			{
-				$adminsuper .= ", ";
-			}
-			$adminsuper .= "" . $redadmin . "";
+			$error = _BADMAILADMIN;
+		} elseif ( $db->sql_numrows($db->sql_query("SELECT * FROM `" . $prefix . "_authors` WHERE (`email`='" . $admin_email . "' AND `aid`!='" . $aid . "')")) > 0 )
+		{
+			$error = _BADMAILADMIN;
+		} elseif ( ! empty($admin_password1) and (strlen($admin_password1) < 5 or ereg("[^a-zA-Z0-9_-]", $admin_password1)) )
+		{
+			$error = _BADPASSADMIN;
+		} elseif ( ! empty($admin_password1) and $admin_password1 != $admin_password2 )
+		{
+			$error = _BADPASSADMIN2;
 		}
 		else
 		{
-			if ( $adminmods != "" )
-			{
-				$adminmods .= ", ";
-			}
-			$adminmods .= "" . $redadmin . "";
+			$query = "UPDATE `" . $prefix . "_authors` SET `email`='" . $admin_email . "'";
+			if ( ! empty($admin_password1) ) $query .= ", `pwd`='" . md5( $admin_password1 ) . "'";
+			$query .= " WHERE `aid`='" . $aid . "'";
+			$db->sql_query( $query );
+			Header( "Location: " . $adminfile . ".php" );
+			exit;
 		}
 	}
-	if ( $adminsuper == "" )
+	else
 	{
-		$adminsuper = "&nbsp;";
+		$admin_email = $radminemail;
 	}
-	if ( $adminmods == "" )
+	//END
+	$resulsadmin = $db->sql_query( "SELECT `aid`, `name`, `radminsuper`, `email` FROM `" . $prefix . "_authors`" );
+	$admintc = $adminsuper = $adminmods = "";
+	while ( $rowadmin = $db->sql_fetchrow($resulsadmin) )
 	{
-		$adminmods = "&nbsp;";
+		$redadmin = "<a href=\"mailto:" . $rowadmin['email'] . "\">" . $rowadmin['aid'] . "</a>";
+		if ( $rowadmin['name'] == "God" )
+		{
+			if ( ! empty($admintc) ) $admintc .= ", ";
+			$admintc .= $redadmin;
+		} elseif ( $rowadmin['radminsuper'] )
+		{
+			if ( ! empty($adminsuper) ) $adminsuper .= ", ";
+			$adminsuper .= $redadmin;
+		}
+		else
+		{
+			if ( ! empty($adminmods) ) $adminmods .= ", ";
+			$adminmods .= $redadmin;
+		}
 	}
+	if ( empty($adminsuper) ) $adminsuper = "&nbsp;";
+	if ( empty($adminmods) ) $adminmods = "&nbsp;";
 
-	$usertotal = $db->sql_numrows( $db->sql_query("SELECT * FROM " . $user_prefix . "_users WHERE user_id!=1") );
-	echo "<p align=\"center\"><b>" . _SITEINFO . "</b></p>\n" . "<table border=\"1\" cellpadding=\"3\" cellspacing=\"3\" width=\"100%\">\n" . "<tr>\n<td colspan=\"2\" bgcolor=\"$bgcolor2\"><b>" . _GENSITEINFO . "</b></td>\n</tr>\n" . "<tr>\n<td>" . _SITENAME . "</td>\n<td>$sitename</td>\n</tr>\n" . "<tr>\n<td>" . _SITEURL . "</td>\n<td><a href=\"$nukeurl\">$nukeurl</a></td>\n</tr>\n" . "<tr>\n<td>" . _STARTDATE . "</td>\n<td>$startdate</td>\n</tr>\n" . "<tr>\n<td colspan=\"2\" bgcolor=\"$bgcolor2\"><b>" . _ADMINSITE . "</b></td>\n</tr>\n" . "<tr>\n<td>" . _MAINACCOUNT . "</td>\n<td>$admintc</td>\n</tr>\n" . "<tr>\n<td>" . _SUPERUSER . "</td>\n<td>$adminsuper</td>\n</tr>\n" . "<tr>\n<td>" . _MODADMIN . "</td>\n<td>$adminmods</td>\n</tr>\n" . "<tr>\n<td colspan=\"2\" bgcolor=\"$bgcolor2\"><b>" . _USERS . "</b></td>\n</tr>\n" . "<tr>\n<td>" . _TOTALUSERS . "</td>\n<td>$usertotal</td>\n</tr>\n</table>\n\n";
+	$usertotal = $db->sql_numrows( $db->sql_query("SELECT * FROM `" . $user_prefix . "_users` WHERE `user_id`!=1") );
+	include ( "../header.php" );
+	GraphicAdmin();
+	OpenTable();
+	echo "<p align=\"center\"><b>" . _SITEINFO . "</b></p>\n";
+	echo "<table border=\"1\" cellpadding=\"3\" cellspacing=\"3\" width=\"100%\">\n";
+	echo "<tr>\n";
+	echo "<td colspan=\"2\" bgcolor=\"" . $bgcolor2 . "\"><b>" . _GENSITEINFO . "</b></td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td>" . _SITENAME . "</td>\n";
+	echo "<td>" . $sitename . "</td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td>" . _SITEURL . "</td>\n";
+	echo "<td><a href=\"" . $nukeurl . "\">" . $nukeurl . "</a></td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td>" . _STARTDATE . "</td>\n";
+	echo "<td>" . $startdate . "</td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td colspan=\"2\" bgcolor=\"" . $bgcolor2 . "\"><b>" . _ADMINSITE . "</b></td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td>" . _MAINACCOUNT . "</td>\n";
+	echo "<td>" . $admintc . "</td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td>" . _SUPERUSER . "</td>\n";
+	echo "<td>" . $adminsuper . "</td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td>" . _MODADMIN . "</td>\n";
+	echo "<td>" . $adminmods . "</td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td colspan=\"2\" bgcolor=\"" . $bgcolor2 . "\"><b>" . _USERS . "</b></td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td>" . _TOTALUSERS . "</td>\n";
+	echo "<td>" . $usertotal . "</td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
 	CloseTable();
+	//310509 - Anhtu
+	echo "<br>\n";
+	OpenTable();
+	echo "<p align=\"center\"><b>" . _CHANGEACCOUNT . "</b></p>\n";
+	if ( ! empty($error) ) echo "<p align=\"center\" style=\"color: #FF0000;\"><b>" . $error . "</b></p>\n";
+	echo "<form method=\"post\" action=\"" . $adminfile . ".php\">\n";
+	echo "<input type=\"hidden\" name=\"save\" value=\"1\">\n";
+	echo "<div style=\"text-align:center;\">\n";
+	echo "<table border=\"1\" cellpadding=\"3\" cellspacing=\"3\">\n";
+	echo "<tr>\n";
+	echo "<td>" . _ADMINEMAIL . ":</td><td><input style=\"width:200px;\" type=\"text\" name=\"admin_email\" value=\"" . $admin_email . "\"></td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td>" . _NEWPASS . ":</td><td><input style=\"width:200px;\" type=\"password\" name=\"admin_password1\" value=\"" . $admin_password1 . "\"></td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td>" . _RETYPEPASSWD . ":</td><td><input style=\"width:200px;\" type=\"password\" name=\"admin_password2\" value=\"" . $admin_password2 . "\"></td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td>" . _CURRENTPASSW . ":</td><td><input style=\"width:200px;\" type=\"password\" name=\"check_pass\"></td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td colspan=\"2\" style=\"text-align:center;\"><input type=\"submit\"></td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
+	echo "</div>\n";
+	echo "</form>\n";
+	CloseTable();
+	//END
 	include ( "../footer.php" );
 }
 
-if ( defined('IS_ADMIN') )
+/**
+ * logout()
+ * 
+ * @return void
+ */
+function admin_logout()
 {
-	switch ( $op )
-	{
-
-		case "GraphicAdmin":
-			GraphicAdmin();
-			break;
-
-		case "adminMain":
-			adminMain();
-			break;
-
-		case "logout":
-			unset( $admin );
-			unset( $_SESSION[ADMIN_COOKIE] );
-			unset( $admf );
-			include ( "../header.php" );
-			OpenTable();
-			echo "<META HTTP-EQUIV=\"refresh\" content=\"3;URL=../index.php\">";
-			echo "<center><font class=\"title\"><b>" . _YOUARELOGGEDOUT . "</b></font>";
-			echo "<br><img border=\"0\" src=\"../images/indicator.gif\" width=\"31\" height=\"31\" align=\"absmiddle\"></p>\n";
-			echo "<p>" . _LOGINOK2 . "</p> \n";
-			echo "<a href=\"../\"><b>" . _LOGINOK3 . " " . _LOGINOK4 . "</b></a></td></center>\n";
-			CloseTable();
-			include ( "../footer.php" );
-			break;
-
-		case "login";
-			unset( $op );
-
-		default:
-			$casedir = dir( "case" );
-			while ( $func = $casedir->read() )
-			{
-				if ( substr($func, 0, 5) == "case." )
-				{
-					include ( $casedir->path . "/$func" );
-				}
-			}
-			closedir( $casedir->handle );
-			break;
-	}
+	global $cookie_path, $cookie_domain;
+	unset( $_SESSION[ADMIN_COOKIE] );
+	setcookie( "adv_sdmin_test", '', 0, $cookie_path, $cookie_domain );
+	include ( "../header.php" );
+	OpenTable();
+	echo "<META HTTP-EQUIV=\"refresh\" content=\"3;URL=../index.php\">";
+	echo "<center><font class=\"title\"><b>" . _YOUARELOGGEDOUT . "</b></font>";
+	echo "<br><img border=\"0\" src=\"../images/indicator.gif\" width=\"31\" height=\"31\" align=\"absmiddle\"></p>\n";
+	echo "<p>" . _LOGINOK2 . "</p> \n";
+	echo "<a href=\"../\"><b>" . _LOGINOK3 . " " . _LOGINOK4 . "</b></a></td></center>\n";
+	CloseTable();
+	include ( "../footer.php" );
+	exit();
 }
-else
+
+switch ( $op )
 {
-	switch ( $op )
-	{
-		default:
-			login();
-			break;
-	}
+	case "adminMain":
+		adminMain();
+		break;
+
+	case "logout":
+		admin_logout();
+		break;
+
+	default:
+		$casedir = dir( "case" );
+		while ( $func = $casedir->read() )
+		{
+			if ( substr($func, 0, 5) == "case." ) include ( $casedir->path . "/" . $func );
+		}
+		closedir( $casedir->handle );
+		break;
 }
 
 ?>

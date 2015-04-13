@@ -14,6 +14,29 @@ SpawEngine.getSpawDir = function()
   return (SpawEngine.spaw_dir);
 }
 
+// platform (php/asp.net)
+SpawEngine.platform;
+SpawEngine.setPlatform = function(platform)
+{
+  SpawEngine.platform = platform;
+}
+SpawEngine.getPlatform = function()
+{
+  return (SpawEngine.platform);
+}
+
+SpawEngine.addBrowserEventHandler = function(obj, evt, func)
+{
+  if (document.attachEvent)
+  {
+    // ie
+    obj.attachEvent("on"+evt, func);
+  }
+  else
+  {
+    obj.addEventListener(evt, func, false);
+  }
+}
 
 // plugin registry
 SpawEngine.plugins = new Array();
@@ -171,7 +194,7 @@ SpawEngine.mouseMove = function(event)
     }
   }
 }
-document.onmousemove = SpawEngine.mouseMove;
+SpawEngine.addBrowserEventHandler(document, "mousemove", SpawEngine.mouseMove);
 SpawEngine.mouseUp = function(event)
 {
   if (SpawEngine.resizingEditor != null)
@@ -187,7 +210,7 @@ SpawEngine.mouseUp = function(event)
     SpawEngine.movingToolbar = null;
   }
 }
-document.onmouseup = SpawEngine.mouseUp;
+SpawEngine.addBrowserEventHandler(document, "mouseup", SpawEngine.mouseUp);
 SpawEngine.resizingEditor;
 SpawEngine.movingToolbar;
 
@@ -197,9 +220,9 @@ SpawEngine.active_context_menu;
 // opens standard dialog
 SpawEngine.openDialog = function(module, dialog, editor, arguments, querystring, callback, tbi, sender)
 {
-  var posX = screen.availWidth/2 - 175;
-  var posY = screen.availHeight/2 - 125;
-  var durl = SpawEngine.spaw_dir + 'dialogs/dialog.php?contnum=<?php echo md5(SpawConfig::getStaticConfigValue('SPAW_PASS'))?>&module=' + module + '&dialog=' + dialog 
+  var posX = screen.availWidth/2 - 275;
+  var posY = screen.availHeight/2 - 250;
+  var durl = SpawEngine.spaw_dir + 'dialogs/dialog.' + SpawEngine.platform + '?contnum=<?php echo md5(SpawConfig::getStaticConfigValue('SPAW_PASS'))?>&module=' + module + '&dialog=' + dialog 
     + '&theme=' + editor.theme.prefix + '&lang=' + editor.getLang() 
     + '&charset=' + editor.getOutputCharset() 
     + '&scid=' + editor.scid + "&" + querystring + editor.getRequestUriConfigValue();
@@ -215,3 +238,4 @@ SpawEngine.openDialog = function(module, dialog, editor, arguments, querystring,
   wnd.focus();   
   return wnd;
 }
+

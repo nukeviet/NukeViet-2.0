@@ -4,8 +4,8 @@
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet Setup
 * @Author: 		NukeViet Group
-* @Version: 	2.0 RC1
-* @Date: 		01.05.2009
+* @Version: 	2.0 RC2
+* @Date: 		07.07.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -105,7 +105,7 @@ define( "_STEP216", "Default language *" );
 define( "_STEP217", "Data folder *" );
 define( "_STEP218", "Admin folder *" );
 define( "_STEP219", "Admin file *" );
-define( "_STEP222", "Note:<li>The forms with '*' are requirement.</li><li>Database informations supplied by hosting provider.</li><li>Username and password must be alphanumberic, unavaiable: anonimo, god, linux, nobody, root, operator, anonymous...</li><li>Eail address must be real email.</li><li>Create and CHMOD Data folder before installation.</li><br>" );
+define( "_STEP222", "Note:<li>The forms with '*' are requirement.</li><li>Database informations supplied by hosting provider.</li><li>Username and password must be alphanumberic, unavaiable: anonimo, god, linux, nobody, root, operator, anonymous...</li><li>Eail address must be real email.</li><li>Default, 'Data folder' is 'includes/data'. If you redeclaration, you must MOVE and CHMOD 777 before continue.</li><br>" );
 define( "_STEP2222", "<font color=#ffffff>Fill all the (*) field to continue!!!</font>" );
 define( "_STEP32", "Create system database" );
 define( "_STEP33", "Create Database" );

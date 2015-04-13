@@ -1,10 +1,105 @@
-/*
-* @Program:	NukeViet CMS v2.0 RC1
-* @File name: 	Changelog
-* @Author: 	AnhTu
-* @Version: 	1.0
-* @Date: 	24.05.2009
-*/
+NHỮNG THAY ĐỔI CỦA NUKEVIET 2.0 RC2 SO VỚI NUKEVIET 2.0 RC1
+===========================================================
+Những thay đổi về File:
+=======================
+
+Thêm các file:
+---------------
+\js\amlich-homnay.html
+\js\amlich-homnay.js
+\modules\Support\rss.php
+\images\button1-bm.gif
+\images\banner.png
+\images\download2.png
+\images\nukeviet2.png
+\images\nukevietcms.png
+\images\banner\nukeviet-banner-120x240.png
+\images\banner\nukeviet-banner-240x60.png
+\images\banner\nukeviet-banner-468x60.png
+\images\banner\nukeviet-banner-728x90.png
+
+Thêm các thư mục:
+----------------
+\tmp
+\uploads\spaw2\files
+
+Thay toàn bộ thư mục:
+---------------------
+\admin\spaw2
+
+Thay đổi các file:
+-----------------
+\admin\language\Editor_english.php
+\admin\language\Editor_vietnamese.php
+\admin\language\lang-english.php
+\admin\language\lang-vietnamese.php
+\admin\modules\editor.php
+\admin\modules\modules.php
+\admin\modules\stories.php
+\admin\admin.php
+\admin\index.php
+\blocks\block-Menu1_default.php
+\includes\data\config_Editor.php
+\includes\data\danhngontycs.txt
+\includes\data\quote-english.txt
+\includes\data\quote-vietnamese.txt
+\includes\functions\blocks.php
+\includes\functions\functions.php
+\includes\functions\mainfile.php
+\includes\functions\security.php
+\modules\Addnews\index.php
+\modules\Contact\language\lang-english.php
+\modules\Contact\language\lang-vietnamese.php
+\modules\Contact\index.php
+\modules\Files\language\lang-vietnamese.php
+\modules\Files\index.php
+\modules\News\index.php
+\modules\Rss\language\lang-english.php
+\modules\Rss\language\lang-vietnamese.php
+\modules\Rss\index.php
+\modules\Sitemap\index.php
+\themes\nv_green\theme.php
+\themes\nv_orange\theme.php
+\themes\nv_silver\theme.php
+\header.php
+\index.php
+\modules.php
+
+Bổ sung file sau vào bản noForum:
+--------------------------------
+\includes\sql_parse.php
+
+
+===========================
+Những thay đổi về tính năng:
+===========================
+Fix lỗi của bản RC1:
+===================
+1. Lỗi không đăng nhập được vào Admin Control Panel trên một số host: http://nukeviet.vn/phpbb/viewtopic.php?f=36&t=5998
+2. Lỗi không nhận được file CSS sau khi cài thủ công: http://nukeviet.vn/phpbb/viewtopic.php?f=12&t=5922
+3. Lỗi block Weblinks không hoạt động  http://nukeviet.vn/phpbb/viewtopic.php?f=12&t=5942
+4. Lỗi của file admin.php  http://nukeviet.vn/phpbb/viewtopic.php?f=12&t=5921
+5. Lỗi trình soạn thảo spaw2 trên một số host: http://nukeviet.vn/phpbb/viewtopic.php?f=12&t=6020
+6. Lỗi không áp đặt được cấu hình theme của module mặc định lên homepage: http://nukeviet.vn/phpbb/viewtopic.php?f=49&t=6123
+7. Fix lỗi không thay đổi được cấu hình cho module mặc định: http://nukeviet.vn/phpbb/viewtopic.php?f=58&t=6193&p=35657#p35657
+8. Fix lỗi "cố định vị trí blocks".
+
+===============
+Những điểm mới:
+===============
+- Cho phép cấu hình News 2 cột tại Admin Control Panel. (laser)
+- Cho phép Người điều hành tự thay đổi thông tin cá nhân trong Admin Control Panel. (anhtu)
+- Cho phép quản lý Module trực quan hơn. (laser)
+- Viết lại phần sắp xếp trật tự block cho dễ dàng hơn (conmatdo)
+- Viết thêm các phần hiển thị lại để tránh việc khi back trình duyệt làm sai mã captcha tại các module Contact, Files. (laser)
+- Thêm Rss cho module Support. Nâng cấp module Sitemap, Rss (laser)
+- Đưa trở lại các báo lỗi "khu vực chỉ dành cho thành viên" và "chưa kích hoạt module".
+- ... và một số thay đổi nhỏ khác.
+
+--------------------\
+laser
+29.06.2009
+http://nukeviet.vn
 
 So với bản NukeViet 2.0 beta 2b 27/01/2007, NukeViet 2.0 RC 1 có những điểm mới sau:
 
@@ -21,17 +116,17 @@ So với bản NukeViet 2.0 beta 2b 27/01/2007, NukeViet 2.0 RC 1 có những đ
 
 - Tích hợp lớp bảo mật Link Protect điều khiển trong Admin Control Panel;
 
-- Bỏ trình soạn thảo SPAW1; Fix lỗi Spaw2: http://nukeviet.vn/phpbb/viewtopic.php?f=37&t=175&start=20#p1816, 
+- Bỏ trình soạn thảo SPAW1; Fix lỗi Spaw2: http://nukeviet.vn/phpbb/viewtopic.php?f=37&t=175&start=20#p1816,
   lỗi Spaw2 trên IIS: http://nukeviet.vn/phpbb/viewtopic.php?f=37&t=175&start=30#p6034
-  
+
 - Thêm tính năng cho phép 1 block có thể hiển thị tại nhiều khu vực, Quản lý tại Admin Control Panel/Blocks;
 
 - Theme có thể thay đổi theo Module, quản lý tại Admin Control Panel/Module; Thay thế theme cũ bằng 3 theme mới
   tương đương 3 style: nv_green, nv_orange, nv_silver Với các tính năng sau đã được làm mẫu;
   3 theme này có khả năng thay đổi vị trí các cột block nhờ vào việc điều khiển của biến $index,
-  biến điều khiển bởi $bltype quản lý trong Admin Control Panel/Modules. Các module sử dụng trên NukeViet 2.0 Beta 2 
+  biến điều khiển bởi $bltype quản lý trong Admin Control Panel/Modules. Các module sử dụng trên NukeViet 2.0 Beta 2
   muốn dùng cho NukeViet 2.0 RC 1 cần thay đổi bằng cách mở file index.php của module, tìm: $index = 0; hoặc $index = 1;
-  thay bằng: $index = (defined('MOD_BLTYPE')) ? MOD_BLTYPE : 1; 
+  thay bằng: $index = (defined('MOD_BLTYPE')) ? MOD_BLTYPE : 1;
   Nếu ko code lại thì module vẫn chạy nhưng không quản lý được các cột của theme.
   Có thể đổi tên theme (Rename thư mục) mà không làm lỗi link ảnh trên theme (sử dụng biến $ThemeSel tại vị trí tên theme);
   Đa ngôn ngữ hình ảnh cho theme (sử dụng biến $currentlang để định vị hình ảnh);
@@ -39,7 +134,7 @@ So với bản NukeViet 2.0 beta 2b 27/01/2007, NukeViet 2.0 RC 1 có những đ
   như đã được lưu ý ở đây: http://nukeviet.vn/phpbb/viewtopic.php?f=41&t=4709;
   Sử dụng 3 block chuẩn để tạo menu cho theme: Menu1(menu dọc), Menu2(menu ngang-trên), Menu3(menu ngang-dưới).
   Menu (1 cấp) tạo hoàn toàn tự động (theo tên module), có thể điều khiển menu trong Admin Control Panel/Modules.
-  Các theme sử dụng trên NukeViet 2.0 beta 2 cần được code lại để có tính năng này, 
+  Các theme sử dụng trên NukeViet 2.0 beta 2 cần được code lại để có tính năng này,
   nếu ko code lại thì nó vẫn chạy nhưng không có các tính năng trên.
 
 - Nâng cấp mã chống spam (chi tiết xem hàm nv_capcha_txt() trong ./includes/functions/functions.php
