@@ -1,7 +1,7 @@
 <?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC1
+* @Program:		NukeViet CMS v2.0 RC4
 * @File name: 	save.php @ Module News
 * @Version: 	2.0
 * @Date: 		01.05.2009

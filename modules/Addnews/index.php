@@ -1,7 +1,7 @@
 <?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC3
+* @Program:		NukeViet CMS v2.0 RC4
 * @File name: 	Module Addnews
 * @Author: 		Nguyen Anh Tu (Nukeviet Group)
 * @Version: 	2.0
@@ -49,13 +49,13 @@ $save = isset( $_POST['save'] ) ? intval( $_POST['save'] ) : 0;
 $error = "";
 if ( $save )
 {
-	$poster = nv_htmlspecialchars( strip_tags(stripslashes(trim($_POST['poster']))) );
+    $poster = trim( nv_htmlspecialchars( strip_tags( stripslashes($_POST['poster']) ) ) );
 	if ( defined('IS_USER') ) $poster = $mbrow['username'];
-	$title = nv_htmlspecialchars( strip_tags(stripslashes(trim($_POST['title']))) );
-	$bodytext = cheonguoc( nl2brStrict(stripslashes(FixQuotes($_POST['bodytext']))) );
-	$source = nv_htmlspecialchars( strip_tags(stripslashes(trim($_POST['source']))) );
-	$seccode = intval( $_POST['seccode'] );
-	$imgtext = nv_htmlspecialchars( strip_tags(stripslashes(trim($_POST['imgtext']))) );
+    $title = trim( nv_htmlspecialchars( strip_tags( stripslashes($_POST['title']) ) ) );
+	$bodytext = nv_nl2br( trim( content_filter( strip_tags( stripslashes( $_POST['bodytext'] ) ), 1 ) ), '<br />' );
+    $source = trim( nv_htmlspecialchars( strip_tags( stripslashes($_POST['source']) ) ) );
+    $seccode = trim( nv_htmlspecialchars( strip_tags( stripslashes($_POST['seccode']) ) ) );
+    $imgtext = trim( nv_htmlspecialchars( strip_tags( stripslashes($_POST['imgtext']) ) ) );
 	if ( empty($title) )
 	{
 		$error = _ADDNEWS0;
@@ -71,25 +71,36 @@ if ( $save )
 	}
 	else
 	{
-		$bodytext = cheonguoc( nl2brStrict(stripslashes(FixQuotes($bodytext))) );
 		$date = date( "Y-m-d H:i:s" );
-		$query = "INSERT INTO `" . $prefix . "_stories_temp` VALUES (NULL, 0, '" . $poster . "', '" . $title . "', '" . $date . "', '', '" . $bodytext . "', '', '" . $currentlang . "', '" . $client_ip . "', '', '" . $source . "', 0, '')";
+        $db->sql_freeresult();
+		$query = "INSERT INTO `" . $prefix . "_stories_temp` VALUES (NULL, 0, ".$db->dbescape($poster).", ".$db->dbescape($title).", ".$db->dbescape($date).", '', ".$db->dbescape($bodytext).", '', ".$db->dbescape($currentlang).", ".$db->dbescape($client_ip).", '', ".$db->dbescape($source).", 0, '')";
 		$db->sql_query( $query );
-		$sid = mysql_insert_id();
-		$images = @uploadimg( "", 0, 1, $sizenewsarticleimg, $temp_path );
-		if ( ! empty($images) )
-		{
-			$query = "UPDATE `" . $prefix . "_stories_temp` SET `images`='" . $images . "', `imgtext`='" . $imgtext . "' WHERE `sid`=" . $sid;
-			$db->sql_query( $query );
-		}
-		$_SESSION['is_addnews'] = 1;
-		Header( "Location: modules.php?name=Addnews" );
-		exit();
+        $sid = $db->sql_nextid();
+        if ($sid > 0){
+    		$images = @uploadimg( "", 0, 1, $sizenewsarticleimg, $temp_path );
+    		if ( ! empty($images) )
+    		{
+    			$query = "UPDATE `" . $prefix . "_stories_temp` SET `images`='" . $images . "', `imgtext`='" . $imgtext . "' WHERE `sid`=" . $sid;
+    			$db->sql_query( $query );
+    		}
+    		$_SESSION['is_addnews'] = 1;
+			setcookie( "is_addnews",1, time() + 300, $cookie_path, $cookie_domain );
+    		Header( "Location: modules.php?name=Addnews" );
+    		exit();
+        }
+        else {
+            $error = _ADDNEWS_ERR_SAVE;
+        }
 	}
 }
 
 $is_add = ( isset($_SESSION['is_addnews']) and $_SESSION['is_addnews'] == 1 ) ? true : false;
-unset( $_SESSION['is_addnews'] );
+if (!$is_add){
+    $is_add = ( isset($_COOKIE['is_addnews']) and $_COOKIE['is_addnews'] == 1 ) ? true : false;
+    if ($is_add){
+        $_SESSION['is_addnews'] = 1;
+    }
+}
 
 include ( "header.php" );
 OpenTable();

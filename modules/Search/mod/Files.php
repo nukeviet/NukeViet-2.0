@@ -1,7 +1,7 @@
-﻿<?php
+<?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC1
+* @Program:		NukeViet CMS v2.0 RC4
 * @File name: 	Files.php @ Module Search
 * @Version: 	2.0
 * @Date: 		01.05.2009
@@ -10,25 +10,19 @@
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
-if ( eregi("Files.php", $_SERVER['SCRIPT_NAME']) )
+if ( ! defined('NV_SYSTEM') )
 {
-	Header( "Location: ../index.php" );
-	exit;
+	die( 'Stop!!!' );
 }
-$checkurl = $_SERVER['REQUEST_URI'];
-if ( preg_match("/http:\/\//i", $checkurl) )
-{
-	Header( "Location: ../index.php" );
-	exit;
-}
+
 if ( ! isset($min) ) $min = 0;
 if ( ! isset($max) ) $max = $min + $offset;
-
-$sqlFiles = "select lid, title, description from $prefix" . _files . " where (title like '%$query%' OR description like '%$query%')";
+$query_likeescape = $db->dblikeescape($query);
+$sqlFiles = "select lid, title, description from $prefix" . _files . " where (title like '%$query_likeescape%' OR description like '%$query_likeescape%')";
 $resultFiles = $db->sql_query( $sqlFiles );
 $nrowsFiles = $db->sql_numrows( $resultFiles );
 
-$sql = "select lid, title, description from $prefix" . _files . " where (title like '%$query%' OR description like '%$query%') AND status != '0' LIMIT $min,$offset";
+$sql = "select lid, title, description from $prefix" . _files . " where (title like '%$query_likeescape%' OR description like '%$query_likeescape%') AND status != '0' LIMIT $min,$offset";
 $result = $db->sql_query( $sql );
 $nrows = $db->sql_numrows( $result );
 $x = 0;

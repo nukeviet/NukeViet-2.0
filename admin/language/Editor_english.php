@@ -1,9 +1,9 @@
 <?php
 /*
- * @Program:	NukeViet CMS v2.0 RC1
+ * @Program:	NukeViet CMS v2.0 RC4
  * @File name: 	Spaw2 Editor
  * @Version: 	2.0
- * @Date: 		07.07.2009
+ * * @Date: 		06.04.2010
  * @Website: 	www.nukeviet.vn
  * @Copyright: 	(C) 2009
  * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License

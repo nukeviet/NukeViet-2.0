@@ -4,8 +4,8 @@
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet Setup
 * @Author: 		NukeViet Group
-* @Version: 	2.0 RC3
-* @Date: 		01.03.2010
+* @Version: 	2.0 RC4
+* @Date: 		06.04.2010
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -70,11 +70,7 @@ $file_uploads_allowed = ( get_php_setting('file_uploads') == 'Off' ) ? "<font co
 
 $dbhost = trim( strip_tags((! empty($_POST['dbhost'])) ? $_POST['dbhost'] : 'localhost') );
 $dbuname0 = trim( strip_tags((! empty($_POST['dbuname0'])) ? $_POST['dbuname0'] : '') );
-$dbuname1 = trim( strip_tags((! empty($_POST['dbuname1'])) ? $_POST['dbuname1'] : '') );
-$dbuname2 = trim( strip_tags((! empty($_POST['dbuname2'])) ? $_POST['dbuname2'] : '') );
 $dbpass0 = trim( strip_tags((! empty($_POST['dbpass0'])) ? $_POST['dbpass0'] : '') );
-$dbpass1 = trim( strip_tags((! empty($_POST['dbpass1'])) ? $_POST['dbpass1'] : '') );
-$dbpass2 = trim( strip_tags((! empty($_POST['dbpass2'])) ? $_POST['dbpass2'] : '') );
 $dbname = trim( strip_tags((! empty($_POST['dbname'])) ? $_POST['dbname'] : '') );
 $prefix = trim( strip_tags((! empty($_POST['prefix'])) ? $_POST['prefix'] : 'nukeviet') );
 $user_prefix = trim( strip_tags((! empty($_POST['user_prefix'])) ? $_POST['user_prefix'] : 'nukeviet') );
@@ -95,11 +91,7 @@ if ( ! get_magic_quotes_gpc() )
 {
 	$dbhost = addslashes( $dbhost );
 	$dbuname0 = addslashes( $dbuname0 );
-	$dbuname1 = addslashes( $dbuname1 );
-	$dbuname2 = addslashes( $dbuname2 );
 	$dbpass0 = addslashes( $dbpass0 );
-	$dbpass1 = addslashes( $dbpass1 );
-	$dbpass2 = addslashes( $dbpass2 );
 	$prefix = addslashes( $prefix );
 	$user_prefix = addslashes( $user_prefix );
 	$adminname = addslashes( $adminname );
@@ -221,7 +213,7 @@ else
 		for ( $i = 0; $i < sizeof($test3); $i++ )
 		{
 			if ( $errmsg != "" ) break;
-			if ( $test3[$i] == "" || strlen($test3[$i]) < 7 || ! preg_match("/^[a-z0-9]([a-z0-9_.-]+)*[a-z0-9]@([a-z0-9]([a-z0-9_-]+)*[a-z0-9].)+[a-z]{2,6}$/i", $test3[$i]) )
+			if ( $test3[$i] == "" || strlen($test3[$i]) < 7 || ! preg_match( "/^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,6}$/",$test3[$i]) )
 			{
 				$gostep3 = false;
 				$errmsg = constant( "_ERRB3" . $i );
@@ -298,45 +290,6 @@ else
 				}
 			}
 			if ( $dbpass0 == "" ) $errmsg = constant( "_ERRB9" );
-			@mysql_close( $db0 );
-			if ( $dbuname1 != "" )
-			{
-				$db1 = @mysql_connect( "$dbhost", "$dbuname1", "$dbpass1" );
-				if ( ! $db1 )
-				{
-					$gostep3 = false;
-					$errmsg = constant( "_ERRB34" );
-				}
-				else
-				{
-					$db1_selected = @mysql_select_db( $dbname, $db1 );
-					if ( ! $db1_selected )
-					{
-						$gostep3 = false;
-						$errmsg = constant( "_ERRB35" );
-					}
-				}
-				@mysql_close( $db1 );
-			}
-			if ( $dbuname2 != "" )
-			{
-				$db2 = @mysql_connect( "$dbhost", "$dbuname2", "$dbpass2" );
-				if ( ! $db2 )
-				{
-					$gostep3 = false;
-					$errmsg = constant( "_ERRB34" );
-				}
-				else
-				{
-					$db2_selected = @mysql_select_db( $dbname, $db2 );
-					if ( ! $db2_selected )
-					{
-						$gostep3 = false;
-						$errmsg = constant( "_ERRB35" );
-					}
-				}
-				@mysql_close( $db2 );
-			}
 		}
 
 	}
@@ -359,11 +312,10 @@ if ( $step == 4 and ! file_exists("../mainfile.php") )
 {
 	if ( ($gostep3) and ($automovef == "1") )
 	{
-		rename( "../$datafold/mainfile.php", "../mainfile.php" );
+		@rename( "../$datafold/mainfile.php", "../mainfile.php" );
 		$automovef = 0;
 	}
-	else
-	{
+	if (! file_exists("../mainfile.php") ){
 		$errmsg = constant( "_ERRB40" );
 		$step = 3;
 	}
@@ -696,7 +648,7 @@ input, textarea, select {color: #A50000; border: 1px solid #FF2400; font-style:n
 </body>
 
 </html>
-<?
+<?php
 
 }
 
@@ -737,19 +689,26 @@ if ( $step == 4 )
 	$content3 .= "</tr>\n";
 	$content3 .= "	<tr>\n";
 	$content3 .= "	<td align=\"left\" colspan=\"2\">" . _STEP36 . " " . $datafold . " " . _STEP37 . "<br><br>
-<input type=\"hidden\" name=\"dbhost\" value=\"$dbhost\"><input type=\"hidden\" name=\"dbuname0\" value=\"$dbuname0\">
-<input type=\"hidden\" name=\"dbpass0\" value=\"$dbpass0\"><input type=\"hidden\" name=\"dbuname1\" value=\"$dbuname1\">
-<input type=\"hidden\" name=\"dbpass1\" value=\"$dbpass1\"><input type=\"hidden\" name=\"dbuname2\" value=\"$dbuname2\">
-<input type=\"hidden\" name=\"dbpass2\" value=\"$dbpass2\"><input type=\"hidden\" name=\"dbname\" value=\"$dbname\">
-<input type=\"hidden\" name=\"prefix\" value=\"$prefix\"><input type=\"hidden\" name=\"user_prefix\" value=\"$user_prefix\">
-<input type=\"hidden\" name=\"sitename\" value=\"$sitename\"><input type=\"hidden\" name=\"adminname\" value=\"$adminname\">
-<input type=\"hidden\" name=\"adminmail\" value=\"$adminmail\"><input type=\"hidden\" name=\"adminpassword\" value=\"$adminpassword\">
-<input type=\"hidden\" name=\"username\" value=\"$username\"><input type=\"hidden\" name=\"usermail\" value=\"$usermail\">
-<input type=\"hidden\" name=\"userpassword\" value=\"$userpassword\"><input type=\"hidden\" name=\"language\" value=\"$language\">
-<input type=\"hidden\" name=\"datafold\" value=\"$datafold\"><input type=\"hidden\" name=\"adminfold\" value=\"$adminfold\">
-<input type=\"hidden\" name=\"adminfile\" value=\"$adminfile\"><input type=\"hidden\" name=\"step\" value=\"4\">
-<input type=\"checkbox\" name=\"automovef\" value=\"1\"/> " . _CHKTOCOPY . "<BR><BR>
-<input type=\"submit\" value=\"" . _STEP35 . "\"></td>\n";
+		<input type=\"hidden\" name=\"dbhost\" value=\"$dbhost\">
+		<input type=\"hidden\" name=\"dbuname0\" value=\"$dbuname0\">
+		<input type=\"hidden\" name=\"dbpass0\" value=\"$dbpass0\">
+		<input type=\"hidden\" name=\"dbname\" value=\"$dbname\">
+		<input type=\"hidden\" name=\"prefix\" value=\"$prefix\">
+		<input type=\"hidden\" name=\"user_prefix\" value=\"$user_prefix\">
+		<input type=\"hidden\" name=\"sitename\" value=\"$sitename\">
+		<input type=\"hidden\" name=\"adminname\" value=\"$adminname\">
+		<input type=\"hidden\" name=\"adminmail\" value=\"$adminmail\">
+		<input type=\"hidden\" name=\"adminpassword\" value=\"$adminpassword\">
+		<input type=\"hidden\" name=\"username\" value=\"$username\">
+		<input type=\"hidden\" name=\"usermail\" value=\"$usermail\">
+		<input type=\"hidden\" name=\"userpassword\" value=\"$userpassword\">
+		<input type=\"hidden\" name=\"language\" value=\"$language\">
+		<input type=\"hidden\" name=\"datafold\" value=\"$datafold\">
+		<input type=\"hidden\" name=\"adminfold\" value=\"$adminfold\">
+		<input type=\"hidden\" name=\"adminfile\" value=\"$adminfile\">
+		<input type=\"hidden\" name=\"step\" value=\"4\">
+		<input type=\"checkbox\" name=\"automovef\" value=\"1\"/> " . _CHKTOCOPY . "<BR><BR>
+		<input type=\"submit\" value=\"" . _STEP35 . "\"></td>\n";
 	$content3 .= "	</tr>\n";
 	$content3 .= "	</table>\n";
 	$content3 .= "</form>\n";
@@ -766,70 +725,67 @@ if ( $step == 4 )
 	$content3 .= "<table border=\"0\" cellpadding=\"3\" style=\"border-collapse: collapse\" width=\"100%\">\n";
 	$content3 .= "<tr>\n";
 	$content3 .= "<td bordercolor=\"#C41200\" class=\"td6\">" . _STEP23 . "</td>\n";
-	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\"><input type=\"text\" name=\"dbhost\" value=\"$dbhost\" onblur='if (this.value==\"\") this.value=\"localhost\";' onfocus='if (this.value==\"localhost\") this.value=\"\";'></td>\n";
+	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\">
+<input type=\"text\" name=\"dbhost\" value=\"$dbhost\" onblur='if (this.value==\"\") this.value=\"localhost\";' onfocus='if (this.value==\"localhost\") this.value=\"\";'></td>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "<tr>\n";
 	$content3 .= "<td bordercolor=\"#C41200\" class=\"td6\"><label id=\"step240\">" . _STEP240 . "</label</td>\n";
-	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\"><input type=\"text\" name=\"dbuname0\" value=\"$dbuname0\"></td>\n";
+	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\">
+<input type=\"text\" name=\"dbuname0\" value=\"$dbuname0\"></td>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "<tr>\n";
 	$content3 .= "<td bordercolor=\"#C41200\" class=\"td6\">" . _STEP250 . "</td>\n";
-	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\"><input type=\"text\" name=\"dbpass0\" value=\"$dbpass0\"></td>\n";
-	$content3 .= "</tr>\n";
-	$content3 .= "<tr>\n";
-	$content3 .= "<td bordercolor=\"#C41200\" class=\"td6\">" . _STEP241 . "</td>\n";
-	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\"><input type=\"text\" name=\"dbuname1\" value=\"$dbuname1\"></td>\n";
-	$content3 .= "</tr>\n";
-	$content3 .= "<tr>\n";
-	$content3 .= "<td bordercolor=\"#C41200\" class=\"td6\">" . _STEP251 . "</td>\n";
-	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\"><input type=\"text\" name=\"dbpass1\" value=\"$dbpass1\"></td>\n";
-	$content3 .= "</tr>\n";
-	$content3 .= "<tr>\n";
-	$content3 .= "<td bordercolor=\"#C41200\" class=\"td6\">" . _STEP242 . "</td>\n";
-	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\"><input type=\"text\" name=\"dbuname2\" value=\"$dbuname2\"></td>\n";
-	$content3 .= "</tr>\n";
-	$content3 .= "<tr>\n";
-	$content3 .= "<td bordercolor=\"#C41200\" class=\"td6\">" . _STEP252 . "</td>\n";
-	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\"><input type=\"text\" name=\"dbpass2\" value=\"$dbpass2\"></td>\n";
+	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\">
+<input type=\"text\" name=\"dbpass0\" value=\"$dbpass0\"></td>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "<tr>\n";
 	$content3 .= "<td bordercolor=\"#C41200\" class=\"td6\">" . _STEP26 . "</td>\n";
-	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\"><input type=\"text\" name=\"dbname\" value=\"$dbname\"></td>\n";
+	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\">
+<input type=\"text\" name=\"dbname\" value=\"$dbname\"></td>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "<tr>\n";
 	$content3 .= "<td bordercolor=\"#C41200\" class=\"td6\">" . _STEP27 . "</td>\n";
-	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\"><input type=\"text\" name=\"prefix\" value=\"$prefix\" onblur='if (this.value==\"\") this.value=\"nukeviet\";' onfocus='if (this.value==\"nukeviet\") this.value=\"\";'></td>\n";
+	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\">
+<input type=\"text\" name=\"prefix\" value=\"$prefix\" onblur='if (this.value==\"\") this.value=\"nukeviet\";' onfocus='if (this.value==\"nukeviet\") this.value=\"\";'></td>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "<tr>\n";
 	$content3 .= "<td bordercolor=\"#C41200\" class=\"td6\">" . _STEP28 . "</td>\n";
-	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\"><input type=\"text\" name=\"user_prefix\" value=\"$user_prefix\" onblur='if (this.value==\"\") this.value=\"nukeviet\";' onfocus='if (this.value==\"nukeviet\") this.value=\"\";'></td>\n";
+	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\">
+<input type=\"text\" name=\"user_prefix\" value=\"$user_prefix\" onblur='if (this.value==\"\") this.value=\"nukeviet\";' onfocus='if (this.value==\"nukeviet\") this.value=\"\";'></td>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "<tr>\n";
 	$content3 .= "<td bordercolor=\"#C41200\" class=\"td6\">" . _STEP29 . "</td>\n";
-	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\"><input type=\"text\" name=\"sitename\" value=\"$sitename\"></td>\n";
+	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\">
+<input type=\"text\" name=\"sitename\" value=\"$sitename\"></td>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "<td bordercolor=\"#C41200\" class=\"td6\">" . _STEP210 . "</td>\n";
-	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\"><input type=\"text\" name=\"adminname\" value=\"$adminname\"></td>\n";
+	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\">
+<input type=\"text\" name=\"adminname\" value=\"$adminname\"></td>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "<td bordercolor=\"#C41200\" class=\"td6\">" . _STEP211 . "</td>\n";
-	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\"><input type=\"text\" name=\"adminmail\" value=\"$adminmail\"></td>\n";
+	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\">
+<input type=\"text\" name=\"adminmail\" value=\"$adminmail\"></td>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "<tr>\n";
 	$content3 .= "<td bordercolor=\"#C41200\" class=\"td6\">" . _STEP212 . "</td>\n";
-	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\"><input type=\"text\" name=\"adminpassword\" value=\"$adminpassword\"></td>\n";
+	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\">
+<input type=\"text\" name=\"adminpassword\" value=\"$adminpassword\"></td>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "<td bordercolor=\"#C41200\" class=\"td6\">" . _STEP213 . "</td>\n";
-	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\"><input type=\"text\" name=\"username\" value=\"$username\"></td>\n";
+	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\">
+<input type=\"text\" name=\"username\" value=\"$username\"></td>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "<td bordercolor=\"#C41200\" class=\"td6\">" . _STEP214 . "</td>\n";
-	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\"><input type=\"text\" name=\"usermail\" value=\"$usermail\"></td>\n";
+	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\">
+<input type=\"text\" name=\"usermail\" value=\"$usermail\"></td>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "<tr>\n";
 	$content3 .= "<td bordercolor=\"#C41200\" class=\"td6\">" . _STEP215 . "</td>\n";
-	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\"><input type=\"text\" name=\"userpassword\" value=\"$userpassword\"></td>\n";
+	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\">
+<input type=\"text\" name=\"userpassword\" value=\"$userpassword\"></td>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "<td bordercolor=\"#C41200\" class=\"td6\">" . _STEP216 . "</td>\n";
@@ -859,18 +815,24 @@ if ( $step == 4 )
 	$content3 .= "</tr>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "<td bordercolor=\"#C41200\" class=\"td6\">" . _STEP217 . "</td>\n";
-	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\"><input type=\"text\" name=\"datafold\" value=\"$datafold\" onblur='if (this.value==\"\") this.value=\"includes/data\";' onfocus='if (this.value==\"includes/data\") this.value=\"\";'></td>\n";
+	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\">
+<input type=\"text\" name=\"datafold\" value=\"$datafold\" onblur='if (this.value==\"\") this.value=\"includes/data\";' onfocus='if (this.value==\"includes/data\") this.value=\"\";'></td>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "<td bordercolor=\"#C41200\" class=\"td6\">" . _STEP218 . "</td>\n";
-	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\"><input type=\"text\" name=\"adminfold\" value=\"$adminfold\" onblur='if (this.value==\"\") this.value=\"admin\";' onfocus='if (this.value==\"admin\") this.value=\"\";'></td>\n";
+	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\">
+<input type=\"text\" name=\"adminfold\" value=\"$adminfold\" onblur='if (this.value==\"\") this.value=\"admin\";' onfocus='if (this.value==\"admin\") this.value=\"\";'></td>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "<td bordercolor=\"#C41200\" class=\"td6\">" . _STEP219 . "</td>\n";
-	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\"><input type=\"text\" name=\"adminfile\" value=\"$adminfile\" onblur='if (this.value==\"\") this.value=\"admin\";' onfocus='if (this.value==\"admin\") this.value=\"\";'></td>\n";
+	$content3 .= "<td align=\"right\" bordercolor=\"#C41200\" class=\"td6\">
+<input type=\"text\" name=\"adminfile\" value=\"$adminfile\" onblur='if (this.value==\"\") this.value=\"admin\";' onfocus='if (this.value==\"admin\") this.value=\"\";'></td>\n";
 	$content3 .= "</tr>\n";
 	$content3 .= "	<tr>\n";
-	$content3 .= "	<td align=\"center\" colspan=\"2\"><input type=\"hidden\" name=\"step\" value=\"3\"><input type=\"button\" value=\"" . _STEP221 . "\" onclick=\"window.location.href='install.php'\"><input type=\"submit\" value=\"" . _STEP220 . "\"></td>\n";
+	$content3 .= "	<td align=\"center\" colspan=\"2\">
+<input type=\"hidden\" name=\"step\" value=\"3\">
+<input type=\"button\" value=\"" . _STEP221 . "\" onclick=\"window.location.href='install.php'\">
+<input type=\"submit\" value=\"" . _STEP220 . "\"></td>\n";
 	$content3 .= "	</tr>\n";
 	$content3 .= "	</table>\n";
 	$content3 .= "</form>\n";
@@ -958,7 +920,9 @@ else
 		$content3 .= "<br><br><form method=\"POST\" action=\"install.php\">\n";
 		$content3 .= "<table border=\"0\" width=\"100%\" cellpadding=\"0\" style=\"border-collapse: collapse\">\n";
 		$content3 .= "	<tr>\n";
-		$content3 .= "	<td align=\"center\"><input type=\"hidden\" name=\"step\" value=\"2\"><input type=\"submit\" value=\"" . _STEP136 . "\"></td>\n";
+		$content3 .= "	<td align=\"center\">
+<input type=\"hidden\" name=\"step\" value=\"2\">
+<input type=\"submit\" value=\"" . _STEP136 . "\"></td>\n";
 		$content3 .= "	</tr>\n";
 		$content3 .= "	</table>\n";
 		$content3 .= "</form>\n";

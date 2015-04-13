@@ -1,9 +1,9 @@
-<?
+<?php
 
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
+* @Version: 	2.0 RC4
 * @Date: 		01.05.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
@@ -32,7 +32,9 @@ $ac_navigator = true;
 
 $mon_name = array( _JANUARY, _FEBRUARY, _MARCH, _APRIL, _MAY, _JUNE, _JULY, _AUGUST, _SEPTEMBER, _OCTOBER, _NOVEMBER, _DECEMBER );
 $nod = array( 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 );
-if ( ! isset($month) )
+$month = (isset($_GET['month'])) ? strip_tags($_GET['month']) : ((isset($_POST['month'])) ? strip_tags($_POST['month']) : "");
+
+if ( empty($month) )
 {
 	$ac_month = date( "n", time() + $timeadjust );
 	$ac_year = date( "Y", time() + $timeadjust );
@@ -42,7 +44,8 @@ if ( ! isset($month) )
 else
 {
 	list( $ac_month, $ac_year ) = explode( "-", $month );
-	if ( ! $ac_year || $ac_year == "" ) $ac_year = date( "Y" );
+    $ac_month = intval($ac_month);
+    $ac_year = intval($ac_year);
 	if ( $ac_year < 1980 ) $ac_year = 1980;
 	if ( $ac_year > 2030 ) $ac_year = 2030;
 	if ( $ac_month != date("n", time() + $timeadjust) or $ac_year != date("Y", time() + $timeadjust) )
@@ -106,7 +109,6 @@ if ( $ac_month != date("n") or $ac_year != date("Y") ) $ac_j_dom = -10;
 $content = "<a name=\"cal\"></a><table width=\"100%\" align=center border=0 cellspacing=1 cellpadding=1 bgcolor=\"#C0C0C0\" style=\"border-collapse: collapse; font-size: $ac_font_size px; color: $ac_font_color; font-family: verdana\">";
 $content .= "<tr bgcolor=$ac_second_color><td colspan=7 align=center>$ac_mon $ac_year</td></tr>";
 $content .= "<tr bgcolor=$ac_second_color><td align=center>" . _MON . "</td><td align=center>" . _TUE . "</td><td align=center>" . _WED . "</td><td align=center>" . _THU . "</td><td align=center>" . _FRI . "</td><td align=center><font color=red>" . _SAT . "</font></td><td align=center><font color=red>" . _SUN . "</font></td>";
-
 if ( $multilingual == 1 )
 {
 	$querylang = "AND (alanguage='$currentlang' OR alanguage='')";
@@ -206,5 +208,4 @@ if ( $ac_navigator )
 	$content .= "</b></td>";
 }
 $content .= "</tr></table>";
-
 ?>

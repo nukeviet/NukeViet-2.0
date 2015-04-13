@@ -3,8 +3,8 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC2
-* @Date: 		07.07.2009
+* @Version: 	2.0 RC4
+* * @Date: 		06.04.2010
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -92,7 +92,7 @@ define( "_NOUADDFILES", "Hiện không được phép thêm file!" );
 define( "_NOUADDFILESANON", "Bạn không thể thêm file nếu chưa là thành viên của site. Hãy <a href=\"modules.php?name=Your_Account\">đăng nhập</a> hoặc <a href=\"modules.php?name=Your_Account&op=new_user\">đăng ký</a>." );
 define( "_ADDFNOTE", "<b>Chú ý!</b><br>Hãy điền đầy đủ thông tin vào các ô dưới đây. File của bạn sẽ được kiểm tra trước khi đăng." );
 define( "_ADDFNOTE2", " Việc đưa file lên server của chúng tôi chỉ ở dạng nén <b>.zip</b>. Dung lượng tối đa cho phép là " );
-define( "_ADDFNOTE3", "Nếu file mà bạn muốn đề nghị với chúng tôi không đáp ứng những điều kiện trên, bạn có thể khai báo địa chỉ tải phần mềm tại m" );
+define( "_ADDFNOTE3", "Nếu file mà bạn muốn đề nghị với chúng tôi không đáp ứng những điều kiện trên, bạn có thể khai báo địa chỉ tải phần mềm tại mục" );
 define( "_ADDFNOTE4", "Đường dẫn liên kết file phải là đường dẫn trực tiếp chứ không phải là liên kết đến site của bạn hay một trang web nào đó." );
 define( "_FTITLE", "Tên file" );
 define( "_FCATEGORY", "Mục chứa file" );

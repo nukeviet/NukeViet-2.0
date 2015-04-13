@@ -1,11 +1,11 @@
 <?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC3
+* @Program:		NukeViet CMS v2.0 RC4
 * @File name: 	Theme Nv_orange
 * @Author: 		Boder - Nguyen Minh Giap
 * @Version: 	1.0
-* @Date: 		01.03.2010
+* @Date: 		06.04.2010
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -46,7 +46,7 @@ while ( $row = $db->sql_fetchrow($result) )
 	$m_title = $row['title'];
 	$custom_title = $row['custom_title'];
 	$view = $row['view'];
-	$m_title2 = ereg_replace( "_", " ", $m_title );
+	$m_title2 = str_replace( "_", " ", $m_title );
 	if ( $custom_title != "" )
 	{
 		$m_title2 = $custom_title;

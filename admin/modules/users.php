@@ -3,8 +3,8 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC3
-* @Date: 		01.03.2010
+* @Version: 	2.0 RC4
+* @Date: 		06.04.2010
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -173,7 +173,7 @@ if ( $adm_access == 1 )
 		global $adminfile;
 		OpenTable();
 		echo "<center><font class=\"title\"><b>" . _USERSEARCH . "</b></font></center><br>\n";
-		echo "<form method=\"POST\" action=\"" . $adminfile . ".php\">\n" . "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n<tr>\n" . "<td><select name=\"check\">\n" . "<option name=\"check\" value=\"\">" . _SEARCHUNAME . "</option>\n" . "<option name=\"check\" value=\"1\">" . _SEARCHEMAIL . "</option>\n" . "<option name=\"check\" value=\"2\">" . _SEARCHID . "</option>\n" . "</select></td>\n" . "<td><input type=\"text\" name=\"key\" size=\"25\"></td>\n" . "<input type=\"hidden\" name=\"sqltable\" value=\"$sqltable\">" . "<input type=\"hidden\" name=\"go_result\" value=\"$go_result\">" . "<input type=\"hidden\" name=\"op\" value=\"go_search_user\">" . "<td><input type=\"submit\" value=\"Tìm ki?m\"></td>\n" . "</tr>\n</table>\n</form>\n";
+		echo "<form method=\"POST\" action=\"" . $adminfile . ".php\">\n" . "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n<tr>\n" . "<td><select name=\"check\">\n" . "<option name=\"check\" value=\"\">" . _SEARCHUNAME . "</option>\n" . "<option name=\"check\" value=\"1\">" . _SEARCHEMAIL . "</option>\n" . "<option name=\"check\" value=\"2\">" . _SEARCHID . "</option>\n" . "</select></td>\n" . "<td><input type=\"text\" name=\"key\" size=\"25\"></td>\n" . "<input type=\"hidden\" name=\"sqltable\" value=\"$sqltable\">" . "<input type=\"hidden\" name=\"go_result\" value=\"$go_result\">" . "<input type=\"hidden\" name=\"op\" value=\"go_search_user\">" . "<td><input type=\"submit\" value=\"Tï¿½m ki?m\"></td>\n" . "</tr>\n</table>\n</form>\n";
 		CloseTable();
 		echo "<br>\n";
 	}
@@ -297,7 +297,7 @@ if ( $adm_access == 1 )
 	{
 		global $bad_mail, $datafold, $stop, $user_prefix, $db;
 		$user_email = strtolower( $user_email );
-		if ( (! $user_email) || ($user_email == "") || (! preg_match("/^[a-z0-9]([a-z0-9_.-]+)*[a-z0-9]@([a-z0-9]([a-z0-9_-]+)*[a-z0-9].)+[a-z]{2,6}$/i", $user_email)) ) $stop = "<center>" . _ERRORINVEMAIL . "</center><br>";
+		if ( (! $user_email) || ($user_email == "") || (!nv_valid_email($user_email)) ) $stop = "<center>" . _ERRORINVEMAIL . "</center><br>";
 		if ( strrpos($user_email, ' ') > 0 ) $stop = "<center>" . _ERROREMAILSPACES . "</center>";
 		$bad_email = explode( "|", $bad_mail );
 		foreach ( $bad_email as $bad_mail )

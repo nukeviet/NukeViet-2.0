@@ -3,7 +3,7 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System Security
-* @Version: 	2.0 RC2
+* @Version: 	2.0 RC4
 * @Date: 		28.05.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009

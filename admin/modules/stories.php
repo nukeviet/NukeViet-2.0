@@ -266,7 +266,7 @@ if ( $adm_access == 1 )
 				{
 					$htl = "<a title=\"" . _ADDIMG . "\" href=\"" . $adminfile . ".php?op=Imggallery&in=2&sid=$sid\"><img border=\"0\" src=\"../images/center_l.gif\" width=\"7\" height=\"11\"></a>";
 				}
-				echo "<tr><td align=\"right\"><b>$sid</b>" . "</td><td align=\"left\" width=\"65%\"><a href=\"../modules.php?name=News&op=viewst&sid=$sid\">$title</a>  ( $time )" . "</td><td align=\"center\"><a title=\"" . _OUTTTD . "\" href=\"" . $adminfile . ".php?op=Commentok&sid=$sid\"><b>$tluan </b>" ._COMMENT. "</td><td align=\"center\"><b>$hit</b> " ._VIEW. "</td><td align=\"center\">$alanguage" . "</td><td align=\"right\" nowrap>(<a href=\"" . $adminfile . ".php?op=EditStory&sid=$sid\">" . _EDIT . "</a>-<a href=\"" . $adminfile . ".php?op=RemoveStory&sid=$sid\">" . _DELETE . "</a>)" . "</td><td width=\"20\" height=\"20\" align=\"center\">$htl</td><td width=10>$ttd</td></tr>";
+				echo "<tr><td align=\"right\"><b>$sid</b>" . "</td><td align=\"left\" width=\"65%\"><a href=\"../modules.php?name=News&op=viewst&sid=$sid\">$title</a>  ( $time )" . "</td><td align=\"center\"><a href=\"" . $adminfile . ".php?op=Commentok&sid=$sid\"><b>$tluan </b>" ._COMMENT. "</td><td align=\"center\"><b>$hit</b> " ._VIEW. "</td><td align=\"center\">$alanguage" . "</td><td align=\"right\" nowrap>(<a href=\"" . $adminfile . ".php?op=EditStory&sid=$sid\">" . _EDIT . "</a>-<a href=\"" . $adminfile . ".php?op=RemoveStory&sid=$sid\">" . _DELETE . "</a>)" . "</td><td width=\"20\" height=\"20\" align=\"center\">$htl</td><td width=10>$ttd</td></tr>";
 			}
 			echo "</table>";
 			echo @generate_page( $base_url, $all_page, $per_page, $page );
@@ -965,8 +965,8 @@ if ( $adm_access == 1 )
 						$db->sql_query( "UPDATE " . $prefix . "_stories_cat SET weight=" . $weight . " WHERE catid=" . $row2['catid'] );
 						}
 					$db->sql_query( "UPDATE " . $prefix . "_stories_cat SET weight=" . $newk . " WHERE catid=" . $id );
-				
-	}
+			ncatlist();	
+			}
 	}
 		Header( "Location: " . $adminfile . ".php?op=ManagerCategory" );
 	}
@@ -1032,11 +1032,13 @@ function MoveCat()
 	for($i=0; $i < sizeof($id); $i++) {
 		$chgid = intval($id[$i]);
 		if($chgid!=0) {
-		$numr2 = $db->sql_numrows($db->sql_query("SELECT * FROM ".$prefix."_stories_cat WHERE (title='".trim(stripslashes(FixQuotes($ten[$i])))."' and ihome='".intval($ihome[$i])."' and catimage='$image[$i]' and linkshome='$linkhome[$i]')"));
-		if($numr2 == 0)$db->sql_query("UPDATE ".$prefix."_stories_cat SET title='".trim(stripslashes(FixQuotes($ten[$i])))."', ihome=".intval($ihome[$i]).", catimage='$image[$i]', linkshome=$linkhome[$i]  WHERE catid=$chgid");
-	}
+		//$numr2 = $db->sql_numrows($db->sql_query("SELECT * FROM ".$prefix."_stories_cat WHERE (title='".trim(stripslashes(FixQuotes($ten[$i])))."' and ihome='".intval($ihome[$i])."' and catimage='$image[$i]' and linkshome='$linkhome[$i]')"));
+		//if($numr2 > 0)
+		$db->sql_query("UPDATE ".$prefix."_stories_cat SET title='".trim(stripslashes(FixQuotes($ten[$i])))."', ihome=".intval($ihome[$i]).", catimage='$image[$i]', linkshome=$linkhome[$i]  WHERE catid=$chgid");
+		}
 	}
 	$db->sql_query("OPTIMIZE TABLE ".$prefix."_stories_cat");
+	ncatlist();
 	info_exit( "<br><b>" . _CATSAVED . "ok</b><META HTTP-EQUIV=\"refresh\" content=\"2;URL=".$_SERVER['HTTP_REFERER']."\"><br><br>" );
 
 	}

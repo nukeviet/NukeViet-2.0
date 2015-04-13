@@ -1,3 +1,29 @@
+===========================================================
+NHỮNG THAY ĐỔI CỦA NUKEVIET 2.0 RC4 SO VỚI NUKEVIET 2.0 RC3
+===========================================================
+
+	1. - Sửa lỗi bảo mật của hệ thống.
+	2. - Sửa lỗi bảo mật của trình soạn thảo spaw2.
+	3. - Sửa lỗi Spaw2 trên Host Windows cài IIS.
+	4. - Sửa lỗi Module News: http://nukeviet.vn/phpbb/viewtopic.php?f=3&t=9569&start=10#p50494
+	5. - và các thay đổi nhỏ khác.
+
+===========================================================
+Hướng dẫn nâng cấp từ NUKEVIET 2.0 RC3 -> NUKEVIET 2.0 RC4
+===========================================================
+   1. Xóa các file
+            includes\functions\users.php
+            includes\data\ulist.php
+   2. Xóa thư mục:
+            includes\db\
+   3. Upload tất cả các file trong thư mục upload lên file cũ (Không cần upload thư mục: install trong đó)
+
+====================
+Những người tham gia
+====================
+Báo lỗi: vv0lll & các thành viên forum nukeviet.vn
+Sửa lỗi: anhtu, vuthao, xman
+
 NHỮNG THAY ĐỔI CỦA NUKEVIET 2.0 RC3 SO VỚI NUKEVIET 2.0 RC2
 ===========================================================
 

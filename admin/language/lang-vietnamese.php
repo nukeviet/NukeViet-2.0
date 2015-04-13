@@ -2,8 +2,8 @@
 /*
  * @Program:	NukeViet CMS
  * @File name: 	NukeViet System
- * @Version: 	2.0 RC3
- * @Date: 		07.07.2009
+ * @Version: 	2.0 RC4
+ * * @Date: 		06.04.2010
  * @Website: 	www.nukeviet.vn
  * @Copyright: 	(C) 2010
  * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License

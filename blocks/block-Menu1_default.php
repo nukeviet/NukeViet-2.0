@@ -1,7 +1,7 @@
 <?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC3
+* @Program:		NukeViet CMS v2.0 RC4
 * @File name: 	Block Menu
 * @Author: 		Nguyen The Hung (Nukeviet Group)
 * @Version: 	3.1
@@ -207,7 +207,7 @@ while ( $row = $db->sql_fetchrow($result) )
 	$m_title = $row['title'];
 	$custom_title = $row['custom_title'];
 	$view = $row['view'];
-	$m_title2 = ereg_replace( "_", " ", $m_title );
+	$m_title2 = str_replace( "_", " ", $m_title );
 	if ( $custom_title != "" )
 	{
 		$m_title2 = $custom_title;

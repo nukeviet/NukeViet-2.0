@@ -3,7 +3,7 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
+* @Version: 	2.0 RC4
 * @Date: 		01.05.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
@@ -177,7 +177,7 @@ $mid_content .= "</table>";
 Original Javascript code by dynamic drive.
 Modified javascript code by SuperCat http://www.ourscripts.net
 Special thanks to Dilandou for helping me with the PHP and JS mixing.
-Cross browser Marquee II- © Dynamic Drive (www.dynamicdrive.com)
+Cross browser Marquee II- ï¿½ Dynamic Drive (www.dynamicdrive.com)
 For full source code, 100's more DHTML scripts, and TOS, visit http://www.dynamicdrive.com
 Credit MUST stay intact
 */

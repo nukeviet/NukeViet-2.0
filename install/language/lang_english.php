@@ -4,8 +4,8 @@
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet Setup
 * @Author: 		NukeViet Group
-* @Version: 	2.0 RC2
-* @Date: 		07.07.2009
+* @Version: 	2.0 RC4
+* * @Date: 		06.04.2010
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -83,12 +83,8 @@ define( "_STEP1352", "Successful checked. Some equirements are not ready to inst
 define( "_STEP136", "Continue to Step 2" );
 define( "_STEP22", "Installation system" );
 define( "_STEP23", "Database host *" );
-define( "_STEP240", "Database user 1 *" );
-define( "_STEP250", "Database password 1 *" );
-define( "_STEP241", "Database user 2" );
-define( "_STEP251", "Database password 2" );
-define( "_STEP242", "Database user 3" );
-define( "_STEP252", "Database password 3" );
+define( "_STEP240", "Database user*" );
+define( "_STEP250", "Database password*" );
 define( "_STEP26", "Database name *" );
 define( "_STEP27", "Public Prefix *" );
 define( "_STEP28", "Private Prefix *" );

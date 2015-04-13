@@ -1,7 +1,7 @@
 <?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC1
+* @Program:		NukeViet CMS v2.0 RC4
 * @File name: 	Rss for Module News
 * @Author: 		laser (Nukeviet Group)
 * @Checked: 	anhtu (Nukeviet Group)

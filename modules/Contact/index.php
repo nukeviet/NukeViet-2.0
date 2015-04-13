@@ -1,7 +1,7 @@
 <?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC3
+* @Program:		NukeViet CMS v2.0 RC4
 * @File name: 	Module Contact
 * @Version: 	2.1
 * @Date: 		25.06.2009
@@ -265,7 +265,7 @@ function submit( $dpid, $cname, $youradd, $yourphone, $from, $email, $message )
 		include ( "footer.php" );
 		exit;
 	}
-	if (! preg_match("/^[a-z0-9]([a-z0-9_.-]+)*[a-z0-9]@([a-z0-9]([a-z0-9_-]+)*[a-z0-9].)+[a-z]{2,6}$/i", $from) )
+	if (!nv_valid_email($from) )
 	{
 		OpenTable();
 		echo "<br><center><font class=\"title\"><b>" . _INVALIDEMAIL . "</b></font>";
@@ -309,18 +309,28 @@ function submit( $dpid, $cname, $youradd, $yourphone, $from, $email, $message )
 
 	if ( ($dept_contact == 2) or ($dept_contact == 3) )
 	{
-		$name1 = stripslashes( FixQuotes($cname) );
-		$add_name1 = stripslashes( FixQuotes($youradd) );
-		$phone_num1 = stripslashes( FixQuotes($yourphone) );
-		$email_name1 = stripslashes( FixQuotes($from) );
-		$dip_name1 = stripslashes( FixQuotes($dpid) );
-		$messenger1 = stripslashes( FixQuotes($message) );
+		$name1 = trim( nv_htmlspecialchars( strip_tags( stripslashes($cname) ) ) );		
+		$add_name1 = trim( nv_htmlspecialchars( strip_tags( stripslashes($youradd) ) ) );		
+		$phone_num1 = trim( nv_htmlspecialchars( strip_tags( stripslashes($yourphone) ) ) );		
+		$email_name1 = trim( nv_htmlspecialchars( strip_tags( stripslashes($from) ) ) );		
+		$dip_name1 = intval( $dpid );		
+	    $messenger1 = nv_nl2br( trim( content_filter( strip_tags( stripslashes( $message ) ), 1 ) ), '<br />' );
+
 		$ctime1 = date( "Y-m-d H:i:s" );
-		ereg( "([0-9]{4})-([0-9]{1,2})-([0-9]{1,2}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})", $ctime1, $datetime );
+		preg_match( "/([0-9]{4})-([0-9]{1,2})-([0-9]{1,2}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})/", $ctime1, $datetime );
 		$datetime = mktime( $datetime[4], $datetime[5] + $hourdiff, $datetime[6], $datetime[2], $datetime[3], $datetime[1] );
 		$datetime = date( "Y-m-d H:i:s", $datetime );
-		$db->sql_query( "insert into " . $prefix . "_contact_contact values (NULL,'$name1', '$add_name1','$phone_num1', '$email_name1', '$dip_name1', '$messenger1', '', '$datetime')" );
-		if ( $dept_contact == 2 )
+		$db->sql_freeresult();
+		$ok = $db->sql_query( "INSERT INTO `" . $prefix . "_contact_contact` (`pid`, `name`, `add_name`, `phone_num`, `email_name`, `dip_name`, `messenger`, `reply`, `time`) values (NULL,".$db->dbescape($name1).", ".$db->dbescape($add_name1).", ".$db->dbescape($phone_num1).", ".$db->dbescape($email_name1).", ".$db->dbescape($dip_name1).", ".$db->dbescape($messenger1).", 0, ".$db->dbescape($datetime).")" );
+		if (!$ok){
+			OpenTable();
+			echo "<br><br><center><font class=\"title\">" . _ERROR2 . "</font>";
+			echo "<br>" . _TRYAGAIN . "<br>";
+			echo "[ <a href=\"modules.php?name=Contact\">" . _BACK . "</a> ]</center>";
+			CloseTable();
+			include ( "footer.php" );				
+		}
+		if ( $dept_contact == 2)
 		{
 			OpenTable();
 			echo "<br><br><center><font class=\"title\"><b>" . _THANKYOUFOR . " </b>";
@@ -329,7 +339,6 @@ function submit( $dpid, $cname, $youradd, $yourphone, $from, $email, $message )
 			CloseTable();
 			include ( "footer.php" );
 		}
-
 	}
 
 	if ( ($dept_contact == 1) or ($dept_contact == 3) )
@@ -337,7 +346,7 @@ function submit( $dpid, $cname, $youradd, $yourphone, $from, $email, $message )
 		$department = stripslashes( trim($dept_name) );
 		$youradd = stripslashes( trim($youradd) );
 		$yourphone = stripslashes( trim($yourphone) );
-		$subject = "Phản hồi từ website $sitename";
+		$subject = _VISITOR." website ".$sitename;
 		$from = strip_tags( trim($from) );
 		$message = stripslashes( trim($message) );
 		$header = "" . _FROM . ": $cname <$from>\r\n\n";

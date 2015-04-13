@@ -1,11 +1,11 @@
 <?php
 
-if ( (! defined('NV_SYSTEM')) and (! defined('NV_ADMIN')) )
+if ( ( ! defined( 'NV_SYSTEM' ) ) and ( ! defined( 'NV_ADMIN' ) ) )
 {
 	die();
 }
 
-if ( ! defined("SQL_LAYER") )
+if ( ! defined( "SQL_LAYER" ) )
 {
 
 	/**
@@ -18,7 +18,6 @@ if ( ! defined("SQL_LAYER") )
 		list( $usec, $sec ) = explode( " ", microtime() );
 		return ( $usec + $sec );
 	}
-
 	/**
 	 * sql_db
 	 * 
@@ -38,7 +37,6 @@ if ( ! defined("SQL_LAYER") )
 		var $num_queries = 0;
 		var $time = 0;
 		var $query_ids = array();
-
 
 		/**
 		 * sql_db::sql_db()
@@ -88,7 +86,6 @@ if ( ! defined("SQL_LAYER") )
 			}
 		}
 
-
 		/**
 		 * sql_db::sql_close()
 		 * 
@@ -101,7 +98,7 @@ if ( ! defined("SQL_LAYER") )
 				$numid = count( $this->query_ids );
 				for ( $i = 0; $i < $numid; $i++ )
 				{
-					if ( isset($this->query_ids[$i]) )
+					if ( isset( $this->query_ids[$i] ) )
 					{
 						@mysql_free_result( $this->query_ids[$i] );
 					}
@@ -120,7 +117,6 @@ if ( ! defined("SQL_LAYER") )
 			}
 		}
 
-
 		/**
 		 * sql_db::sql_query()
 		 * 
@@ -135,8 +131,7 @@ if ( ! defined("SQL_LAYER") )
 			unset( $this->query_result );
 			if ( $query != "" )
 			{
-				$query = eregi_replace( 'union', 'UNI0N', $query );
-
+				$query = preg_replace( '/union/', 'UNI0N', $query );
 				$this->query_result = @mysql_query( $query, $this->db_connect_id );
 				$this->num_queries++;
 			}
@@ -149,7 +144,6 @@ if ( ! defined("SQL_LAYER") )
 				return $this->query_result;
 			}
 		}
-
 
 		/**
 		 * sql_db::sql_numrows()
@@ -318,7 +312,7 @@ if ( ! defined("SQL_LAYER") )
 				$stime = get_microtime();
 				unset( $this->rowset[$query_id] );
 				unset( $this->row[$query_id] );
-				while ( $this->rowset[$query_id] = @mysql_fetch_array($query_id) )
+				while ( $this->rowset[$query_id] = @mysql_fetch_array( $query_id ) )
 				{
 					$result[] = $this->rowset[$query_id];
 				}
@@ -353,7 +347,7 @@ if ( ! defined("SQL_LAYER") )
 				}
 				else
 				{
-					if ( empty($this->row[$query_id]) && empty($this->rowset[$query_id]) )
+					if ( empty( $this->row[$query_id] ) && empty( $this->rowset[$query_id] ) )
 					{
 						if ( $this->sql_fetchrow() )
 						{
@@ -470,8 +464,46 @@ if ( ! defined("SQL_LAYER") )
 			return $result;
 		}
 
-	}
+		public function dbescape( $value )
+		{
+			if ( is_array( $value ) )
+			{
+				$value = array_map( array( $this, __function__ ), $value );
+			}
+			else
+			{
+				if ( ! is_numeric( $value ) || $value{0} == '0' )
+				{
+					$value = str_replace( '\'', '&#039;', $value );
+					$value = preg_replace( array( "/select/i", "/union/i", "/concat/i", "/char/i", "/outfile/i", "/alter/i", "/insert/i", "/drop/i", "/from/i", "/where/i", "/update/i", "/delete/i", "/create/i" ), array( "se-lect", "uni0n", "c0ncat", "ch@r", "0utfile", "al-ter", "in-sert", "dr0p", "fr0m", "whe-re", "up-date", "dele-te", "crea-te" ), $value );
+					$value = preg_replace( "/([^\&]+)\#/", "\\1&#x23;", $value );
+					$value = "'" . mysql_real_escape_string( $value ) . "'";
+				}
+			}
 
+			return $value;
+		}
+
+		public function dblikeescape( $value )
+		{
+			if ( is_array( $value ) )
+			{
+				$value = array_map( array( $this, __function__ ), $value );
+			}
+			else
+			{
+				$value = str_replace( '\\', '\\\\', $value );
+				$value = str_replace( '\'', '&#039;', $value );
+				$value = preg_replace( array( "/select/i", "/union/i", "/concat/i", "/char/i", "/outfile/i", "/alter/i", "/insert/i", "/drop/i", "/from/i", "/where/i", "/update/i", "/delete/i", "/create/i" ), array( "se-lect", "uni0n", "c0ncat", "ch@r", "0utfile", "al-ter", "in-sert", "dr0p", "fr0m", "whe-re", "up-date", "dele-te", "crea-te" ), $value );
+				$value = preg_replace( "/([^\&]+)\#/", "\\1&#x23;", $value );
+				$value = mysql_real_escape_string( $value );
+				$value = addcslashes( $value, '_%' );
+			}
+
+			return $value;
+		}
+
+	}
 
 	define( "SQL_LAYER", "mysql" );
 

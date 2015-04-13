@@ -8,11 +8,16 @@
  * @author Alan Mendelevich <alan@solmetra.lt> 
  * @copyright UAB Solmetra
  */
-header('Content-Type: application/x-javascript; charset=utf-8'); 
 
 require_once(str_replace('\\\\','/',dirname(__FILE__)).'/../config/config.php');
 require_once(str_replace('\\\\','/',dirname(__FILE__)).'/../class/util.class.php');
 
+$check_session_id = isset($_SESSION['check_session_id']) ? $_SESSION['check_session_id'] : "";
+if (empty($check_session_id) OR $check_session_id != md5(SpawConfig::getStaticConfigValue('SPAW_PASS').session_id())){
+	   header("HTTP/1.0 404 Not Found");
+	   die("STOP!!!");
+}
+header('Content-Type: application/x-javascript; charset=utf-8'); 
 $spaw_root = SpawConfig::getStaticConfigValue("SPAW_ROOT");
 $agent = SpawAgent::getAgentName();
 

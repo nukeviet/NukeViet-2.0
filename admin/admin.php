@@ -3,8 +3,8 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	admin.php
-* @Version: 	2.0 RC3
-* @Date: 		15.06.2009
+* @Version: 	2.0 RC4
+* * @Date: 		06.04.2010
 * @author: 		Nguyen Anh Tu (Nukeviet Group)
 * @contact: 	anht@mail.ru
 * @Website: 	www.nukeviet.vn
@@ -25,8 +25,7 @@ $module_title = _ADMINPAGE;
 @require ( "../" . $datafold . "/config_admin.php" );
 if ( $editor )
 {
-	if ( file_exists("spaw2/spaw.inc.php") ) @require_once ( "spaw2/spaw.inc.php" );
-	elseif ( file_exists(INCLUDE_PATH . "spaw/spaw_control.class.php") ) @require_once ( INCLUDE_PATH . "spaw/spaw_control.class.php" );
+	@require_once ( "../" . $datafold . "/config_Editor.php" );
 }
 
 $op = ( isset($_POST['op']) and ! empty($_POST['op']) ) ? $_POST['op'] : $_GET['op'];
@@ -208,7 +207,7 @@ if ( ! defined("IS_ADMIN") )
 		{
 			$pwd = "";
 			$error = "Password is empty or invalid";
-		} elseif ( empty($email) || ! preg_match("/^[a-z0-9]([a-z0-9_.-]+)*[a-z0-9]@([a-z0-9]([a-z0-9_-]+)*[a-z0-9].)+[a-z]{2,6}$/i", $email) || strrpos($email, ' ') > 0 )
+		} elseif ( empty($email) || ! nv_valid_email($email) || strrpos($email, ' ') > 0 )
 		{
 			$email = "";
 			$error = "E-mail is empty or invalid";
@@ -233,12 +232,21 @@ if ( ! defined("IS_ADMIN") )
 					$query = "UPDATE `" . $prefix . "_authors` SET `checknum` = '" . $checknum . "', `last_login` = '" . time() . "', `last_ip` = '" . $addr_ip . "', agent = '" . $agent . "' WHERE `aid`='" . $aid . "'";
 					$db->sql_query( $query );
 					$_SESSION[ADMIN_COOKIE] = base64_encode( $aid . "#:#" . md5($pwd) . "#:#" . $admlanguage . "#:#" . $checknum . "#:#" . $agent . "#:#" . $addr_ip );
+					$_SESSION['check_session_id'] = md5($editorconfig['editor_pass'].session_id());
+					   $sturl = explode("/", $_SERVER["SCRIPT_NAME"]);
+					   $base_url_spaw_dir = "";
+					    for ( $i = 1; $i < count( $sturl )-1; $i++ ){
+					        $base_url_spaw_dir .= '/' . $sturl[$i];
+					    }
+					   $base_url_spaw_dir .= '/spaw2/';
+					$_SESSION['base_url_spaw_dir'] = $base_url_spaw_dir;
 					Header( "Location: " . $adminfile . ".php" );
 					exit;
 				}
 			}
 		}
 	}
+
 
 	$html = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n";
 	$html .= "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
@@ -298,6 +306,12 @@ if ( ! defined("IS_ADMIN") )
 /**
  * Duoi day chi danh cho Admin
  */
+ 
+if ( $editor )
+{
+	if ( file_exists("spaw2/spaw.inc.php") ) @require_once ( "spaw2/spaw.inc.php" );
+	elseif ( file_exists(INCLUDE_PATH . "spaw/spaw_control.class.php") ) @require_once ( INCLUDE_PATH . "spaw/spaw_control.class.php" );
+} 
 
 if ( empty($op) ) $op = "adminMain";
 
@@ -458,7 +472,7 @@ function adminMain()
 		{
 			$error = _BADPASSADMIN3;
 		}
-		elseif ( ! preg_match("/^[a-z0-9]([a-z0-9_.-]+)*[a-z0-9]@([a-z0-9]([a-z0-9_-]+)*[a-z0-9].)+[a-z]{2,6}$/i", $admin_email) )
+		elseif ( ! nv_valid_email($admin_email) )
 		{
 			$error = _BADMAILADMIN;
 		} elseif ( $db->sql_numrows($db->sql_query("SELECT * FROM `" . $prefix . "_authors` WHERE (`email`='" . $admin_email . "' AND `aid`!='" . $aid . "')")) > 0 )
@@ -595,6 +609,7 @@ function admin_logout()
 {
 	global $cookie_path, $cookie_domain;
 	unset( $_SESSION[ADMIN_COOKIE] );
+	unset( $_SESSION['check_session_id'] );
 	setcookie( "adv_sdmin_test", '', 0, $cookie_path, $cookie_domain );
 	include ( "../header.php" );
 	OpenTable();

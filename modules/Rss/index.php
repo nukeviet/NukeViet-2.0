@@ -1,7 +1,7 @@
 <?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC1
+* @Program:		NukeViet CMS v2.0 RC4
 * @File name: 	Module RSS generation
 * @Author: 		laser (Nukeviet Group)
 * @Version: 	3.1

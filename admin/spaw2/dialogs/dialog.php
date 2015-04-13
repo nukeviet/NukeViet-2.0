@@ -17,6 +17,12 @@ if($contnum=="" || $contnum!=md5(SpawConfig::getStaticConfigValue('SPAW_PASS')))
 	Header("Location: ../../../index.php"); exit;
 }
 //END
+
+$check_session_id = isset($_SESSION['check_session_id']) ? $_SESSION['check_session_id'] : "";
+if (empty($check_session_id) OR $check_session_id != md5(SpawConfig::getStaticConfigValue('SPAW_PASS').session_id())){
+	die("please login control panel");
+}
+
 $module = SpawVars::getGetVar("module");
 if (strpos($module, '/') || strpos($module, "\\")) die("illegal module name");
 $dialog = SpawVars::getGetVar("dialog");
@@ -29,8 +35,6 @@ if (SpawVars::getGetVar('charset') != '')
   $lang->setOutputCharset($charset);
 }
 
-if (SpawVars::getGetVar("scid") != '' && session_id() == '')
-  session_start();
 $config = new SpawConfig();
 $config->restoreSecureConfig(SpawVars::getGetVar("scid"));
 

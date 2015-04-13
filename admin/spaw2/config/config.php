@@ -1,11 +1,32 @@
 <?php
-
 define( "DATAFOLD", "includes/data" );
-
 define( "NV_SYSTEM", true );
+
+$nv_rootdir = str_replace( "\\", "/", realpath( dirname( __file__ ) . "/../../.." ) );
+if ( ! preg_match( "/\/$/", $nv_rootdir ) ) $nv_rootdir = $nv_rootdir . '/';
+
+if ( ! defined( 'NV_MAINFILE' ) )
+{
+    @ini_set( 'magic_quotes_gpc', 'Off' );
+    @ini_set( 'magic_quotes_runtime', 'Off' );
+    @ini_set( 'magic_quotes_sybase', 'Off' );
+    @ini_set( 'session.use_trans_sid', 0 );
+    @ini_set( 'session.auto_start', '0' );
+    @ini_set( 'display_errors', 0 );
+    @ini_set( 'display_startup_errors', 0 );
+    @ini_set( 'log_errors', 0 );
+    @ini_set( 'error_reporting', 2039 );
+    @ini_set( 'track_errors', 1 );
+	error_reporting( 0 );
+
+	if ( is_dir( $nv_rootdir . 'tmp' ) ) @ini_set( 'session.save_path', $nv_rootdir . 'tmp' );
+	session_name( "NVS" );
+	session_start();
+}
 
 require_once(str_replace('\\\\','/',dirname(__FILE__)).'/../class/config.class.php');
 require_once(str_replace('\\\\','/',dirname(__FILE__)).'/../class/util.class.php');
+require_once( str_replace("\\", "/", realpath(dirname(__file__) . "/../../..") . '/') . DATAFOLD . '/config_Editor.php' );
 
 if ( ! function_exists('str_ireplace') )
 {
@@ -32,38 +53,32 @@ if ( ! function_exists('str_ireplace') )
 	}
 }
 
-// sets physical filesystem directory of web site root
-// if calculation fails (usually if web server is not apache) set this manually
-SpawConfig::setStaticConfigItem('DOCUMENT_ROOT', str_replace("\\","/",SpawVars::getServerVar("DOCUMENT_ROOT")));
-if (!ereg('/$', SpawConfig::getStaticConfigValue('DOCUMENT_ROOT')))
-  SpawConfig::setStaticConfigItem('DOCUMENT_ROOT', SpawConfig::getStaticConfigValue('DOCUMENT_ROOT').'/');
+SpawConfig::setStaticConfigItem('DOCUMENT_ROOT', $nv_rootdir);
 // sets physical filesystem directory where spaw files reside
 // should work fine most of the time but if it fails set SPAW_ROOT manually by providing correct path
 SpawConfig::setStaticConfigItem('SPAW_ROOT', str_replace("\\","/",realpath(dirname(__FILE__)."/..").'/'));
-// sets virtual path to the spaw directory on the server
-// if calculation fails set this manually
-SpawConfig::setStaticConfigItem('SPAW_DIR', '/'.str_ireplace(SpawConfig::getStaticConfigValue("DOCUMENT_ROOT"),'',SpawConfig::getStaticConfigValue("SPAW_ROOT")));
-SpawConfig::setStaticConfigItem( 'SPAW_UPLOAD', '/' . str_ireplace(SpawConfig::getStaticConfigValue("DOCUMENT_ROOT"), '', str_replace("\\", "/", realpath(dirname(__file__) . "/../../..") . '/')) );
-include ( str_replace("\\", "/", realpath(dirname(__file__) . "/../../..") . '/') . DATAFOLD . '/config_Editor.php' );
-SpawConfig::setStaticConfigItem( 'SPAW_PASS', $editorconfig['editor_pass'] );
-/*
-// semi-automatic path calculation
-// comment the above settings of DOCUMENT_ROOT, SPAW_ROOT and SPAW_DIR
-// and use this block if the above fails.
-// set SPAW_DIR manually. If you access demo page by http://domain.com/spaw2/demo/demo.php
-// then set SPAW_DIR to /spaw2/
-SpawConfig::setStaticConfigItem('SPAW_DIR', '/spaw2/');
-// and the following settings will be calculated automaticly
-SpawConfig::setStaticConfigItem('SPAW_ROOT', str_replace("\\","/",realpath(dirname(__FILE__)."/..").'/'));
-SpawConfig::setStaticConfigItem('DOCUMENT_ROOT', substr(SpawConfig::getStaticConfigValue('SPAW_ROOT'),0,strlen(SpawConfig::getStaticConfigValue('SPAW_ROOT'))-strlen(SpawConfig::getStaticConfigValue('SPAW_DIR'))));
-*/
 
-/*
-// under IIS you will probably need to setup the above paths manually. it would be something like this
-SpawConfig::setStaticConfigItem('DOCUMENT_ROOT', 'c:/inetpub/wwwroot/');
-SpawConfig::setStaticConfigItem('SPAW_ROOT', 'c:/inetpub/wwwroot/spaw2/');
-SpawConfig::setStaticConfigItem('SPAW_DIR', '/spaw2/');
-*/
+	if (isset($_SESSION['base_url_spaw_dir'])){
+		$base_url_spaw_dir = strip_tags($_SESSION['base_url_spaw_dir']);
+	}
+	else{
+	   $sturl = explode("/", $_SERVER["SCRIPT_NAME"]);
+	   $base_url_spaw_dir = "";
+	    for ( $i = 1; $i < count( $sturl )-1; $i++ ){
+	        $base_url_spaw_dir .= '/' . $sturl[$i];
+	    }
+	   $base_url_spaw_dir .= '/spaw2/';
+	   $_SESSION['base_url_spaw_dir'] = $base_url_spaw_dir;
+	}
+   $base_url_spaw_upload = "";
+   $sturl = explode("/", $base_url_spaw_dir);
+   for ( $i = 1; $i < count( $sturl)-3; $i++ ){
+        $base_url_spaw_upload .= '/' . $sturl[$i];
+   }
+   $base_url_spaw_upload .= '/';
+   SpawConfig::setStaticConfigItem('SPAW_DIR',$base_url_spaw_dir);
+   SpawConfig::setStaticConfigItem('SPAW_UPLOAD',$base_url_spaw_upload);
+   SpawConfig::setStaticConfigItem( 'SPAW_PASS', $editorconfig['editor_pass'] );
 
 // DEFAULTS used when no value is set from code
 // language 
@@ -272,6 +287,7 @@ SpawConfig::setStaticConfigItem(
   array(
     array(
       'dir'     => SpawConfig::getStaticConfigValue('SPAW_UPLOAD') . $editorconfig['flash_dir'],
+      'fsdir'   => $nv_rootdir.$editorconfig['flash_dir'], // optional absolute physical filesystem path
       'caption' => 'Flash movies', 
       'params'  => array(
         'allowed_filetypes' => array('flash')
@@ -279,6 +295,7 @@ SpawConfig::setStaticConfigItem(
     ),
     array(
       'dir'     => SpawConfig::getStaticConfigValue('SPAW_UPLOAD') . $editorconfig['img_dir'],
+      'fsdir'   => $nv_rootdir.$editorconfig['img_dir'], // optional absolute physical filesystem path
       'caption' => 'Images',
       'params'  => array(
         'default_dir' => true, // set directory as default (optional setting)
@@ -286,8 +303,8 @@ SpawConfig::setStaticConfigItem(
       )
     ),
     array(
-      'dir'     => SpawConfig::getStaticConfigValue('SPAW_UPLOAD') . $editorconfig['files_dir'],
-      //'fsdir'   => SpawConfig::getStaticConfigValue('SPAW_ROOT').'uploads/files/', // optional absolute physical filesystem path
+     // 'dir'     => SpawConfig::getStaticConfigValue('SPAW_UPLOAD') . $editorconfig['files_dir'],
+      'fsdir'   => $nv_rootdir.$editorconfig['files_dir'], // optional absolute physical filesystem path
       'caption' => 'Files', 
       'params'  => array(
         'allowed_filetypes' => array('any')

@@ -3,7 +3,7 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
+* @Version: 	2.0 RC4
 * @Date: 		01.05.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
@@ -24,5 +24,6 @@ define( "_ADDNEWS9", "Your name" );
 define( "_ADDNEWS10", "Submit" );
 define( "_ADDNEWS11", "Your article has been sent. Thank you" );
 define( "_ADDNEWS12", "Source" );
+define( "_ADDNEWS_ERR_SAVE", "Error: No Save content, please contact Administrator" );
 
 ?>

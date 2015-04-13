@@ -3,7 +3,7 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC1
+* @Version: 	2.0 RC4
 * @Date: 		01.05.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
@@ -22,7 +22,8 @@ define( "_ADDNEWS7", "Chú thích cho hình minh họa" );
 define( "_ADDNEWS8", "Nội dung (Không sử dụng HTML)" );
 define( "_ADDNEWS9", "Họ tên của bạn" );
 define( "_ADDNEWS10", "Gửi đi" );
-define( "_ADDNEWS11", "Bài viết của bạn đã được gửi đi. Xin cảm ơn" );
+define( "_ADDNEWS11", "Bài viết của bạn đã được gửi đi. Xin cảm ơn. Để tiếp tục gửi bài vui lòng chờ 5 phút" );
 define( "_ADDNEWS12", "Nguồn tin" );
+define( "_ADDNEWS_ERR_SAVE", "Lỗi: Hệ không lưu được bài vết của bạn. bạn vui lòng thông báo cho ban quản trị. Cảm ơn " );
 
 ?>

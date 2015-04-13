@@ -3,8 +3,8 @@
 /*
 * @Program:	NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC3
-* @Date: 		01.03.2010
+* @Version: 	2.0 RC4
+* @Date: 		06.04.2010
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -26,7 +26,7 @@ if ( isset($_POST['name']) and ! empty($_POST['name']) ) $name = $_POST['name'];
 elseif ( isset($_GET['name']) and ! empty($_GET['name']) ) $name = $_GET['name'];
 $name = trim( $name );
 
-if ( empty($name) || eregi("[^a-zA-Z0-9_]", $name) || ! file_exists("modules/" . $name . "/index.php") || filesize("modules/" . $name . "/index.php") == 0 )
+if ( empty($name) || preg_match("/[^a-zA-Z0-9_]/i", $name) || ! file_exists("modules/" . $name . "/index.php") || filesize("modules/" . $name . "/index.php") == 0 )
 {
 	header( "Location: index.php" );
 	exit;
@@ -73,7 +73,7 @@ if ( $mod_active )
 	$mop = ( isset($_POST['mop']) and ! empty($_POST['mop']) ) ? $_POST['mop'] : ( (isset($_GET['mop']) and ! empty($_GET['mop'])) ? $_GET['mop'] : "modload" );
 	$file = ( isset($_POST['file']) and ! empty($_POST['file']) ) ? $_POST['file'] : ( (isset($_GET['file']) and ! empty($_GET['file'])) ? $_GET['file'] : "index" );
 	if ( stripos_clone($name, "..") || (isset($file) && stripos_clone($file, "..")) || stripos_clone($mop, "..") ) die( "You are so cool..." );
-	if ( eregi("[^a-zA-Z0-9\_\.]", $file) or eregi("[^a-zA-Z0-9\_]", $mop) ) die( "You are so cool..." );	$set_view = false;
+	if ( preg_match("/[^a-zA-Z0-9\_\.]/i", $file) or preg_match("/[^a-zA-Z0-9\_]/i", $mop) ) die( "You are so cool..." );	$set_view = false;
 	if ( defined('IS_ADMMOD') )
 	{
 		$set_view = true;

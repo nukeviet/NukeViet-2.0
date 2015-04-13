@@ -1,9 +1,9 @@
 <?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC3
+* @Program:		NukeViet CMS v2.0
 * @File name: 	Module News
-* @Version: 	2.0
+* @Version: 	2.0RC4
 * @Date: 		13.06.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2010
@@ -1033,15 +1033,14 @@ function addcomment()
 	}
 
 	$gfx_check = intval( $_POST['gfx_check'] );
-	$postname = at_htmlspecialchars( strip_tags(trim($_POST['postname'])) );
-	$postemail = strip_tags( trim($_POST['postemail']) );
+    $postname = trim( nv_htmlspecialchars( strip_tags( stripslashes($_POST['postname']) ) ) );
+    $postemail = trim( nv_htmlspecialchars( strip_tags( stripslashes($_POST['postemail']) ) ) );
 	if ( defined('IS_USER') )
 	{
 		global $mbrow;
 		$postname = at_htmlspecialchars( trim($mbrow['username']) );
 		$postemail = stripslashes( trim($mbrow['user_email']) );
 	}
-	//   $postcomment = FixQuotes(trim($_POST['postcomment']));
 	$postcomment = cheonguoc( nl2brStrict(stripslashes(FixQuotes(trim($_POST['postcomment'])))) );
 	$error = "";
 	$save = intval( $_POST['save'] );
@@ -1072,7 +1071,7 @@ function addcomment()
 			if ( strlen($postname) < 3 || (strlen($postname) > 50) )
 			{
 				$error = _ERCOM1;
-			} elseif ( ! preg_match("/^[a-z0-9]([a-z0-9_.-]+)*[a-z0-9]@([a-z0-9]([a-z0-9_-]+)*[a-z0-9].)+[a-z]{2,6}$/i", $postemail) )
+			} elseif (!nv_valid_email( $postemail ))
 			{
 				$error = _ERCOM2;
 			} elseif ( strlen($postcomment) < 3 )
@@ -1083,11 +1082,10 @@ function addcomment()
 			{
 				$date = date( "Y-m-d H:i:s" );
 				$online = ( $commentcheck ) ? 0 : 1;
-				$db->sql_query( "INSERT INTO " . $prefix . "_stories_comments VALUES (
-            NULL, '$sid', '$date', '$postname', '$postemail', '', '$client_ip', '', '$postcomment', '$online')" );
+				$db->sql_query("INSERT INTO " . $prefix . "_stories_comments VALUES (NULL, ".$db->dbescape($sid).", ".$db->dbescape($date).", ".$db->dbescape($postname).", ".$db->dbescape($postemail).", '', ".$db->dbescape($client_ip).", '', ".$db->dbescape($postcomment).", ".$db->dbescape($online).")");
 				if ( ! $commentcheck )
 				{
-					$db->sql_query( "UPDATE " . $prefix . "_stories SET comments=comments+1 WHERE sid='$sid'" );
+					$db->sql_query( "UPDATE " . $prefix . "_stories SET comments=comments+1 WHERE sid='".$sid."'" );
 				}
 				$_SESSION['floodtime'] = time();
 				include ( "header.php" );
@@ -1595,6 +1593,10 @@ function archive( $catid, $pozit, $day, $month, $year )
 {
 	global $module_name, $hourdiff, $sizecatnewshomeimg, $path, $adminfold, $adminfile, $catnewshomeimg, $newspagenum, $catimgnewshome, $db, $prefix, $multilingual, $currentlang;
 	$catid = intval( $catid );
+	$pozit = intval( $pozit );
+	$day = intval( $day );
+	$month = intval( $month );
+	$year = intval( $year );
 	if ( ($pozit > 3) || (! $day) || (strlen($day) > 2) || (! $month) || (strlen($month) > 2) || (! $year) || (strlen($year) > 4) || (strlen($catid) > 4) )
 	{
 		Header( "Location: modules.php?name=$module_name" );
@@ -1805,12 +1807,13 @@ function archive( $catid, $pozit, $day, $month, $year )
 	include ( "footer.php" );
 }
 
-$op = isset($_GET['op']) ? $_GET['op'] :(isset($_POST['op']) ? $_POST['op'] :"");
+$op = isset($_POST['op']) ? $_POST['op'] :(isset($_GET['op']) ? $_GET['op'] :"");
+$op = strip_tags($op);
 switch ( $op )
 {
 
 	case "addcomment":
-		addcomment( $sid, $postname, $postemail, $postcomment );
+		addcomment();
 		break;
 
 	case "viewst":
@@ -1836,7 +1839,6 @@ switch ( $op )
 	default:
 		main();
 		break;
-
 }
 
 ?>

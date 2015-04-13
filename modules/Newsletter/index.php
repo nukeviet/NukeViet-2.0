@@ -3,8 +3,8 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC3
-* @Date: 		01.03.2010
+* @Version: 	2.0 RC4
+* @Date: 		06.04.2010
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -53,13 +53,16 @@ function Action( $new_email, $new_type )
 {
 	global $db, $prefix, $nukeurl, $adminmail, $module_name;
 	$new_email = strtolower( $new_email );
+	$new_email = trim( nv_htmlspecialchars( strip_tags( stripslashes($new_email) ) ) );
+	$new_type = intval($new_type);
+	
 	$actionletter = 1;
-	if ( (! $new_email) || ($new_email == "") || (! preg_match("/^[a-z0-9]([a-z0-9_.-]+)*[a-z0-9]@([a-z0-9]([a-z0-9_-]+)*[a-z0-9].)+[a-z]{2,6}$/i", $new_email)) || (strrpos($new_email, ' ') > 0) )
+	if ( (! $new_email) || ($new_email == "") || (!nv_valid_email( $new_email )) || (strrpos($new_email, ' ') > 0) )
 	{
 		$info = "" . _NEW_NOEMAIL . "";
 		$actionletter = 0;
 	}
-	$numrow = $db->sql_numrows( $db->sql_query("SELECT * FROM " . $prefix . "_newsletter WHERE email='$new_email'") );
+	$numrow = $db->sql_numrows( $db->sql_query("SELECT * FROM " . $prefix . "_newsletter WHERE email=".$db->dbescape($new_email)."") );
 	if ( $numrow != 0 )
 	{
 		$info = "" . _NEW_ALREADY . "";
@@ -79,16 +82,7 @@ function Action( $new_email, $new_type )
 		srand( (double)microtime() * 1000000 );
 		$mycode = rand();
 		$time = time();
-		list( $newest_uid ) = $db->sql_fetchrow( $db->sql_query("SELECT max(id) AS newest_uid FROM " . $prefix . "_newsletter") );
-		if ( $newest_uid == "-1" )
-		{
-			$new_uid = 1;
-		}
-		else
-		{
-			$new_uid = $newest_uid + 1;
-		}
-		$result = $db->sql_query( "INSERT INTO " . $prefix . "_newsletter (id, email, status, html, checkkey, time, newsletterid) VALUES ('$new_uid', '$new_email', '1', '$new_type', '$mycode', '$time', '')" );
+		$result = $db->sql_query( "INSERT INTO " . $prefix . "_newsletter (id, email, status, html, checkkey, time, newsletterid) VALUES (NULL, ".$db->dbescape($new_email).", '1', ".$db->dbescape($new_type).", ".$db->dbescape($mycode).", ".$db->dbescape($time).", '')" );
 		if ( ! $result )
 		{
 			return;
@@ -117,10 +111,12 @@ function Action( $new_email, $new_type )
 function Confirm( $new_email, $new_check )
 {
 	global $db, $prefix, $module_name;
+	$new_email = trim( nv_htmlspecialchars( strip_tags( stripslashes($new_email) ) ) );
+	$new_check = trim( nv_htmlspecialchars( strip_tags( stripslashes($new_check) ) ) );
 	$past = time() - 86400;
 	$db->sql_query( "DELETE FROM " . $prefix . "_newsletter WHERE (time < '$past' AND status='1')" );
 	$db->sql_query( "OPTIMIZE TABLE " . $prefix . "_newsletter" );
-	if ( $db->sql_numrows($db->sql_query("SELECT * FROM " . $prefix . "_newsletter WHERE (status='1' AND email='$new_email' AND checkkey = '$new_check')")) != 1 )
+	if ( $db->sql_numrows($db->sql_query("SELECT * FROM " . $prefix . "_newsletter WHERE (status='1' AND email=".$db->dbescape($new_email)." AND checkkey = ".$db->dbescape($new_check).")")) != 1 )
 	{
 		include ( "header.php" );
 		OpenTable();
@@ -131,7 +127,7 @@ function Confirm( $new_email, $new_check )
 	}
 	srand( (double)microtime() * 1000000 );
 	$mycode = rand();
-	$query = $db->sql_query( "UPDATE " . $prefix . "_newsletter SET status='2', checkkey = '$mycode' WHERE email='$new_email'" );
+	$query = $db->sql_query( "UPDATE " . $prefix . "_newsletter SET status='2', checkkey = ".$db->dbescape($mycode)." WHERE email=".$db->dbescape($new_email)."");
 	if ( ! $query )
 	{
 		return;
@@ -153,7 +149,10 @@ function Confirm( $new_email, $new_check )
 function Delletter( $del_email, $del_check )
 {
 	global $db, $prefix, $module_name;
-	if ( $db->sql_numrows($db->sql_query("SELECT * FROM " . $prefix . "_newsletter WHERE (email='$del_email' AND checkkey = '$del_check')")) != 1 )
+	$del_email = trim( nv_htmlspecialchars( strip_tags( stripslashes($del_email) ) ) );
+	$del_check = trim( nv_htmlspecialchars( strip_tags( stripslashes($del_check) ) ) );
+	
+	if ( $db->sql_numrows($db->sql_query("SELECT * FROM " . $prefix . "_newsletter WHERE (email=".$db->dbescape($del_email)." AND checkkey = ".$db->dbescape($del_check).")")) != 1 )
 	{
 		include ( "header.php" );
 		OpenTable();
@@ -163,7 +162,7 @@ function Delletter( $del_email, $del_check )
 		include ( "footer.php" );
 		return;
 	}
-	$query = $db->sql_query( "DELETE FROM " . $prefix . "_newsletter WHERE (email='$del_email' AND checkkey = '$del_check')" );
+	$query = $db->sql_query( "DELETE FROM " . $prefix . "_newsletter WHERE (email=".$db->dbescape($del_email)." AND checkkey = ".$db->dbescape($del_check).")" );
 	if ( ! $query )
 	{
 		return;

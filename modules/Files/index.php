@@ -1,7 +1,7 @@
 <?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC3
+* @Program:		NukeViet CMS v2.0 RC4
 * @File name: 	Module Files
 * @Version: 	2.2
 * @Date: 		14.06.2009
@@ -198,7 +198,7 @@ function getit()
 function get_cat_name( $cid_temp )
 {
 	global $prefix, $db;
-	list( $title ) = $db->sql_fetchrow( $db->sql_query("SELECT title FROM " . $prefix . "_files_categories WHERE cid='$cid_temp'") );
+	list( $title ) = $db->sql_fetchrow( $db->sql_query("SELECT title FROM " . $prefix . "_files_categories WHERE cid='".intval($cid_temp)."'") );
 	return $title;
 }
 
@@ -212,7 +212,7 @@ function get_cat_name( $cid_temp )
 function get_cdescription( $cid_temp2 )
 {
 	global $prefix, $db;
-	list( $cdescription ) = $db->sql_fetchrow( $db->sql_query("SELECT cdescription FROM " . $prefix . "_files_categories WHERE cid='$cid_temp2'") );
+	list( $cdescription ) = $db->sql_fetchrow( $db->sql_query("SELECT cdescription FROM " . $prefix . "_files_categories WHERE cid='".intval($cid_temp2)."'") );
 	return $cdescription;
 }
 
@@ -227,7 +227,7 @@ function get_cdescription( $cid_temp2 )
 function getparent( $parentid, $title )
 {
 	global $prefix, $db;
-	$sql = "SELECT cid, title, parentid FROM " . $prefix . "_files_categories WHERE cid=$parentid";
+	$sql = "SELECT cid, title, parentid FROM " . $prefix . "_files_categories WHERE cid=".intval($parentid)."";
 	$res = $db->sql_query( $sql );
 	$row = $db->sql_fetchrow( $res );
 	$cid = $row['cid'];
@@ -346,6 +346,7 @@ function viewcatnews( $catid, $numnews )
 {
 	global $module_name, $db, $prefix, $multilingual, $currentlang;
 	$catid = intval( $catid );
+	$numnews = intval( $numnews );
 	if ( $catid == 0 )
 	{
 		Header( "Location: modules.php?name=$module_name" );
@@ -1366,7 +1367,6 @@ function view_file()
 	{
 		echo "<br><b>" . _COMMENTSQ . "</b><hr>";
 		$subject = "Re: $title";
-		@include ( "" . $datafold . "/ulist.php" );
 		if ( ! defined('IS_ADMMOD') and ! defined('IS_USER') and $anonpost == 0 )
 		{
 			OpenTable();
@@ -1471,11 +1471,11 @@ function savecomments()
 		exit;
 	}
 	$lid = intval( $_POST['lid'] );
-	$postname = FixQuotes( filter_text($_POST['postname'], "nohtml") );
-	$postemail = FixQuotes( filter_text($_POST['postemail'], "nohtml") );
-	$posturl = FixQuotes( filter_text($_POST['posturl'], "nohtml") );
-	$subject = FixQuotes( filter_text($_POST['subject'], "nohtml") );
-	$comment = $_POST['comment'];
+	$postname = trim( nv_htmlspecialchars( strip_tags( stripslashes($_POST['postname']) ) ) );
+	$postemail = trim( nv_htmlspecialchars( strip_tags( stripslashes($_POST['postemail']) ) ) );
+	$posturl = trim( nv_htmlspecialchars( strip_tags( stripslashes($_POST['posturl']) ) ) );
+	$subject = trim( nv_htmlspecialchars( strip_tags( stripslashes($_POST['subject']) ) ) );
+	$comment = trim( nv_htmlspecialchars( strip_tags( stripslashes($_POST['comment']) ) ) );
 	$gfx_check = intval( $_POST['gfx_check'] );
 	if ( ! isset($lid) || $lid == 0 )
 	{
@@ -1548,11 +1548,10 @@ function savecomments()
 		include ( "footer.php" );
 		// End hien thi lai form gui
 	} else {
-	$comment = nl2br( FixQuotes(filter_text($comment, "nohtml")) );
-	$ip = $client_ip;
-	$db->sql_query( "INSERT INTO " . $prefix . "_files_comments VALUES (NULL, '$lid', now(), '$postname', '$postemail', '$posturl', '$ip', '$subject', '$comment')" );
-	$db->sql_query( "UPDATE " . $prefix . "_files SET totalcomments=totalcomments+1 WHERE lid='$lid'" );
-	Header( "Location: modules.php?name=$module_name&go=view_file&lid=$lid#com" );
+    	$ip = $client_ip;
+    	$db->sql_query( "INSERT INTO " . $prefix . "_files_comments VALUES (NULL, ".$lid.", now(), ".$db->dbescape($postname).", ".$db->dbescape($postemail).", ".$db->dbescape($posturl).", ".$db->dbescape($ip).", ".$db->dbescape($subject).", ".$db->dbescape($comment).")" );
+    	$db->sql_query( "UPDATE " . $prefix . "_files SET totalcomments=totalcomments+1 WHERE lid='$lid'" );
+    	Header( "Location: modules.php?name=".$module_name."&go=view_file&lid=".$lid."#com" );
 	}
 }
 
@@ -1587,7 +1586,6 @@ function show()
 	include ( "header.php" );
 	echo "<br><b>" . _COMMENTSAR . ":</b> <a href=\"modules.php?name=$module_name&go=view_file&lid=$lid\"><b>$title</b></a><br><br><hr>";
 	$subject = "Re: $title";
-	@include ( "" . $datafold . "/ulist.php" );
 	if ( ! defined('IS_USER') and $anonpost == 0 )
 	{
 		OpenTable();
@@ -1843,24 +1841,23 @@ function file_send()
 		Header( "Location: index.php" );
 		exit;
 	}
-	$filelink = stripslashes( FixQuotes($_POST['filelink']) );
+	$filelink = trim( nv_htmlspecialchars( strip_tags( stripslashes($_POST['filelink']) ) ) );
 	if ( $filelink == "http://" )
 	{
 		$filelink = "";
 	}
-	$authorurl = stripslashes( FixQuotes($_POST['authorurl']) );
+	$authorurl = trim( nv_htmlspecialchars( strip_tags( stripslashes($_POST['authorurl']) ) ) );
 	if ( $authorurl == "http://" )
 	{
 		$authorurl = "";
 	}
-	$title = stripslashes( FixQuotes($_POST['title']) );
-	$description = stripslashes( FixQuotes($_POST['description']) );
-	$author = stripslashes( FixQuotes($_POST['author']) );
-	$authormail = stripslashes( FixQuotes($_POST['authormail']) );
-	$version = stripslashes( FixQuotes($_POST['version']) );
+	$title = trim( nv_htmlspecialchars( strip_tags( stripslashes($_POST['title']) ) ) );
+	$description = trim( nv_htmlspecialchars( strip_tags( stripslashes($_POST['description']) ) ) );
+	$author = trim( nv_htmlspecialchars( strip_tags( stripslashes($_POST['author']) ) ) );
+	$authormail = trim( nv_htmlspecialchars( strip_tags( stripslashes($_POST['authormail']) ) ) );
+	$version = trim( nv_htmlspecialchars( strip_tags( stripslashes($_POST['version']) ) ) );
 	$cid = intval( $_POST['cid'] );
 	$file_size = intval( $_POST['file_size'] );
-
 	if ( ($title == "") or ($description == "") or ($author == "") or ($authormail == "") or ($authorurl == "") )
 	{
 		info_exit( "<center><br><br>" . _UPLOADEROR . "<br><br>" . _ERGOBACK . "<br><br></center>" );
@@ -1972,7 +1969,7 @@ function file_send()
 		$file_size = intval( $file_size );
 	}
 	$ip = $client_ip;
-	$add = $db->sql_query( "INSERT INTO " . $prefix . "_files (lid, cid, title, description, url, date, filesize, version, name, email, homepage, ip_sender, status) VALUES (NULL, '$cid', '$title', '$description', '$file_name', now(), '$file_size', '$version', '$author', '$authormail', '$authorurl', '$ip', '0')" );
+	$add = $db->sql_query( "INSERT INTO " . $prefix . "_files (lid, cid, title, description, url, date, filesize, version, name, email, homepage, ip_sender, status) VALUES (NULL, '$cid', ".$db->dbescape($title).", ".$db->dbescape($description).", ".$db->dbescape($file_name).", now(), ".$db->dbescape($file_size).", ".$db->dbescape($version).", ".$db->dbescape($author).", ".$db->dbescape($authormail).", ".$db->dbescape($authorurl).", ".$db->dbescape($ip).", '0')" );
 	if ( $add )
 	{
 		info_exit( "<center><br><br>" . _UPLOADFINISH . "<br><br></center><META HTTP-EQUIV=\"refresh\" content=\"6;URL=modules.php?name=$module_name\">" );
@@ -1984,7 +1981,7 @@ function file_send()
 }
 
 $go = addslashes( trim((isset($_POST['go'])) ? $_POST['go'] : $_GET['go']) );
-if ( eregi("[^a-zA-Z0-9_]", $go) )
+if ( preg_match("/[^a-zA-Z0-9_]/i", $go) )
 {
 	Header( "Location:index.php" );
 	exit;

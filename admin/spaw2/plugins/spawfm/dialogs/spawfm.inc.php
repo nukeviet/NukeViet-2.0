@@ -15,6 +15,7 @@ $settings = $config->getConfigValue('PG_SPAWFM_SETTINGS');
 $filetypes = $config->getConfigValue('PG_SPAWFM_FILETYPES');
 $dir_list = $config->getConfigValue('PG_SPAWFM_DIRECTORIES');
 $doc_root = $config->getConfigValue('DOCUMENT_ROOT');
+
 if (preg_match('|[\\/]$|', $doc_root))
   $doc_root = substr($doc_root, 0, -1);
 $imgdir = $config->getConfigValue('SPAW_DIR').'plugins/spawfm/lib/theme/'.$theme->name.'/img/';

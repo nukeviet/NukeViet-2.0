@@ -1,7 +1,7 @@
 <?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC1
+* @Program:		NukeViet CMS v2.0 RC4
 * @File name: 	Module Search
 * @Version: 	2.0
 * @Date: 		01.05.2009
@@ -30,7 +30,7 @@ $index = ( defined('MOD_BLTYPE') ) ? MOD_BLTYPE : 1;
 
 include ( "header.php" );
 
-$query = cheonguoc( stripslashes(check_html($query, nohtml)) );
+$query = trim( nv_htmlspecialchars( strip_tags( stripslashes($query))));
 $handle = opendir( "modules/" . $module_name . "/mod" );
 while ( $file = readdir($handle) )
 {
@@ -62,8 +62,6 @@ if ( ($query == "") or ($query == "" . _SEARCH . "") )
 }
 else
 {
-	$query = cheonguoc( stripslashes(check_html($query, nohtml)) );
-
 	OpenTable();
 	echo "<fieldset style=\"border: 1px solid #3F1D80; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px\">\n" . "<legend><b>" . _NSRETRY . "</b></legend>\n" . "<center><br><table>\n" . "<form enctype=\"multipart/form-data\" action=\"modules.php?name=Search\" method=\"post\" style=\"display: inline\">\n" . "<tr><td width=\"100\" align=\"right\">" . _TUTK . ":</td>\n" . "<td>&nbsp;&nbsp;<input type=\"text\" name=\"query\" value=\"$query\" size=\"30\" maxlength=\"25\" style=\"width=200px\"></td></tr>\n" . "<tr><td width=\"100\" align=\"right\">" . _TIMKIEMTAI . ":</td>\n" . "<td>&nbsp;&nbsp;<select name=\"modname\" style=\"width=200px\">\n" . "<option name=\"modname\" value=\"\">" . _NSHEADER . "</option>\n";
 	for ( $i = 0; $i < sizeof($themelist); $i++ )

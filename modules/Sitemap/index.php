@@ -1,7 +1,7 @@
 <?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC1
+* @Program:		NukeViet CMS v2.0 RC4
 * @File name: 	Module Sitemap
 * @Author: 		Nguyen The Hung (Nukeviet Group)
 * @Version: 	2.2

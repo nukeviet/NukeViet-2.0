@@ -3,19 +3,19 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC3
+* @Version: 	2.0 RC4
 * @Date: 		28.05.2009
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
-if ( ! defined('NV_MAINFILE') )
+if ( ! defined( 'NV_MAINFILE' ) )
 {
 	die( 'Stop!!!' );
 }
 
-if ( ! function_exists("floatval") )
+if ( ! function_exists( "floatval" ) )
 {
 	/**
 	 * floatval()
@@ -29,7 +29,7 @@ if ( ! function_exists("floatval") )
 	}
 }
 
-if ( ! function_exists('stripos') )
+if ( ! function_exists( 'stripos' ) )
 {
 	/**
 	 * stripos_clone()
@@ -41,7 +41,7 @@ if ( ! function_exists('stripos') )
 	 */
 	function stripos_clone( $haystack, $needle, $offset = 0 )
 	{
-		$return = strpos( strtoupper($haystack), strtoupper($needle), $offset );
+		$return = strpos( strtoupper( $haystack ), strtoupper( $needle ), $offset );
 		if ( $return === false )
 		{
 			return false;
@@ -68,7 +68,7 @@ else
 	}
 }
 
-if ( ! function_exists('http_build_query') )
+if ( ! function_exists( 'http_build_query' ) )
 {
 	/**
 	 * http_build_query()
@@ -82,28 +82,28 @@ if ( ! function_exists('http_build_query') )
 	function http_build_query( $data, $prefix = '', $sep = '', $key = '' )
 	{
 		$ret = array();
-		foreach ( (array )$data as $k => $v )
+		foreach ( ( array )$data as $k => $v )
 		{
-			if ( is_int($k) && $prefix != null )
+			if ( is_int( $k ) && $prefix != null )
 			{
 				$k = urlencode( $prefix . $k );
 			}
-			if ( (! empty($key)) || ($key === 0) ) $k = $key . '[' . urlencode( $k ) . ']';
-			if ( is_array($v) || is_object($v) )
+			if ( ( ! empty( $key ) ) || ( $key === 0 ) ) $k = $key . '[' . urlencode( $k ) . ']';
+			if ( is_array( $v ) || is_object( $v ) )
 			{
-				array_push( $ret, http_build_query($v, '', $sep, $k) );
+				array_push( $ret, http_build_query( $v, '', $sep, $k ) );
 			}
 			else
 			{
-				array_push( $ret, $k . '=' . urlencode($v) );
+				array_push( $ret, $k . '=' . urlencode( $v ) );
 			}
 		}
-		if ( empty($sep) ) $sep = ini_get( 'arg_separator.output' );
+		if ( empty( $sep ) ) $sep = ini_get( 'arg_separator.output' );
 		return implode( $sep, $ret );
 	}
 }
 
-if ( ! function_exists('str_ireplace') )
+if ( ! function_exists( 'str_ireplace' ) )
 {
 	/**
 	 * str_ireplace()
@@ -118,10 +118,10 @@ if ( ! function_exists('str_ireplace') )
 		$token = chr( 1 );
 		$haystack = strtolower( $subject );
 		$needle = strtolower( $search );
-		while ( ($pos = strpos($haystack, $needle)) !== false )
+		while ( ( $pos = strpos( $haystack, $needle ) ) !== false )
 		{
-			$subject = substr_replace( $subject, $token, $pos, strlen($search) );
-			$haystack = substr_replace( $haystack, $token, $pos, strlen($search) );
+			$subject = substr_replace( $subject, $token, $pos, strlen( $search ) );
+			$haystack = substr_replace( $haystack, $token, $pos, strlen( $search ) );
 		}
 		$subject = str_replace( $token, $replace, $subject );
 		return $subject;
@@ -157,9 +157,9 @@ function compress_output_deflate( $output )
  */
 function nv_getClientIP()
 {
-	$client_ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] :"";
-	if ( ! strstr($client_ip, ".") ) $client_ip = $_SERVER['REMOTE_ADDR'];
-	if ( ! strstr($client_ip, ".") ) $client_ip = getenv( "REMOTE_ADDR" );
+	$client_ip = isset( $_SERVER['HTTP_CLIENT_IP'] ) ? $_SERVER['HTTP_CLIENT_IP'] : "";
+	if ( ! strstr( $client_ip, "." ) ) $client_ip = $_SERVER['REMOTE_ADDR'];
+	if ( ! strstr( $client_ip, "." ) ) $client_ip = getenv( "REMOTE_ADDR" );
 	return trim( $client_ip );
 }
 
@@ -172,11 +172,12 @@ function nv_getClientIP()
 function nv_is_ban( $client_ip = "" )
 {
 	global $datafold;
-	if ( empty($client_ip) ) $client_ip = nv_getClientIP();
+	if ( empty( $client_ip ) ) $client_ip = nv_getClientIP();
 	$return = false;
-	if ( file_exists(INCLUDE_PATH . $datafold . "/config_banip.php")){
+	if ( file_exists( INCLUDE_PATH . $datafold . "/config_banip.php" ) )
+	{
 		@include ( INCLUDE_PATH . $datafold . "/config_banip.php" );
-		if (in_array($client_ip, $array_ip_ban) )
+		if ( in_array( $client_ip, $array_ip_ban ) )
 		{
 			$return = true;
 		}
@@ -195,18 +196,18 @@ function nv_set_currentlang()
 	$currentlang = "";
 	if ( $multilingual )
 	{
-		if ( isset($_COOKIE['lang']) and ! eregi("[^a-zA-Z0-9_]", $_COOKIE['lang']) and file_exists(INCLUDE_PATH . "language/lang-" . $_COOKIE['lang'] . ".php") )
+		if ( isset( $_COOKIE['lang'] ) and ! preg_match("/[^a-zA-Z0-9_]/i", $_COOKIE['lang'] ) and file_exists( INCLUDE_PATH . "language/lang-" . $_COOKIE['lang'] . ".php" ) )
 		{
 			$currentlang = $_COOKIE['lang'];
-		} elseif ( file_exists(INCLUDE_PATH . "language/lang-" . $language . ".php") )
+		} elseif ( file_exists( INCLUDE_PATH . "language/lang-" . $language . ".php" ) )
 		{
-			setcookie( "lang", $language, time() + intval($live_cookie_time) * 86400, $cookie_path, $cookie_domain );
+			setcookie( "lang", $language, time() + intval( $live_cookie_time ) * 86400, $cookie_path, $cookie_domain );
 			$currentlang = $language;
 		}
 	}
 	else
 	{
-		if ( file_exists(INCLUDE_PATH . "language/lang-" . $language . ".php") ) $currentlang = $language;
+		if ( file_exists( INCLUDE_PATH . "language/lang-" . $language . ".php" ) ) $currentlang = $language;
 	}
 	return $currentlang;
 }
@@ -222,18 +223,18 @@ function nv_set_ThemeSel()
 	$ThemeSel = "";
 	if ( $changtheme )
 	{
-		if ( isset($_COOKIE['clsk']) and ! eregi("[^a-zA-Z0-9_\-]", $_COOKIE['clsk']) and file_exists(INCLUDE_PATH . "themes/" . $_COOKIE['clsk'] . "/theme.php") )
+		if ( isset( $_COOKIE['clsk'] ) and ! eregi( "[^a-zA-Z0-9_\-]", $_COOKIE['clsk'] ) and file_exists( INCLUDE_PATH . "themes/" . $_COOKIE['clsk'] . "/theme.php" ) )
 		{
 			$ThemeSel = $_COOKIE['clsk'];
-		} elseif ( file_exists(INCLUDE_PATH . "themes/" . $Default_Theme . "/theme.php") )
+		} elseif ( file_exists( INCLUDE_PATH . "themes/" . $Default_Theme . "/theme.php" ) )
 		{
-			setcookie( "clsk", $Default_Theme, time() + intval($live_cookie_time) * 86400, $cookie_path, $cookie_domain );
+			setcookie( "clsk", $Default_Theme, time() + intval( $live_cookie_time ) * 86400, $cookie_path, $cookie_domain );
 			$ThemeSel = $Default_Theme;
 		}
 	}
 	else
 	{
-		if ( file_exists(INCLUDE_PATH . "themes/" . $Default_Theme . "/theme.php") ) $ThemeSel = $Default_Theme;
+		if ( file_exists( INCLUDE_PATH . "themes/" . $Default_Theme . "/theme.php" ) ) $ThemeSel = $Default_Theme;
 	}
 	return $ThemeSel;
 }
@@ -247,10 +248,10 @@ function nv_set_ThemeSel()
 function del_online( $del )
 {
 	global $db, $prefix;
-	list( $online ) = $db->sql_fetchrow( $db->sql_query("SELECT `online` FROM `" . $prefix . "_stats`") );
+	list( $online ) = $db->sql_fetchrow( $db->sql_query( "SELECT `online` FROM `" . $prefix . "_stats`" ) );
 	$onl1 = explode( "|", $online );
 	$onl = "";
-	for ( $z = 0; $z < sizeof($onl1); $z++ )
+	for ( $z = 0; $z < sizeof( $onl1 ); $z++ )
 	{
 		$onl2 = explode( ":", $onl1[$z] );
 		if ( $onl2[0] != $del )
@@ -271,20 +272,20 @@ function del_online( $del )
 function get_lang( $module )
 {
 	global $currentlang, $language;
-	if ( $module == "admin")
+	if ( $module == "admin" )
 	{
-		if ( file_exists("language/lang-$currentlang.php") ) @include_once ( "language/lang-$currentlang.php" );
-		elseif ( file_exists("language/lang-$language.php") ) @include_once ( "language/lang-$language.php" );
+		if ( file_exists( "language/lang-$currentlang.php" ) ) @include_once ( "language/lang-$currentlang.php" );
+		elseif ( file_exists( "language/lang-$language.php" ) ) @include_once ( "language/lang-$language.php" );
 	}
 	else
 	{
-		if ( file_exists("modules/$module/language/lang-$currentlang.php") )
+		if ( file_exists( "modules/$module/language/lang-$currentlang.php" ) )
 		{
 			@include_once ( "modules/$module/language/lang-$currentlang.php" );
 		}
 		else
 		{
-			if ( file_exists("modules/$module/language/lang-$language.php") )
+			if ( file_exists( "modules/$module/language/lang-$language.php" ) )
 			{
 				@include_once ( "modules/$module/language/lang-$language.php" );
 			}
@@ -330,17 +331,17 @@ function message_box()
 	}
 	$sql = "SELECT mid, title, content, date, expire, view FROM " . $prefix . "_message WHERE active='1' $querylang";
 	$result = $db->sql_query( $sql );
-	if ( $numrows = $db->sql_numrows($result) == 0 )
+	if ( $numrows = $db->sql_numrows( $result ) == 0 )
 	{
 		return;
 	}
 	else
 	{
-		while ( $row = $db->sql_fetchrow($result) )
+		while ( $row = $db->sql_fetchrow( $result ) )
 		{
 			$mid = $row['mid'];
 			$mid = intval( $mid );
-			$title = stripslashes( check_html($row['title'], "nohtml") );
+			$title = stripslashes( check_html( $row['title'], "nohtml" ) );
 			$content = stripslashes( $row['content'] );
 			$mdate = $row['date'];
 			$expire = $row['expire'];
@@ -355,7 +356,7 @@ function message_box()
 				}
 				else
 				{
-					$etime = ( ($mdate + $expire) - time() ) / 3600;
+					$etime = ( ( $mdate + $expire ) - time() ) / 3600;
 					$etime = ( int )$etime;
 					if ( $etime < 1 )
 					{
@@ -366,31 +367,31 @@ function message_box()
 						$remain = "" . _EXPIREIN . " $etime " . _HOURS . "";
 					}
 				}
-				if ( $view == 4 and defined('IS_ADMIN') )
+				if ( $view == 4 and defined( 'IS_ADMIN' ) )
 				{
 					OpenTable();
 					echo "<center><font class=\"option\" color=\"$textcolor2\"><b>$title</b></font></center><br>\n" . "<font class=\"content\">$content</font>";
-					if ( defined('IS_SPADMIN') )
+					if ( defined( 'IS_SPADMIN' ) )
 					{
 						echo "<br><br><center><font class=\"content\">[ " . _MVIEWADMIN . " - $remain - <a href=\"" . $adminfold . "/" . $adminfile . ".php?op=editmsg&mid=$mid\">" . _EDIT . "</a> ]</font></center>";
 					}
 					CloseTable();
 					echo "<br>";
-				} elseif ( $view == 3 and defined('IS_USER') || defined('IS_ADMIN') )
+				} elseif ( $view == 3 and defined( 'IS_USER' ) || defined( 'IS_ADMIN' ) )
 				{
 					OpenTable();
 					echo "<center><font class=\"option\" color=\"$textcolor2\"><b>$title</b></font></center><br>\n" . "<font class=\"content\">$content</font>";
-					if ( defined('IS_SPADMIN') )
+					if ( defined( 'IS_SPADMIN' ) )
 					{
 						echo "<br><br><center><font class=\"content\">[ " . _MVIEWUSERS . " - $remain - <a href=\"" . $adminfold . "/" . $adminfile . ".php?op=editmsg&mid=$mid\">" . _EDIT . "</a> ]</font></center>";
 					}
 					CloseTable();
 					echo "<br>";
-				} elseif ( $view == 2 and ! defined('IS_USER') || defined('IS_ADMIN') )
+				} elseif ( $view == 2 and ! defined( 'IS_USER' ) || defined( 'IS_ADMIN' ) )
 				{
 					OpenTable();
 					echo "<center><font class=\"option\" color=\"$textcolor2\"><b>$title</b></font></center><br>\n" . "<font class=\"content\">$content</font>";
-					if ( defined('IS_SPADMIN') )
+					if ( defined( 'IS_SPADMIN' ) )
 					{
 						echo "<br><br><center><font class=\"content\">[ " . _MVIEWANON . " - $remain - <a href=\"" . $adminfold . "/" . $adminfile . ".php?op=editmsg&mid=$mid\">" . _EDIT . "</a> ]</font></center>";
 					}
@@ -400,7 +401,7 @@ function message_box()
 				{
 					OpenTable();
 					echo "<center><font class=\"option\" color=\"$textcolor2\"><b>$title</b></font></center><br>\n" . "<font class=\"content\">$content</font>";
-					if ( defined('IS_SPADMIN') )
+					if ( defined( 'IS_SPADMIN' ) )
 					{
 						echo "<br><br><center><font class=\"content\">[ " . _MVIEWALL . " - $remain - <a href=\"" . $adminfold . "/" . $adminfile . ".php?op=editmsg&mid=$mid\">" . _EDIT . "</a> ]</font></center>";
 					}
@@ -462,7 +463,7 @@ function getusrinfo( $user )
 	$user3 = explode( ":", $user2 );
 	$sql = "SELECT * FROM " . $user_prefix . "_users WHERE username='$user3[1]' AND user_password='$user3[2]'";
 	$result = $db->sql_query( $sql );
-	if ( $db->sql_numrows($result) == 1 )
+	if ( $db->sql_numrows( $result ) == 1 )
 	{
 		$userinfo = $db->sql_fetchrow( $result );
 	}
@@ -479,13 +480,12 @@ function FixQuotes( $what = "" )
 {
 
 	$what = ereg_replace( "'", "''", $what );
-	while ( eregi("\\\\'", $what) )
+	while ( eregi( "\\\\'", $what ) )
 	{
 		$what = ereg_replace( "\\\\'", "'", $what );
 	}
 	return $what;
 }
-
 
 /**
  * check_words()
@@ -500,24 +500,24 @@ function check_words( $Message )
 	$EditedMessage = $Message;
 	if ( $CensorMode != 0 )
 	{
-		if ( is_array($CensorList) )
+		if ( is_array( $CensorList ) )
 		{
 			$Replace = $CensorReplace;
 			if ( $CensorMode == 1 )
 			{
-				for ( $i = 0; $i < count($CensorList); $i++ )
+				for ( $i = 0; $i < count( $CensorList ); $i++ )
 				{
 					$EditedMessage = eregi_replace( "$CensorList[$i]([^a-zA-Z0-9])", "$Replace\\1", $EditedMessage );
 				}
 			} elseif ( $CensorMode == 2 )
 			{
-				for ( $i = 0; $i < count($CensorList); $i++ )
+				for ( $i = 0; $i < count( $CensorList ); $i++ )
 				{
 					$EditedMessage = eregi_replace( "(^|[^[:alnum:]])$CensorList[$i]", "\\1$Replace", $EditedMessage );
 				}
 			} elseif ( $CensorMode == 3 )
 			{
-				for ( $i = 0; $i < count($CensorList); $i++ )
+				for ( $i = 0; $i < count( $CensorList ); $i++ )
 				{
 					$EditedMessage = eregi_replace( "$CensorList[$i]", "$Replace", $EditedMessage );
 				}
@@ -535,7 +535,6 @@ function check_words( $Message )
  */
 function delQuotes( $string )
 {
-
 
 	$tmp = "";
 
@@ -561,7 +560,7 @@ function delQuotes( $string )
 				else
 				{
 					$quote = 0;
-					if ( ($attrib > 0) && ($tmp != "") )
+					if ( ( $attrib > 0 ) && ( $tmp != "" ) )
 					{
 						$result .= "=\"$tmp\"";
 					}
@@ -596,7 +595,7 @@ function delQuotes( $string )
 		}
 		$i++;
 	}
-	if ( ($quote != 0) && ($tmp != "") )
+	if ( ( $quote != 0 ) && ( $tmp != "" ) )
 	{
 		if ( $attrib == 1 ) $result .= "=";
 
@@ -617,37 +616,36 @@ function check_html( $str, $strip = "" )
 {
 	global $datafold;
 
-
 	include ( "" . INCLUDE_PATH . "$datafold/config.php" );
-	if ( $strip == "nohtml" ) {
+	if ( $strip == "nohtml" )
+	{
 		$AllowableHTML = array( '' );
 		$str = strip_tags( $str );
 	}
 	$str = stripslashes( $str );
-	$str = eregi_replace( "<[[:space:]]*([^>]*)[[:space:]]*>", '<\\1>', $str );
+	$str = preg_replace( "/<[[:space:]]*([^>]*)[[:space:]]*>/i", '<\\1>', $str );
 
-	$str = eregi_replace( "<a[^>]*href[[:space:]]*=[[:space:]]*\"?[[:space:]]*([^\" >]*)[[:space:]]*\"?[^>]*>", '<a href="\\1">', $str );
+	$str = preg_replace( "/<a[^>]*href[[:space:]]*=[[:space:]]*\"?[[:space:]]*([^\" >]*)[[:space:]]*\"?[^>]*>/i", '<a href="\\1">', $str );
 
-	$str = eregi_replace( "<[[:space:]]* img[[:space:]]*([^>]*)[[:space:]]*>", '', $str );
+	$str = preg_replace( "/<[[:space:]]* img[[:space:]]*([^>]*)[[:space:]]*>/i", '', $str );
 
-	$str = eregi_replace( "<a[^>]*href[[:space:]]*=[[:space:]]*\"?javascript[[:punct:]]*\"?[^>]*>", '', $str );
+	$str = preg_replace( "/<a[^>]*href[[:space:]]*=[[:space:]]*\"?javascript[[:punct:]]*\"?[^>]*>/i", '', $str );
 
 	$tmp = "";
-	while ( ereg("<(/?[[:alpha:]]*)[[:space:]]*([^>]*)>", $str, $reg) )
-	{
+	while (@ereg("<(/?[[:alpha:]]*)[[:space:]]*([^>]*)>",$str,$reg)) {
 		$i = strpos( $str, $reg[0] );
 		$l = strlen( $reg[0] );
-		if ( $reg[1][0] == "/" ) $tag = strtolower( substr($reg[1], 1) );
+		if ( $reg[1][0] == "/" ) $tag = strtolower( substr( $reg[1], 1 ) );
 		else  $tag = strtolower( $reg[1] );
 		if ( $a = $AllowableHTML[$tag] )
 			if ( $reg[1][0] == "/" ) $tag = "</$tag>";
-			elseif ( ($a == 1) || ($reg[2] == "") ) $tag = "<$tag>";
+			elseif ( ( $a == 1 ) || ( $reg[2] == "" ) ) $tag = "<$tag>";
 			else
 			{
 
 				$attrb_list = delQuotes( $reg[2] );
 
-				$attrb_list = ereg_replace( "&", "&amp;", $attrb_list );
+				$attrb_list = str_replace( "&", "&amp;", $attrb_list );
 				$tag = "<$tag" . $attrb_list . ">";
 			}
 
@@ -705,7 +703,6 @@ function cheonguoc( $text )
 	return $text;
 }
 
-
 /**
  * formatTimestamp()
  * 
@@ -716,7 +713,7 @@ function cheonguoc( $text )
 function formatTimestamp( $time, $ht = 1 )
 {
 	global $datetime, $hourdiff, $htg1, $htg2;
-	ereg( "([0-9]{4})-([0-9]{1,2})-([0-9]{1,2}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})", $time, $datetime );
+	preg_match( "/([0-9]{4})-([0-9]{1,2})-([0-9]{1,2}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})/", $time, $datetime );
 	$datetime = mktime( $datetime[4], $datetime[5], $datetime[6], $datetime[2], $datetime[3], $datetime[1] );
 	$timeadjust = ( $hourdiff * 60 );
 	$datetime = $datetime + $timeadjust;
@@ -780,7 +777,7 @@ function generate_page( $base_url, $num_items, $per_page, $start_item, $add_prev
 		$init_page_max = ( $total_pages > 3 ) ? 3 : $total_pages;
 		for ( $i = 1; $i < $init_page_max + 1; $i++ )
 		{
-			$page_string .= ( $i == $on_page ) ? '<b>' . $i . '</b>' : '<a href="' . $base_url . "&amp;page=" . ( ($i - 1) * $per_page ) . '">' . $i . '</a>';
+			$page_string .= ( $i == $on_page ) ? '<b>' . $i . '</b>' : '<a href="' . $base_url . "&amp;page=" . ( ( $i - 1 ) * $per_page ) . '">' . $i . '</a>';
 			if ( $i < $init_page_max )
 			{
 				$page_string .= ", ";
@@ -795,7 +792,7 @@ function generate_page( $base_url, $num_items, $per_page, $start_item, $add_prev
 				$init_page_max = ( $on_page < $total_pages - 4 ) ? $on_page : $total_pages - 4;
 				for ( $i = $init_page_min - 1; $i < $init_page_max + 2; $i++ )
 				{
-					$page_string .= ( $i == $on_page ) ? '<b>' . $i . '</b>' : '<a href="' . $base_url . "&amp;page=" . ( ($i - 1) * $per_page ) . '">' . $i . '</a>';
+					$page_string .= ( $i == $on_page ) ? '<b>' . $i . '</b>' : '<a href="' . $base_url . "&amp;page=" . ( ( $i - 1 ) * $per_page ) . '">' . $i . '</a>';
 					if ( $i < $init_page_max + 1 )
 					{
 						$page_string .= ', ';
@@ -810,7 +807,7 @@ function generate_page( $base_url, $num_items, $per_page, $start_item, $add_prev
 
 			for ( $i = $total_pages - 2; $i < $total_pages + 1; $i++ )
 			{
-				$page_string .= ( $i == $on_page ) ? '<b>' . $i . '</b>' : '<a href="' . $base_url . "&amp;page=" . ( ($i - 1) * $per_page ) . '">' . $i . '</a>';
+				$page_string .= ( $i == $on_page ) ? '<b>' . $i . '</b>' : '<a href="' . $base_url . "&amp;page=" . ( ( $i - 1 ) * $per_page ) . '">' . $i . '</a>';
 				if ( $i < $total_pages )
 				{
 					$page_string .= ", ";
@@ -822,7 +819,7 @@ function generate_page( $base_url, $num_items, $per_page, $start_item, $add_prev
 	{
 		for ( $i = 1; $i < $total_pages + 1; $i++ )
 		{
-			$page_string .= ( $i == $on_page ) ? '<b>' . $i . '</b>' : '<a href="' . $base_url . "&amp;page=" . ( ($i - 1) * $per_page ) . '">' . $i . '</a>';
+			$page_string .= ( $i == $on_page ) ? '<b>' . $i . '</b>' : '<a href="' . $base_url . "&amp;page=" . ( ( $i - 1 ) * $per_page ) . '">' . $i . '</a>';
 			if ( $i < $total_pages )
 			{
 				$page_string .= ', ';
@@ -833,7 +830,7 @@ function generate_page( $base_url, $num_items, $per_page, $start_item, $add_prev
 	{
 		if ( $on_page > 1 )
 		{
-			$page_string = ' <a href="' . $base_url . "&amp;page=" . ( ($on_page - 2) * $per_page ) . '">' . _PAGEPREV . '</a>&nbsp;&nbsp;' . $page_string;
+			$page_string = ' <a href="' . $base_url . "&amp;page=" . ( ( $on_page - 2 ) * $per_page ) . '">' . _PAGEPREV . '</a>&nbsp;&nbsp;' . $page_string;
 		}
 		if ( $on_page < $total_pages )
 		{
@@ -863,7 +860,7 @@ function removecrlf( $str )
  */
 function info_exit( $info )
 {
-	$info = stripslashes( FixQuotes($info) );
+	$info = stripslashes( FixQuotes( $info ) );
 	include ( INCLUDE_PATH . "header.php" );
 	OpenTable();
 	echo "<br><center><b>" . $info . "</b></center><br>";
@@ -881,9 +878,9 @@ function info_exit( $info )
 function select_language( $sellang )
 {
 	$handle = opendir( "" . INCLUDE_PATH . "language" );
-	while ( $file = readdir($handle) )
+	while ( $file = readdir( $handle ) )
 	{
-		if ( preg_match("/^lang\-(.+)\.php/", $file, $matches) )
+		if ( preg_match( "/^lang\-(.+)\.php/", $file, $matches ) )
 		{
 			$langFound = $matches[1];
 			$languageslist .= "$langFound ";
@@ -892,7 +889,7 @@ function select_language( $sellang )
 	closedir( $handle );
 	$languageslist = explode( " ", $languageslist );
 	sort( $languageslist );
-	for ( $i = 0; $i < sizeof($languageslist); $i++ )
+	for ( $i = 0; $i < sizeof( $languageslist ); $i++ )
 	{
 		if ( $languageslist[$i] != "" )
 		{
@@ -987,15 +984,14 @@ function at_htmlspecialchars( $string )
  */
 function at_getextension( $filename )
 {
-	if ( strpos($filename, '.') === false )
+	if ( strpos( $filename, '.' ) === false )
 	{
 		return '';
 	}
-	$filename = basename( strtolower($filename) );
+	$filename = basename( strtolower( $filename ) );
 	$filename = explode( '.', $filename );
 	return array_pop( $filename );
 }
-
 
 /**
  * nv_htmlspecialchars()
@@ -1005,26 +1001,80 @@ function at_getextension( $filename )
  */
 function nv_htmlspecialchars( $string )
 {
-	$search = array( '&', '\'', '"', '<', '>', '\\', '/' );
-	$replace = array( '&amp;', '&#039;', '&quot;', '&#x003C;', '&#x003E;', '&#x005C;', '&#x002F;' );
-	$string = str_replace( $replace, $search, $string );
-	$string = str_replace( $search, $replace, $string );
+	$search = array('&', '\'', '"', '<', '>', '\\', '/', '(', ')', '*', '[', ']', '!', '=', '%', '^', ':', '{', '}', '`', '~');
+	$replace = array('&amp;', '&#039;', '&quot;', '&#x003C;', '&#x003E;', '&#x005C;', '&#x002F;', '&#40;', '&#41;', '&#42;', '&#91;', '&#93;', '&#33;', '&#x3D;', '&#x25;', '&#x5E;', '&#x3A;', '&#x7B;', '&#x7D;', '&#x60;', '&#x7E;');
+	$string = str_replace($replace, $search, $string);
+	$string = str_replace("&#x23;", "#", $string);
+	$string = str_replace($search, $replace, $string);
+	$string = preg_replace("/([^\&]+)\#/", "\\1&#x23;", $string);
 	return $string;
 }
 
 /**
-* nv_capcha_txt()
-*
-* @param mixed $seccode
-* @return
-*/
-function nv_capcha_txt( $seccode )
+ * nv_unhtmlspecialchars()
+ * 
+ * @param mixed $string
+ * @return
+ */
+
+function nv_unhtmlspecialchars( $string )
 {
-   $return = false;
-   if ($seccode ==$_SESSION['random_num'] ) $return = true;
-   //echo $seccode . "<br>".$_SESSION['random_num'];
-   $_SESSION['random_num'] = mt_rand( 100000, 999999 );
-   return $return;
+	$search = array('&amp;', '&#039;', '&quot;', '&#x003C;', '&#x003E;', '&#x005C;', '&#x002F;', '&#40;', '&#41;', '&#42;', '&#91;', '&#93;', '&#33;', '&#x3D;', '&#x23;', '&#x25;', '&#x5E;', '&#x3A;', '&#x7B;', '&#x7D;','&#x60;', '&#x7E;');
+	$replace = array('&', '\'', '"', '<', '>', '\\', '/', '(', ')', '*', '[', ']', '!', '=', '#', '%', '^', ':', '{', '}', '`', '~');
+	$string = str_replace($search, $replace, $string);
+	return $string;
 }
 
+/**
+ * nv_capcha_txt()
+ *
+ * @param mixed $seccode
+ * @return
+ */
+function nv_capcha_txt( $seccode )
+{
+	$return = false;
+	if ( $seccode == $_SESSION['random_num'] ) $return = true;
+	//echo $seccode . "<br>".$_SESSION['random_num'];
+	$_SESSION['random_num'] = mt_rand( 100000, 999999 );
+	return $return;
+}
+
+function nv_valid_email( $mail )
+{
+	$mail = strip_tags( trim( $mail ) );
+	if ( empty( $mail ) )
+	{
+		return false;
+	}
+	if ( ! preg_match( "/^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,6}$/", $mail ) || strrpos( $mail, ' ' ) > 0 )
+	{
+		return false;
+	}
+	if ( ! preg_match( "/\.(ac|ad|ae|aero|af|ag|ai|al|am|an|ao|aq|ar|arpa|as|asia|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cat|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|com|coop|cr|cu|cv|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|info|int|io|iq|ir|is|it|je|jm|jo|jobs|jp|ke|kg|kh|ki|km|kn|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|mg|mh|mil|mk|ml|mm|mn|mo|mobi|mp|mq|mr|ms|mt|mu|museum|mv|mw|mx|my|mz|na|name|nc|ne|net|nf|ng|ni|nl|no|np|nr|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|pro|ps|pt|pw|py|qa|re|ro|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tel|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|travel|tt|tv|tw|tz|ua|ug|uk|um|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)$/", $mail ) )
+	{
+		return false;
+	}
+	return true;
+}
+
+function content_filter($content,$save=0) {
+	$search = array	('@<script[^>]*?>.*?</script>@si',  // Strip out javascript
+							'@<meta[^>]*?>@',    // Strip meta tags properly
+							'@<link[^>]*?>@' // Strip link  tags properly
+							);
+	$content = preg_replace($search, '', $content);
+    $content = ($save) ? nv_htmlspecialchars($content) : trim($content);
+	return $content;
+}
+
+function nv_nl2br( $text, $replacement = '<br />' )
+{
+	return strtr( $text, array( "\r\n" => trim( $replacement ), "\r" => trim( $replacement ), "\n" => trim( $replacement ) ) );
+}
+
+function nv_br2nl( $text )
+{
+	return preg_replace( '/\<br(\s*)?\/?(\s*)?\>/i', chr( 13 ) . chr( 10 ), $text );
+}
 ?>

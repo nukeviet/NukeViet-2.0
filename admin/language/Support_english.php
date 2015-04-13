@@ -1,6 +1,6 @@
 <?php
 /*
- * @Program:	NukeViet CMS v2.0 RC1
+ * @Program:	NukeViet CMS v2.0 RC4
  * @File name: 	Support Module
  * @Author: 	Nguyen Anh Tu
  * @Version: 	1.1

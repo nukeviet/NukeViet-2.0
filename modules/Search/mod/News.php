@@ -1,7 +1,7 @@
-﻿<?php
+<?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC1
+* @Program:		NukeViet CMS v2.0 RC4
 * @File name: 	News.php @ Module Search
 * @Version: 	2.0
 * @Date: 		01.05.2009
@@ -10,25 +10,19 @@
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
-if ( eregi("News.php", $_SERVER['SCRIPT_NAME']) )
+if ( ! defined('NV_SYSTEM') )
 {
-	Header( "Location: ../index.php" );
-	exit;
+	die( 'Stop!!!' );
 }
-$checkurl = $_SERVER['REQUEST_URI'];
-if ( preg_match("/http:\/\//i", $checkurl) )
-{
-	Header( "Location: ../index.php" );
-	exit;
-}
+
 if ( ! isset($min) ) $min = 0;
 if ( ! isset($max) ) $max = $min + $offset;
-
-$sqlNews = "select sid, title, hometext, bodytext  from $prefix" . _stories . " where (title like '%$query%' OR hometext like '%$query%' OR bodytext like '%$query%') AND alanguage='$currentlang'";
+$query_likeescape = $db->dblikeescape($query);
+$sqlNews = "select sid, title, hometext, bodytext  from $prefix" . _stories . " where (title like '%$query_likeescape%' OR hometext like '%$query_likeescape%' OR bodytext like '%$query_likeescape%') AND alanguage='$currentlang'";
 $resultNews = $db->sql_query( $sqlNews );
 $nrowsNews = $db->sql_numrows( $resultNews );
 
-$sql = "select sid, title, hometext, bodytext from $prefix" . _stories . " where (title like '%$query%' OR hometext like '%$query%' OR bodytext like '%$query%') AND alanguage='$currentlang' ORDER BY sid DESC limit $min, $offset";
+$sql = "select sid, title, hometext, bodytext from $prefix" . _stories . " where (title like '%$query_likeescape%' OR hometext like '%$query_likeescape%' OR bodytext like '%$query_likeescape%') AND alanguage='$currentlang' ORDER BY sid DESC limit $min, $offset";
 $result = $db->sql_query( $sql );
 $nrows = $db->sql_numrows( $result );
 $x = 0;

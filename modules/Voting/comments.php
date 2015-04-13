@@ -1,7 +1,7 @@
 <?php
 
 /*
-* @Program:		NukeViet CMS v2.0 RC1
+* @Program:		NukeViet CMS v2.0 RC4
 * @File name: 	comment.php @ Module Voting
 * @Version: 	2.0
 * @Date: 		17.05.2009
@@ -350,8 +350,6 @@ function show( $pollid )
 				$sender_name = "<a href=\"modules.php?name=Your_Account&op=userinfo&user_id=$user_id\">$sender_name</a>";
 
 			}
-
-
 			$sender_email = $row['email'];
 			$sender_page = $row['url'];
 			$sender_host = $row['host_name'];

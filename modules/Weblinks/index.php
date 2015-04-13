@@ -1,7 +1,7 @@
 <?php
 
 /*
-* @Program:	NukeViet CMS v2.0 RC1
+* @Program:	NukeViet CMS v2.0 RC4
 * @File name: 	Module Addnews
 * @Author: 		Nguyen Anh Tu (Nukeviet Group)
 * @Version: 	1.1

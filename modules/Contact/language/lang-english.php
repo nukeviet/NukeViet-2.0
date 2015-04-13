@@ -3,8 +3,8 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC2
-* @Date: 		07.07.2009
+* @Version: 	2.0 RC4
+* * @Date: 		06.04.2010
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -48,7 +48,7 @@ define( "_NSPHONENAME", "Phone Name" );
 define( "_NSPHONENUM", "Phone" );
 define( "_NSFAXNUM", "Fax" );
 define( "_YOURADD", "Address" );
-define( "_Note", "Ghi chú" );
+define( "_Note", "Ghi chï¿½" );
 define( "_Addinfo", "For more convenient for customers to contact. Please contact the owner of the information below:" );
 define( "_CONT1", "Your full name?" );
 define( "_CONT2", "Error: your name too short" );

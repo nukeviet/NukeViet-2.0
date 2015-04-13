@@ -4,8 +4,8 @@
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet Setup
 * @Author: 		NukeViet Group
-* @Version: 	2.0 RC3
-* @Date: 		01.03.2010
+* @Version: 	2.0 RC4
+* @Date: 		06.04.2010
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -39,7 +39,7 @@ $content .= "</filesmatch>";
 $content = "<?php\n\n";
 $fctime = date( "d-m-Y H:i:s", filectime("../$datafold/mainfile.php") );
 $fmtime = date( "d-m-Y H:i:s" );
-$content .= "// File: mainfile.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC3.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
+$content .= "// File: mainfile.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC4.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
 $content .= "define('NV_MAINFILE', true);\n";
 $content .= "define('NV_ANTIDOS', true);\n\n";
 $content .= "\$datafold = \"$datafold\";\n\n";
@@ -50,37 +50,8 @@ $content .= "	include(\"../\$datafold/antidos.php\");\n";
 $content .= "}\n\n";
 $content .= "\$dbhost = \"$dbhost\";\n";
 $content .= "\$dbname = \"$dbname\";\n\n";
-$content .= "\$db_tmp = date(\"G\") % 3;\n";
-$content .= "switch (\$db_tmp) {\n";
-$content .= "	case 0:\n";
-$content .= "		\$dbuname=\"$dbuname0\"; \n";
-$content .= "		\$dbpass = \"$dbpass0\"; \n";
-$content .= "		break;\n";
-$content .= "	case 1:\n";
-if ( $dbuname1 != "" )
-{
-	$content .= "		\$dbuname=\"$dbuname1\"; \n";
-	$content .= "		\$dbpass = \"$dbpass1\"; \n";
-}
-else
-{
-	$content .= "		\$dbuname=\"$dbuname0\"; \n";
-	$content .= "		\$dbpass = \"$dbpass0\"; \n";
-}
-$content .= "		break;\n";
-$content .= "	case 2:\n";
-if ( $dbuname2 != "" )
-{
-	$content .= "		\$dbuname=\"$dbuname2\"; \n";
-	$content .= "		\$dbpass = \"$dbpass2\"; \n";
-}
-else
-{
-	$content .= "		\$dbuname=\"$dbuname0\"; \n";
-	$content .= "		\$dbpass = \"$dbpass0\"; \n";
-}
-$content .= "		break;\n";
-$content .= "}\n\n";
+$content .= "\$dbuname=\"$dbuname0\"; \n";
+$content .= "\$dbpass = \"$dbpass0\"; \n";
 $content .= "\$prefix = \"$prefix\";\n";
 $content .= "\$user_prefix = \"$user_prefix\";\n";
 $content .= "\$dbtype = \"MySQL\";\n";
@@ -96,7 +67,7 @@ $content .= "?>";
 $content = "<?php\n\n";
 $fctime = date( "d-m-Y H:i:s", filectime("../$datafold/config.php") );
 $fmtime = date( "d-m-Y H:i:s" );
-$content .= "// File: config.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC3.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
+$content .= "// File: config.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC4.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
 $content .= "if ((!defined('NV_SYSTEM')) AND (!defined('NV_ADMIN'))) {\n";
 $content .= "die('Stop!!!');\n";
 $content .= "}\n";
@@ -130,7 +101,7 @@ $content .= "\$adminfile = \"$adminfile\";\n";
 $content .= "\$disable_site = \"0\";\n";
 $content .= "\$disable_message = \"\";\n";
 $content .= "\$gzip_method = \"0\";\n";
-$content .= "\$eror_value = \"1\";\n";
+$content .= "\$eror_value = \"0\";\n";
 $content .= "\$counteract = \"1\";\n";
 $content .= "\$timecount = \"300\";\n";
 $content .= "\$hourdiff = \"0\";\n";
@@ -162,7 +133,7 @@ $content .= "?>";
 $content = "<?php\n\n";
 $fctime = date( "d-m-Y H:i:s", filectime("../$datafold/config_admin.php") );
 $fmtime = date( "d-m-Y H:i:s" );
-$content .= "// File: config_admin.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC3.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
+$content .= "// File: config_admin.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC4.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
 $content .= "if (!defined('NV_ADMIN')) {\n";
 $content .= "die('Stop!!!');\n";
 $content .= "}\n";
@@ -192,7 +163,7 @@ $content .= "?>";
 $content = "<?php\n\n";
 $fctime = date( "d-m-Y H:i:s", filectime("../$datafold/config_Your_Account.php") );
 $fmtime = date( "d-m-Y H:i:s" );
-$content .= "// File: config_Your_Account.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC3.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
+$content .= "// File: config_Your_Account.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC4.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
 $content .= "if ((!defined('NV_SYSTEM')) AND (!defined('NV_ADMIN'))) {\n";
 $content .= "die('Stop!!!');\n";
 $content .= "}\n";
@@ -223,7 +194,7 @@ $content .= "?>";
 $content = "<?php\n\n";
 $fctime = date( "d-m-Y H:i:s", filectime("../$datafold/config_News.php") );
 $fmtime = date( "d-m-Y H:i:s" );
-$content .= "// File: config_News.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC3.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
+$content .= "// File: config_News.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC4.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
 $content .= "if ((!defined('NV_SYSTEM')) AND (!defined('NV_ADMIN'))) {\n";
 $content .= "die('Stop!!!');\n";
 $content .= "}\n";
@@ -262,7 +233,7 @@ $content .= "?>";
 $content = "<?php\n\n";
 $fctime = date( "d-m-Y H:i:s", filectime("../$datafold/config_Files.php") );
 $fmtime = date( "d-m-Y H:i:s" );
-$content .= "// File: config_Files.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC3.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
+$content .= "// File: config_Files.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC4.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
 $content .= "if ((!defined('NV_SYSTEM')) AND (!defined('NV_ADMIN'))) {\n";
 $content .= "die('Stop!!!');\n";
 $content .= "}\n";
@@ -301,7 +272,7 @@ $content .= "?>";
 $content = "<?php\n\n";
 $fctime = date( "d-m-Y H:i:s", filectime("../$datafold/admlock.php") );
 $fmtime = date( "d-m-Y H:i:s" );
-$content .= "// File: admlock.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC3.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
+$content .= "// File: admlock.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC4.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
 $content .= "?>";
 @$writefile = fwrite( $file, $content );
 @fclose( $file );
@@ -312,7 +283,7 @@ $content .= "?>";
 $content = "<?php\n\n";
 $fctime = date( "d-m-Y H:i:s", filectime("../$datafold/config_banip.php") );
 $fmtime = date( "d-m-Y H:i:s" );
-$content .= "// File: config_banip.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC3.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
+$content .= "// File: config_banip.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC4.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
 $content .= "\$array_ip_ban = array();\n";
 $content .= "?>";
 @$writefile = fwrite( $file, $content );
@@ -332,7 +303,7 @@ function getUniqueCode($length = "")
 $content = "<?php\n\n";
 $fctime = date( "d-m-Y H:i:s", filectime("../$datafold/config_Editor.php") );
 $fmtime = date( "d-m-Y H:i:s" );
-$content .= "// File: config_Editor.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC3.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
+$content .= "// File: config_Editor.php.\n// Created: $fctime.\n// Modified: $fmtime.\n// Program: NukeViet CMS v2.0 RC4.\n// Website: www.nukeviet.vn.\n// Do not change anything in this file!\n\n";
 $content .= "\$editorconfig = array(\n";
 $content .= "	'default_theme' => 'spaw2',\n";
 $content .= "	'default_toolbarset' => 'standard',\n";

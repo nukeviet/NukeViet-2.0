@@ -1,6 +1,6 @@
 <?php
 /*
- * @Program:	NukeViet CMS v2.0 RC1
+ * @Program:	NukeViet CMS v2.0 RC4
  * @File name: 	Theme Nv_silver
  * @Author: 	Boder - Nguyen Minh Giap
  * @Version: 	1.0

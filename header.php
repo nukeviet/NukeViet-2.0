@@ -3,14 +3,14 @@
 /*
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet System
-* @Version: 	2.0 RC3
-* @Date: 		01.03.2010
+* @Version: 	2.0 RC4
+* @Date: 		06.04.2010
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 
-if ( eregi("header.php", $_SERVER['SCRIPT_NAME']) )
+if ( preg_match("/header.php/i", $_SERVER['SCRIPT_NAME']) )
 {
 	Header( "Location: index.php" );
 	die();
@@ -32,14 +32,14 @@ function head()
 	$keys = array();
 	if ( isset($key_words) and ! empty($key_words) )
 	{
-		$keys = strip_tags( $key_words );
+		$keys = strip_tags( stripslashes($key_words) );
 		$keys = explode( ",", $keys );
 		$keys = array_map( "trim", $keys );
 	}
 
 	if ( isset($header_page_keyword) and ! empty($header_page_keyword) )
 	{
-		$keywords = strip_tags( $header_page_keyword );
+		$keywords = strip_tags( stripslashes($header_page_keyword) );
 		$keywords = trim( ereg_replace('("|\?|!|:|\.|\(|\)|;|\\\\)+', ' ', $keywords) );
 		$keywords = ereg_replace( '( |' . CHR(10) . '|' . CHR(13) . ')+', ',', $keywords );
 		$keywords = substr( $keywords, 0, 1600 );

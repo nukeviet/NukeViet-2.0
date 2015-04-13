@@ -4,8 +4,8 @@
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet Setup
 * @Author: 		NukeViet Group
-* @Version: 	2.0 RC2
-* @Date: 		07.07.2009
+* @Version: 	2.0 RC4
+* * @Date: 		06.04.2010
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2009
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -83,12 +83,8 @@ define( "_STEP1352", "Việc kiểm tra đã hoàn tất. Một số đòi hỏi
 define( "_STEP136", "Chuyển sang bước 2" );
 define( "_STEP22", "Khai báo cài đặt hệ thống Nukeviet" );
 define( "_STEP23", "Host chứa CSDL *" );
-define( "_STEP240", "Tên truy cập CSDL 1 *" );
-define( "_STEP250", "Mật khẩu truy cập CSDL 1 *" );
-define( "_STEP241", "Tên truy cập CSDL 2" );
-define( "_STEP251", "Mật khẩu truy cập CSDL 2" );
-define( "_STEP242", "Tên truy cập CSDL 3" );
-define( "_STEP252", "Mật khẩu truy cập CSDL 3" );
+define( "_STEP240", "Tên truy cập CSDL*" );
+define( "_STEP250", "Mật khẩu truy cập CSDL*" );
 define( "_STEP26", "Tên CSDL *" );
 define( "_STEP27", "Tiếp đầu tố chung *" );
 define( "_STEP28", "Tiếp đầu tố cá nhân *" );
@@ -114,7 +110,7 @@ define( "_STEP35", ">> Bước 4" );
 define( "_STEP36", "Chỉ còn một động tác cuối cùng là chuyển tập tin mainfile.php trong thư mục" );
 define( "_STEP37", "ra ngoài thư mục gốc, sau đó nhấn chuột vào nút <u>Bước 4</u> để kết thúc cài đặt." );
 define( "_STEP42", "Kết thúc cài đặt" );
-define( "_STEP43", "Xin chúc mừng!!! Bạn đã cài đặt thành công hệ thống Nukeviet. Hãy xóa ngay thư mục install khỏi server và đăng nhập vào khu vực quản lý để tiến hành các bước cấu hình site.<br><br><b>Chú ý:</b> Hãy <font color=\"#ffffff\">CHMOD thư mục <u>uploads</u></font> trên webroot và các thư mục con nằm trong nó ở chế độ 777. Nếu không làm việc này ngay, hệ thống sẽ không cho phép bạn upload các tập tin lên host.<br>Mọi nhu cầu về hỗ trợ kỹ thuật xin liên hệ tại <a href=http://nukeviet.vn target=_blank><font color=\"#ffffff\">diễn đàn Nukeviet.VN</font></a>.<br>Xin cảm ơn và chúc thành công!" );
+define( "_STEP43", "Xin chúc mừng!!! Bạn đã cài đặt thành công hệ thống Nukeviet. <font color=\"#ffffff\"><b>Hãy xóa ngay thư mục install</b></font> khỏi server và đăng nhập vào khu vực quản lý để tiến hành các bước cấu hình site.<br><br><b>Chú ý:</b> Hãy <font color=\"#ffffff\">CHMOD thư mục <u>uploads</u></font> trên webroot và các thư mục con nằm trong nó ở chế độ 777. Nếu không làm việc này ngay, hệ thống sẽ không cho phép bạn upload các tập tin lên host.<br>Mọi nhu cầu về hỗ trợ kỹ thuật xin liên hệ tại <a href=http://nukeviet.vn target=_blank><font color=\"#ffffff\">diễn đàn Nukeviet.VN</font></a>.<br>Xin cảm ơn và chúc thành công!" );
 define( "_STEP44", "Vào khu vực quản lý site" );
 define( "_STEP45", "Đến trang chủ" );
 

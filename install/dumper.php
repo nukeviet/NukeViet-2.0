@@ -4,8 +4,8 @@
 * @Program:		NukeViet CMS
 * @File name: 	NukeViet Setup
 * @Author: 		NukeViet Group
-* @Version: 	2.0 RC3
-* @Date: 		01.03.2010
+* @Version: 	2.0 RC4
+* @Date: 		06.04.2010
 * @Website: 	www.nukeviet.vn
 * @Copyright: 	(C) 2010
 * @License: 	http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -17,7 +17,7 @@ if ( ! defined('NV_DB') )
 	exit();
 }
 
-include ( "../includes/db/mysql.php" );
+include ( "../includes/mysql.php" );
 $time = time();
 $user_regdate = date( "M d, Y" );
 
